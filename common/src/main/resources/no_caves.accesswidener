@@ -1,0 +1,59 @@
+accessWidener v2 named
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$BinaryOperationLike
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Unary
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Constant
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Positional
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$BinaryOperation
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Noise
+accessible field net/minecraft/registry/entry/RegistryEntry$Direct value Ljava/lang/Object;
+mutable    field net/minecraft/registry/entry/RegistryEntry$Direct value Ljava/lang/Object;
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$RangeChoice
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$RangeChoice whenInRange Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$RangeChoice whenInRange Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$RangeChoice whenOutOfRange Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$RangeChoice whenOutOfRange Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/chunk/ChunkNoiseSampler$Cache2D
+accessible field net/minecraft/world/gen/chunk/ChunkNoiseSampler$Cache2D delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/chunk/ChunkNoiseSampler$Cache2D delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/chunk/ChunkNoiseSampler$CacheOnce
+accessible field net/minecraft/world/gen/chunk/ChunkNoiseSampler$CacheOnce delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/chunk/ChunkNoiseSampler$CacheOnce delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/chunk/ChunkNoiseSampler$CellCache
+accessible field net/minecraft/world/gen/chunk/ChunkNoiseSampler$CellCache delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/chunk/ChunkNoiseSampler$CellCache delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible field net/minecraft/world/gen/chunk/ChunkNoiseSampler$DensityInterpolator delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/chunk/ChunkNoiseSampler$DensityInterpolator delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/chunk/ChunkNoiseSampler$FlatCache
+accessible field net/minecraft/world/gen/chunk/ChunkNoiseSampler$FlatCache delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/chunk/ChunkNoiseSampler$FlatCache delegate Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Wrapping
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Wrapping wrapped Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Wrapping wrapped Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Clamp
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Clamp input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Clamp input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$LinearOperation
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$LinearOperation input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$LinearOperation input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$UnaryOperation
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$UnaryOperation input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$UnaryOperation input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$BlendDensity
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$BlendDensity input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$BlendDensity input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+
+accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$WeirdScaledSampler
+accessible field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$WeirdScaledSampler input Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/densityfunction/DensityFunctionTypes$WeirdScaledSampler input Lnet/minecraft/world/gen/densityfunction/DensityFunction;

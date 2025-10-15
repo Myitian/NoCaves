@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.myitian.no_caves.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "GenerationSettingsMixin",
+    "NoiseRouterMixin",
+    "RegistryLoaderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "sources": "${mod_source}"
+  },
+  "license": "${mod_license}",
+  "icon": "${mod_icon}",
+  "accessWidener": "no_caves.accesswidener",
+  "environment": "client",
+  "mixins": [
+    "no_caves-common.mixins.json"
+  ],
+  "entrypoints": {
+    "main": [
+      "net.myitian.no_caves.fabric.NoCavesFabric"
+    ]
+  },
+  "depends": {
+    "minecraft": ">=1.20.5"
+  }
+}

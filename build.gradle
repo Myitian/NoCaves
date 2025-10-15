@@ -1,0 +1,58 @@
+plugins {
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "1.11-SNAPSHOT" apply false
+}
+
+ext {
+    props = [
+            mod_id         : project.mod_id,
+            mod_version    : project.mod_version,
+            mod_name       : project.mod_name,
+            mod_description: project.mod_description,
+            mod_license    : project.mod_license,
+            mod_author     : project.mod_author,
+            mod_source     : project.mod_source,
+            mod_icon       : project.mod_icon
+    ]
+}
+
+architectury {
+    minecraft = rootProject.minecraft_version
+}
+
+subprojects {
+    apply plugin: "dev.architectury.loom"
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
+        mappings loom.layered {
+            it.mappings("net.fabricmc:yarn:$project.yarn_mappings:v2")
+            it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$project.yarn_mappings_patch_neoforge_version")
+        }
+    }
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
+
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    repositories {
+        maven { url "https://maven.shedaniel.me" }
+        maven { url "https://maven.architectury.dev" }
+        maven { url "https://maven.neoforged.net" }
+        maven { url "https://maven.parchmentmc.org" }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.release = 21
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
