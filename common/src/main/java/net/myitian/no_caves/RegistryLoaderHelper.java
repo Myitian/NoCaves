@@ -21,8 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class RegistryLoaderHelper {
-    public static Object process(RegistryKey<?> key, DataResult<?> instance) {
-        Object rawValue = instance.getOrThrow();
+    public static Object process(RegistryKey<?> key, Object rawValue) {
         boolean newObject = false;
         boolean useOptional = false;
         Object value = rawValue;

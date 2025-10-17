@@ -106,11 +106,13 @@ public class PatternSet extends AbstractSet<Pattern> {
 
     @Override
     public boolean contains(Object o) {
-        return switch (o) {
-            case Pattern pattern -> map.containsKey(new PatternKey(pattern));
-            case PatternKey key -> map.containsKey(key);
-            default -> false;
-        };
+        if (o instanceof Pattern pattern) {
+            return map.containsKey(new PatternKey(pattern));
+        } else if (o instanceof PatternKey key) {
+            return map.containsKey(key);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -133,11 +135,13 @@ public class PatternSet extends AbstractSet<Pattern> {
 
     @Override
     public boolean remove(Object o) {
-        return switch (o) {
-            case Pattern pattern -> map.remove(new PatternKey(pattern)) != null;
-            case PatternKey key -> map.remove(key) != null;
-            default -> false;
-        };
+        if (o instanceof Pattern pattern) {
+            return map.remove(new PatternKey(pattern)) != null;
+        } else if (o instanceof PatternKey key) {
+            return map.remove(key) != null;
+        } else {
+            return false;
+        }
     }
 
     private record PatternKey(String pattern, int flags) {
@@ -147,7 +151,7 @@ public class PatternSet extends AbstractSet<Pattern> {
 
         @Override
         public boolean equals(Object o) {
-            return o instanceof PatternKey(String pattern1, int flags1) && pattern.equals(pattern1) && flags == flags1;
+            return o instanceof PatternKey key && pattern.equals(key.pattern) && flags == key.flags;
         }
 
         @Override

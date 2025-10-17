@@ -29,6 +29,6 @@ abstract class RegistryLoaderMixin {
             RegistryKey<?> key,
             Resource unused_3,
             RegistryEntryInfo unused_4) {
-        return RegistryLoaderHelper.process(key, instance);
+        return RegistryLoaderHelper.process(key, instance.getOrThrow());
     }
 }
