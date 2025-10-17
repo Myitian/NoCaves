@@ -11,7 +11,7 @@ loom {
 }
 
 base {
-    archivesName = "${project.mod_id}-common-${project.minecraft_version}"
+    archivesName = project.mod_id
 }
 
 publishing {
