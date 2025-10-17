@@ -1,6 +1,8 @@
 package net.myitian.no_caves;
 
+import com.mojang.serialization.DataResult;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.util.Identifier;
@@ -19,6 +21,43 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class RegistryLoaderHelper {
+    public static Object process(RegistryKey<?> key, DataResult<?> instance) {
+        Object rawValue = instance.getOrThrow();
+        boolean newObject = false;
+        boolean useOptional = false;
+        Object value = rawValue;
+        if (rawValue instanceof Optional<?> optional) {
+            // NeoForge modified some mechanisms so that the decoder returns an optional.
+            if (optional.isEmpty()) {
+                return rawValue;
+            }
+            value = optional.get();
+            useOptional = true;
+        }
+        Identifier registryId = key.getRegistry();
+        if (registryId.equals(RegistryKeys.CHUNK_GENERATOR_SETTINGS.getValue())) {
+            if (value instanceof ChunkGeneratorSettings checkedValue) {
+                processChunkGeneratorSettings(key.getValue(), checkedValue);
+            }
+        } else if (registryId.equals(RegistryKeys.DENSITY_FUNCTION.getValue())) {
+            if (value instanceof DensityFunction checkedValue) {
+                value = processDensityFunction(key.getValue(), checkedValue);
+                newObject = true;
+            }
+        } else if (registryId.equals(RegistryKeys.BIOME.getValue())) {
+            if (value instanceof Biome checkedValue) {
+                processBiome(key.getValue(), checkedValue);
+            }
+        }
+        if (!newObject) {
+            return rawValue;
+        } else if (useOptional) {
+            return Optional.of(value);
+        } else {
+            return value;
+        }
+    }
+
     public static void processChunkGeneratorSettings(Identifier key, ChunkGeneratorSettings chunkGeneratorSettings) {
         if (!(NoCaves.isEnableFinalDensityTransformation()
                 && !NoCaves.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
