@@ -1,6 +1,5 @@
 package net.myitian.no_caves;
 
-import com.mojang.serialization.DataResult;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -8,16 +7,13 @@ import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.densityfunction.DensityFunction;
 import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
 import net.minecraft.world.gen.noise.NoiseRouter;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 
 public final class RegistryLoaderHelper {
@@ -100,21 +96,14 @@ public final class RegistryLoaderHelper {
             return;
         }
         GenerationSettings generationSettings = biome.getGenerationSettings();
-        @SuppressWarnings("unchecked")
-        Pair<GenerationStep.Carver, RegistryEntryList<ConfiguredCarver<?>>>[] carvers = new Pair[generationSettings.carvers.size()];
-        int i = 0;
-        for (var entry : generationSettings.carvers.entrySet()) {
-            RegistryEntryList<ConfiguredCarver<?>> originalList = entry.getValue();
-            ArrayList<RegistryEntry<ConfiguredCarver<?>>> list = new ArrayList<>(originalList.size());
-            for (var regEntry : originalList) {
-                Optional<RegistryKey<ConfiguredCarver<?>>> regKey = regEntry.getKey();
-                if (regKey.isPresent() && !NoCaves.getDisabledCarverPatterns().matches(regKey.get().getValue().toString())) {
-                    list.add(regEntry);
-                }
+        ArrayList<RegistryEntry<ConfiguredCarver<?>>> carvers = new ArrayList<>(generationSettings.carvers.size());
+        for (var entry : generationSettings.carvers) {
+            Optional<RegistryKey<ConfiguredCarver<?>>> regKey = entry.getKey();
+            if (regKey.isPresent() && !NoCaves.getDisabledCarverPatterns().matches(regKey.get().getValue().toString())) {
+                carvers.add(entry);
             }
-            carvers[i++] = Pair.of(entry.getKey(), RegistryEntryList.of(list));
         }
-        generationSettings.carvers = Map.ofEntries(carvers);
+        generationSettings.carvers = RegistryEntryList.of(carvers);
         NoCaves.LOGGER.debug(
                 "NoCaves.processedGenerationSettings {} {}",
                 ++NoCaves.processedGenerationSettings,
