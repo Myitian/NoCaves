@@ -120,52 +120,61 @@ public final class NoCaves {
 
     public static boolean load(File configFile) {
         try (var reader = new JsonReader(new FileReader(configFile))) {
-            reader.setLenient(false);
+            reader.setLenient(true);
             if (reader.peek() != JsonToken.BEGIN_OBJECT) {
                 return false;
             }
             reader.beginObject();
-            while (true) {
-                if (reader.peek() != JsonToken.NAME) {
-                    return true;
-                }
+            long bitfield = 0;
+            while (reader.peek() == JsonToken.NAME) {
                 switch (reader.nextName()) {
                     case "enableCarverFilter":
                         setEnableCarverFilter(reader.nextBoolean());
+                        bitfield |= 0b0000_0000_0001;
                         break;
                     case "disabledCarverPatterns":
                         loadPatternSet(reader, getDisabledCarverPatterns());
+                        bitfield |= 0b0000_0000_0010;
                         break;
                     case "carverFilterBiomeExclusionPatterns":
                         loadPatternSet(reader, getCarverFilterBiomeExclusionPatterns());
+                        bitfield |= 0b0000_0000_0100;
                         break;
 
                     case "enableDensityFunctionTransformation":
                         setEnableDensityFunctionTransformation(reader.nextBoolean());
+                        bitfield |= 0b0000_0000_1000;
                         break;
                     case "densityFunctionToTransformPatterns":
                         loadPatternSet(reader, getDensityFunctionToTransformPatterns());
+                        bitfield |= 0b0000_0001_0000;
                         break;
 
                     case "enableFinalDensityTransformation":
                         setEnableFinalDensityTransformation(reader.nextBoolean());
+                        bitfield |= 0b0000_0010_0000;
                         break;
                     case "finalDensityTransformationExclusionPatterns":
                         loadPatternSet(reader, getFinalDensityTransformationExclusionPatterns());
+                        bitfield |= 0b0000_0100_0000;
                         break;
 
                     case "enableNoiseCavesFilter":
                         DensityFunctionCaveCleaner.setEnableNoiseCaveFilter(reader.nextBoolean());
+                        bitfield |= 0b0000_1000_0000;
                         break;
                     case "noiseCavePatterns":
                         loadPatternSet(reader, DensityFunctionCaveCleaner.getNoiseCavePatterns());
+                        bitfield |= 0b0001_0000_0000;
                         break;
 
                     case "enableDensityFunctionCavesFilter":
                         DensityFunctionCaveCleaner.setEnableDensityFunctionCaveFilter(reader.nextBoolean());
+                        bitfield |= 0b0010_0000_0000;
                         break;
                     case "densityFunctionCavePatterns":
                         loadPatternSet(reader, DensityFunctionCaveCleaner.getDensityFunctionCavePatterns());
+                        bitfield |= 0b0100_0000_0000;
                         break;
 
                     default:
@@ -173,6 +182,7 @@ public final class NoCaves {
                         break;
                 }
             }
+            return (~bitfield & 0b0111_1111_1111) == 0;
         } catch (Exception e) {
             LOGGER.info("Failed to read config: {}", e.getLocalizedMessage());
         }

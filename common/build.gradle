@@ -7,11 +7,11 @@ dependencies {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/no_caves.accesswidener")
+    accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
 }
 
 base {
-    archivesName = rootProject.mod_id
+    archivesName = project.mod_id
 }
 
 publishing {

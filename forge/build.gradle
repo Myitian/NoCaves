@@ -13,7 +13,7 @@ loom {
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-        mixinConfig "no_caves-common.mixins.json"
+        mixinConfig "${project.mod_id}-common.mixins.json"
     }
 }
 
@@ -26,11 +26,11 @@ configurations {
 }
 
 base {
-    archivesName = rootProject.mod_id + "-forge"
+    archivesName = project.mod_id + "-forge"
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    forge "net.minecraftforge:forge:${project.forge_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }

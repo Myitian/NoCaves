@@ -3,7 +3,7 @@ loaderVersion = "[1,)"
 license = "${mod_license}"
 
 [[mixins]]
-config = "no_caves-common.mixins.json"
+config = "${mod_id}-common.mixins.json"
 
 [[accessTransformers]]
 file = "META-INF/accesstransformer.cfg"

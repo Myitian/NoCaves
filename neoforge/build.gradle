@@ -23,11 +23,11 @@ configurations {
 }
 
 base {
-    archivesName = rootProject.mod_id + "-neoforge"
+    archivesName = project.mod_id + "-neoforge"
 }
 
 dependencies {
-    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+    neoForge "net.neoforged:neoforge:${project.neoforge_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
@@ -67,7 +67,7 @@ components.java {
 
 afterEvaluate {
 //  copied from Aw2At.setup
-    net.fabricmc.loom.LoomGradleExtension extension = LoomGradleExtension.get(project);
+    LoomGradleExtension extension = LoomGradleExtension.get(project);
     if (extension.getAccessWidenerPath().isPresent()) {
         // Find the relative AW file name
         String awName = null;
