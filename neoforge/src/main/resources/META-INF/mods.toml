@@ -15,11 +15,11 @@ displayName = "${mod_name}"
 displayURL = "${mod_source}"
 authors = "${mod_author}"
 description = "${mod_description}"
-logoFile = "assets/${mod_id}/logo.png"
+logoFile = "logo.png"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20.5,)"
+versionRange = "[1.20.2,1.20.4]"
 ordering = "NONE"
 side = "BOTH"

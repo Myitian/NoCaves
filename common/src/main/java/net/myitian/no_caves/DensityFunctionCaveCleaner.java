@@ -96,10 +96,8 @@ public final class DensityFunctionCaveCleaner {
     }
 
     public static boolean isCaveDensityFunction(DensityFunction densityFunction) {
-        return densityFunction instanceof DensityFunctionTypes.RegistryEntryHolder(
-                RegistryEntry<DensityFunction> function
-        )
-                && isCaveDensityFunction(function);
+        return densityFunction instanceof DensityFunctionTypes.RegistryEntryHolder holder
+                && isCaveDensityFunction(holder.function());
     }
 
     public static boolean isCaveDensityFunction(RegistryEntry<DensityFunction> densityFunction) {

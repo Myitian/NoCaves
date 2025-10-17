@@ -12,17 +12,17 @@
   },
   "license": "${mod_license}",
   "icon": "${mod_icon}",
-  "accessWidener": "no_caves.accesswidener",
+  "accessWidener": "${mod_id}.accesswidener",
   "environment": "client",
   "mixins": [
-    "no_caves-common.mixins.json"
+    "${mod_id}-common.mixins.json"
   ],
   "entrypoints": {
     "main": [
-      "net.myitian.no_caves.fabric.NoCavesFabric"
+      "${maven_group}.fabric.NoCavesFabric"
     ]
   },
   "depends": {
-    "minecraft": ">=1.20.5"
+    "minecraft": ">=1.19.3 <=1.20.4"
   }
 }

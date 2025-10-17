@@ -1,5 +1,5 @@
 # NoCaves
-<img src="common/src/main/resources/assets/no_caves/logo.png" alt="logo" width="256"/>
+<img src="common/src/main/resources/logo.png" alt="logo" width="256"/>
 
 Disables Noise Caves, Density Function Caves, Carver Caves, and Carver Canyons based on the configuration, and maintains compatibility with other terrain modification mods and data packs as much as possible. Affects all biomes and all world generation presets by default.
 
@@ -88,3 +88,8 @@ The names of the cave density functions to filter.\
 - [雕刻器](https://zh.minecraft.wiki/w/%E9%9B%95%E5%88%BB%E5%99%A8%E5%AE%9A%E4%B9%89%E6%A0%BC%E5%BC%8F)：在生物群系定义（`worldgen/biome`）中引用，用于添加洞穴和峡谷。
 - [密度函数](https://zh.minecraft.wiki/w/%E5%AF%86%E5%BA%A6%E5%87%BD%E6%95%B0)：主要供噪声设置（`worldgen/noise_settings`）使用，可以根据一定的运算法则将一个坐标转换为一个数。
 - [最终密度](https://zh.minecraft.wiki/w/%E5%99%AA%E5%A3%B0%E8%AE%BE%E7%BD%AE#%E5%AE%9A%E4%B9%89%E6%A0%BC%E5%BC%8F)：是噪声设置（`worldgen/noise_settings`）的一部分，是决定方块位置应为固体还是空气的主要密度函数。
+
+## Branch Information 分支信息
+- 1.20.2: supported MC 1.19.3~1.20.4
+- 1.20.6: supported MC 1.20.5~1.21.1
+- 1.21.2: supported MC 1.21.2+

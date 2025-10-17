@@ -20,7 +20,7 @@ configurations {
 }
 
 base {
-    archivesName = project.mod_id + "-fabric"
+    archivesName = "${project.mod_id}-fabric-${project.minecraft_version}"
 }
 
 dependencies {
