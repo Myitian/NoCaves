@@ -1,10 +1,10 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "net.myitian.no_caves.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "no_caves-common-refmap.json",
   "mixins": [
-    "GenerationSettingsMixin",
-    "NoiseRouterMixin",
     "RegistryLoaderMixin"
   ],
   "injectors": {

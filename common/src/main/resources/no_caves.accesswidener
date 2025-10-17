@@ -1,5 +1,10 @@
 accessWidener v2 named
 
+accessible field net/minecraft/world/gen/noise/NoiseRouter finalDensity Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+mutable    field net/minecraft/world/gen/noise/NoiseRouter finalDensity Lnet/minecraft/world/gen/densityfunction/DensityFunction;
+accessible field net/minecraft/world/biome/GenerationSettings carvers Ljava/util/Map;
+mutable    field net/minecraft/world/biome/GenerationSettings carvers Ljava/util/Map;
+
 accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$BinaryOperationLike
 accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Unary
 accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$Constant

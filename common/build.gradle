@@ -10,6 +10,10 @@ loom {
     accessWidenerPath = file("src/main/resources/no_caves.accesswidener")
 }
 
+base {
+    archivesName = rootProject.mod_id
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {

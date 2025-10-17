@@ -1,56 +1,62 @@
 package net.myitian.no_caves;
 
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
 import net.minecraft.world.gen.chunk.ChunkNoiseSampler;
 import net.minecraft.world.gen.densityfunction.DensityFunction;
 import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class DensityFunctionCaveCleaner {
-    private static boolean noNoiseCaves = true;
-    private static boolean noDensityFunctionCaves = true;
-    private static Pattern caveNoisePattern = Pattern.compile("^minecraft:cave_");
-    private static Pattern caveDensityFunctionPattern = Pattern.compile("^minecraft:overworld/caves/");
+public final class DensityFunctionCaveCleaner {
+    private static final Map<String, Pair<Predicate<DensityFunction>, Function<DensityFunction, DensityFunction>>> customTransformerRegistry = new LinkedHashMap<>();
 
-    public static boolean isNoNoiseCaves() {
-        return noNoiseCaves;
+    private static boolean enableNoiseCaveFilter = true;
+    private static final PatternSet noiseCavePatterns = new PatternSet(
+            Pattern.compile("^minecraft:cave_")
+    );
+    private static boolean enableDensityFunctionCaveFilter = true;
+    private static final PatternSet densityFunctionCavePatterns = new PatternSet(
+            // mod: Tectonic
+            Pattern.compile("^minecraft:overworld/caves/"),
+            Pattern.compile("^tectonic:overworld/caves$")
+    );
+
+    public static boolean isEnableNoiseCaveFilter() {
+        return enableNoiseCaveFilter;
     }
 
-    public static void setNoNoiseCaves(boolean status) {
-        noNoiseCaves = status;
+    public static void setEnableNoiseCaveFilter(boolean status) {
+        enableNoiseCaveFilter = status;
     }
 
-    public static boolean isNoDensityFunctionCaves() {
-        return noDensityFunctionCaves;
+    public static PatternSet getNoiseCavePatterns() {
+        return noiseCavePatterns;
     }
 
-    public static void setNoDensityFunctionCaves(boolean status) {
-        noDensityFunctionCaves = status;
+    public static boolean isEnableDensityFunctionCaveFilter() {
+        return enableDensityFunctionCaveFilter;
     }
 
-    public static Pattern getCaveNoisePattern() {
-        return caveNoisePattern;
+    public static void setEnableDensityFunctionCaveFilter(boolean status) {
+        enableDensityFunctionCaveFilter = status;
     }
 
-    public static void setCaveNoisePattern(Pattern pattern) {
-        if (pattern == null) {
-            throw new IllegalArgumentException("pattern cannot be null!");
-        }
-        caveNoisePattern = pattern;
+    public static PatternSet getDensityFunctionCavePatterns() {
+        return densityFunctionCavePatterns;
     }
 
-    public static Pattern getCaveDensityFunctionPattern() {
-        return caveDensityFunctionPattern;
-    }
-
-    public static void setCaveDensityFunctionPattern(Pattern pattern) {
-        if (pattern == null) {
-            throw new IllegalArgumentException("pattern cannot be null!");
-        }
-        caveDensityFunctionPattern = pattern;
+    /**
+     * @return a mutable map that preserves insertion order
+     */
+    public static Map<String, Pair<Predicate<DensityFunction>, Function<DensityFunction, DensityFunction>>> getCustomTransformerRegistry() {
+        return customTransformerRegistry;
     }
 
     /**
@@ -60,7 +66,16 @@ public class DensityFunctionCaveCleaner {
      */
     @Nullable
     public static DensityFunction transform(DensityFunction original) {
-        if (original instanceof DensityFunctionTypes.RegistryEntryHolder holder) {
+        if (!customTransformerRegistry.isEmpty()) {
+            for (var pair : customTransformerRegistry.values()) {
+                if (pair != null
+                        && pair.getLeft() != null
+                        && pair.getRight() != null
+                        && pair.getLeft().test(original)) {
+                    return pair.getRight().apply(original);
+                }
+            }
+        } else if (original instanceof DensityFunctionTypes.RegistryEntryHolder holder) {
             return transformRegistryEntryHolder(holder);
         } else if (original instanceof DensityFunctionTypes.Noise noise) {
             return transformNoise(noise);
@@ -89,7 +104,7 @@ public class DensityFunctionCaveCleaner {
 
     public static boolean isCaveDensityFunction(RegistryEntry<DensityFunction> densityFunction) {
         return densityFunction instanceof RegistryEntry.Reference<DensityFunction> reference
-                && caveDensityFunctionPattern.matcher(reference.registryKey().getValue().toString()).find();
+                && densityFunctionCavePatterns.matches(reference.registryKey().getValue().toString());
     }
 
     public static boolean isCaveNoise(DensityFunction.Noise noise) {
@@ -98,12 +113,12 @@ public class DensityFunctionCaveCleaner {
 
     public static boolean isCaveNoise(RegistryEntry<DoublePerlinNoiseSampler.NoiseParameters> noise) {
         return noise instanceof RegistryEntry.Reference<DoublePerlinNoiseSampler.NoiseParameters> reference
-                && caveNoisePattern.matcher(reference.registryKey().getValue().toString()).find();
+                && noiseCavePatterns.matches(reference.registryKey().getValue().toString());
     }
 
     public static DensityFunction transformRegistryEntryHolder(DensityFunctionTypes.RegistryEntryHolder holder) {
         RegistryEntry<DensityFunction> function = holder.function();
-        if (noDensityFunctionCaves && isCaveDensityFunction(function)) {
+        if (enableDensityFunctionCaveFilter && isCaveDensityFunction(function)) {
             return null;
         } else if (function instanceof RegistryEntry.Direct<DensityFunction>) {
             return transform(function.value());
@@ -112,7 +127,7 @@ public class DensityFunctionCaveCleaner {
     }
 
     public static DensityFunction transformNoise(DensityFunctionTypes.Noise noise) {
-        return noNoiseCaves && isCaveNoise(noise.noise()) ? null : noise;
+        return enableNoiseCaveFilter && isCaveNoise(noise.noise()) ? null : noise;
     }
 
     public static DensityFunction transformRangeChoice(DensityFunctionTypes.RangeChoice rangeChoice) {
