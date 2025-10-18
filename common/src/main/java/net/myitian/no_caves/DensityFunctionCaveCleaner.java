@@ -19,12 +19,14 @@ public final class DensityFunctionCaveCleaner {
 
     private static boolean enableNoiseCaveFilter = true;
     private static final PatternSet noiseCavePatterns = new PatternSet(
+            // vanilla
             Pattern.compile("^minecraft:cave_")
     );
     private static boolean enableDensityFunctionCaveFilter = true;
     private static final PatternSet densityFunctionCavePatterns = new PatternSet(
-            // mod: Tectonic
+            // vanilla
             Pattern.compile("^minecraft:overworld/caves/"),
+            // mod: Tectonic
             Pattern.compile("^tectonic:overworld/caves$")
     );
 
@@ -55,7 +57,7 @@ public final class DensityFunctionCaveCleaner {
     /**
      * @return a mutable map that preserves insertion order
      */
-    public static Map<String, Pair<Predicate<DensityFunction>, Function<DensityFunction, DensityFunction>>> getCustomTransformerRegistry() {
+    public static Map<String, Pair<Predicate<DensityFunction>, Function<DensityFunction, @Nullable DensityFunction>>> getCustomTransformerRegistry() {
         return customTransformerRegistry;
     }
 
@@ -67,12 +69,18 @@ public final class DensityFunctionCaveCleaner {
     @Nullable
     public static DensityFunction transform(DensityFunction original) {
         if (!customTransformerRegistry.isEmpty()) {
-            for (var pair : customTransformerRegistry.values()) {
-                if (pair != null
-                        && pair.getLeft() != null
-                        && pair.getRight() != null
-                        && pair.getLeft().test(original)) {
-                    return pair.getRight().apply(original);
+            for (var entry : customTransformerRegistry.entrySet()) {
+                String id = entry.getKey();
+                try {
+                    var pair = entry.getValue();
+                    if (pair != null
+                            && pair.getLeft() != null
+                            && pair.getRight() != null
+                            && pair.getLeft().test(original)) {
+                        return pair.getRight().apply(original);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("An unhandled exception occurred in transformer " + id, e);
                 }
             }
         } else if (original instanceof DensityFunctionTypes.RegistryEntryHolder holder) {
@@ -114,6 +122,7 @@ public final class DensityFunctionCaveCleaner {
                 && noiseCavePatterns.matches(reference.registryKey().getValue().toString());
     }
 
+    @Nullable
     public static DensityFunction transformRegistryEntryHolder(DensityFunctionTypes.RegistryEntryHolder holder) {
         RegistryEntry<DensityFunction> function = holder.function();
         if (enableDensityFunctionCaveFilter && isCaveDensityFunction(function)) {
@@ -124,21 +133,23 @@ public final class DensityFunctionCaveCleaner {
         return holder;
     }
 
+    @Nullable
     public static DensityFunction transformNoise(DensityFunctionTypes.Noise noise) {
         return enableNoiseCaveFilter && isCaveNoise(noise.noise()) ? null : noise;
     }
 
-    public static DensityFunction transformRangeChoice(DensityFunctionTypes.RangeChoice rangeChoice) {
+    @Nullable
+    private static DensityFunction transformRangeChoice(DensityFunctionTypes.RangeChoice rangeChoice) {
         DensityFunction input = rangeChoice.input();
         if (isCaveDensityFunction(input)) {
             // Might not cover all cases, but good enough for vanilla worldgen json.
-            return rangeChoice.whenOutOfRange();
+            return transform(rangeChoice.whenOutOfRange());
         } else if (input instanceof DensityFunctionTypes.Constant constant) {
             double v = constant.value();
             if (v >= rangeChoice.minInclusive() && v < rangeChoice.maxExclusive()) {
-                return rangeChoice.whenInRange();
+                return transform(rangeChoice.whenInRange());
             } else {
-                return rangeChoice.whenOutOfRange();
+                return transform(rangeChoice.whenOutOfRange());
             }
         } else {
             DensityFunction originalChild1 = rangeChoice.whenInRange();
@@ -157,7 +168,7 @@ public final class DensityFunctionCaveCleaner {
         }
     }
 
-    public static DensityFunction transformLinear(DensityFunctionTypes.LinearOperation linear) {
+    private static DensityFunction transformLinear(DensityFunctionTypes.LinearOperation linear) {
         DensityFunction originalChild = linear.input();
         DensityFunction transformedChild = transform(originalChild);
         if (transformedChild == null) {
@@ -170,7 +181,8 @@ public final class DensityFunctionCaveCleaner {
         }
     }
 
-    public static DensityFunction transformBinary(DensityFunctionTypes.BinaryOperationLike binary) {
+    @Nullable
+    private static DensityFunction transformBinary(DensityFunctionTypes.BinaryOperationLike binary) {
         DensityFunction originalChild1 = binary.argument1();
         DensityFunction transformedChild1 = transform(originalChild1);
         DensityFunction originalChild2 = binary.argument2();
@@ -205,6 +217,7 @@ public final class DensityFunctionCaveCleaner {
         return binary;
     }
 
+    @Nullable
     private static DensityFunction transformUnary(DensityFunctionTypes.Unary unary) {
         DensityFunction originalChild = unary.input();
         DensityFunction transformedChild = transform(originalChild);
@@ -223,6 +236,7 @@ public final class DensityFunctionCaveCleaner {
         return unary;
     }
 
+    @Nullable
     private static DensityFunction transformWrapper(DensityFunctionTypes.Wrapper wrapper) {
         DensityFunction originalChild = wrapper.wrapped();
         DensityFunction transformedChild = transform(originalChild);
@@ -249,6 +263,7 @@ public final class DensityFunctionCaveCleaner {
         return wrapper;
     }
 
+    @Nullable
     private static DensityFunction transformPositional(DensityFunctionTypes.Positional positional) {
         DensityFunction originalChild = positional.input();
         DensityFunction transformedChild = transform(originalChild);
