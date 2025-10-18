@@ -30,7 +30,8 @@ abstract class RegistryLoaderMixin {
             method = "load(Lnet/minecraft/registry/RegistryOps$RegistryInfoGetter;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/registry/MutableRegistry;Lcom/mojang/serialization/Decoder;Ljava/util/Map;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcom/mojang/serialization/DataResult;getOrThrow(ZLjava/util/function/Consumer;)Ljava/lang/Object;"))
+                    target = "Lcom/mojang/serialization/DataResult;getOrThrow(ZLjava/util/function/Consumer;)Ljava/lang/Object;",
+                    remap = false))
     private static Object load_Redirect_getOrThrow(DataResult<?> instance, boolean allowPartial, Consumer<String> onError) {
         RegistryKey<?> key = tmp$registryKey.get();
         tmp$registryKey.remove();
