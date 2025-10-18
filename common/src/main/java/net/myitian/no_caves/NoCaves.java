@@ -21,6 +21,7 @@ public final class NoCaves {
 
     private static boolean enableCarverFilter = true;
     private static final PatternSet disabledCarverPatterns = new PatternSet(
+            // vanilla
             Pattern.compile("^minecraft:ca(?:nyon|ve(?:_extra_underground)?)$")
     );
     private static final PatternSet carverFilterBiomeExclusionPatterns = new PatternSet();
