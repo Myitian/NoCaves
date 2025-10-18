@@ -1,5 +1,6 @@
 package net.myitian.no_caves.mixin;
 
+import com.mojang.serialization.DataResult;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryLoader;
 import net.myitian.no_caves.RegistryLoaderHelper;
@@ -7,6 +8,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.function.Consumer;
 
 @Mixin(RegistryLoader.class)
 abstract class RegistryLoaderMixin {
@@ -22,13 +26,14 @@ abstract class RegistryLoaderMixin {
         return key;
     }
 
-    @ModifyVariable(
+    @Redirect(
             method = "load(Lnet/minecraft/registry/RegistryOps$RegistryInfoGetter;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/registry/MutableRegistry;Lcom/mojang/serialization/Decoder;Ljava/util/Map;)V",
-            at = @At("STORE"),
-            ordinal = 0)
-    private static Object load_ModifyVariable_getOrThrow(Object value) {
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/mojang/serialization/DataResult;getOrThrow(ZLjava/util/function/Consumer;)Ljava/lang/Object;"))
+    private static Object load_Redirect_getOrThrow(DataResult<?> instance, boolean allowPartial, Consumer<String> onError) {
         RegistryKey<?> key = tmp$registryKey.get();
         tmp$registryKey.remove();
-        return RegistryLoaderHelper.process(key, value);
+        return RegistryLoaderHelper.process(key, instance.getOrThrow(allowPartial, onError));
     }
 }
