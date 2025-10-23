@@ -23,6 +23,6 @@
     ]
   },
   "depends": {
-    "minecraft": ">=1.21.2"
+    "minecraft": "${supported_minecraft_version_fabric}"
   }
 }

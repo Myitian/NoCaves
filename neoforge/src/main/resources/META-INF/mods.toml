@@ -20,6 +20,6 @@ logoFile = "logo.png"
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.21.2,)"
+versionRange = "${supported_minecraft_version_neoforge}"
 ordering = "NONE"
 side = "BOTH"
