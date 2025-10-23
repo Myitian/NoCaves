@@ -12,6 +12,7 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.densityfunction.DensityFunction;
 import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
 import net.minecraft.world.gen.noise.NoiseRouter;
+import net.myitian.no_caves.config.Config;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -54,8 +55,8 @@ public final class RegistryLoaderHelper {
     }
 
     public static void processChunkGeneratorSettings(Identifier key, ChunkGeneratorSettings chunkGeneratorSettings) {
-        if (!(NoCaves.isEnableFinalDensityTransformation()
-                && !NoCaves.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
+        if (!(Config.isEnableFinalDensityTransformation()
+                && !Config.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
             return;
         }
         NoiseRouter noiseRouter = chunkGeneratorSettings.noiseRouter();
@@ -73,8 +74,8 @@ public final class RegistryLoaderHelper {
     }
 
     public static DensityFunction processDensityFunction(Identifier key, DensityFunction densityFunction) {
-        if (!(NoCaves.isEnableDensityFunctionTransformation()
-                && NoCaves.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
+        if (!(Config.isEnableDensityFunctionTransformation()
+                && Config.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
             return densityFunction;
         }
         densityFunction = DensityFunctionCaveCleaner.transform(densityFunction);
@@ -91,15 +92,17 @@ public final class RegistryLoaderHelper {
     }
 
     public static void processBiome(Identifier key, Biome biome) {
-        if (!(NoCaves.isEnableCarverFilter()
-                && !NoCaves.getCarverFilterBiomeExclusionPatterns().matches(key.toString()))) {
+        if (!(Config.isEnableCarverFilter()
+                && !Config.getCarverFilterBiomeExclusionPatterns().matches(key.toString()))) {
             return;
         }
         GenerationSettings generationSettings = biome.getGenerationSettings();
+        PatternSet patterns = Config.getBiomeSpecificOverrideForDisabledCarverPatterns()
+                .getOrDefault(key.toString(), Config.getDisabledCarverPatterns());
         ArrayList<RegistryEntry<ConfiguredCarver<?>>> carvers = new ArrayList<>(generationSettings.carvers.size());
         for (var entry : generationSettings.carvers) {
             Optional<RegistryKey<ConfiguredCarver<?>>> regKey = entry.getKey();
-            if (regKey.isPresent() && !NoCaves.getDisabledCarverPatterns().matches(regKey.get().getValue().toString())) {
+            if (regKey.isPresent() && !patterns.matches(regKey.get().getValue().toString())) {
                 carvers.add(entry);
             }
         }

@@ -14,7 +14,7 @@ authors = "${mod_author}"
 description = "${mod_description}"
 logoFile = "logo.png"
 
-[[dependencies.${ mod_id }]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.21.2,)"

@@ -106,13 +106,11 @@ public class PatternSet extends AbstractSet<Pattern> {
 
     @Override
     public boolean contains(Object o) {
-        if (o instanceof Pattern pattern) {
-            return map.containsKey(new PatternKey(pattern));
-        } else if (o instanceof PatternKey key) {
-            return map.containsKey(key);
-        } else {
-            return false;
-        }
+        return o instanceof Pattern pattern && containsPatternKey(new PatternKey(pattern));
+    }
+
+    public boolean containsPatternKey(PatternKey key) {
+        return map.containsKey(key);
     }
 
     @Override
@@ -135,29 +133,11 @@ public class PatternSet extends AbstractSet<Pattern> {
 
     @Override
     public boolean remove(Object o) {
-        if (o instanceof Pattern pattern) {
-            return map.remove(new PatternKey(pattern)) != null;
-        } else if (o instanceof PatternKey key) {
-            return map.remove(key) != null;
-        } else {
-            return false;
-        }
+        return o instanceof Pattern pattern && removeByPatternKey(new PatternKey(pattern));
     }
 
-    private record PatternKey(String pattern, int flags) {
-        public PatternKey(Pattern pattern) {
-            this(pattern.pattern(), pattern.flags());
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return o instanceof PatternKey key && pattern.equals(key.pattern) && flags == key.flags;
-        }
-
-        @Override
-        public int hashCode() {
-            return 31 * pattern.hashCode() + flags;
-        }
+    public boolean removeByPatternKey(PatternKey key) {
+        return map.remove(key) != null;
     }
 
     private class PatternIterator implements Iterator<Pattern> {
