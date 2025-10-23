@@ -43,7 +43,7 @@ The specified biome will not be affected by carver filter.\
 
 ### `biomeSpecificOverrideForDisabledCarverPatterns`
 
-Mapping between strings and lists of regular expressions
+Mapping between biome names and lists of regular expressions
 
 Biome-specific override for `disabledCarverPatterns`.\
 生物群系特定的对`disabledCarverPatterns`的覆盖。

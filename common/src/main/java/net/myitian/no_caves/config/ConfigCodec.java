@@ -181,6 +181,7 @@ public class ConfigCodec {
     }
 
     public boolean serialize(JsonWriter writer) throws IOException {
+        writer.beginObject();
         for (var fieldInfo : fieldMap.entrySet()) {
             writer.name(fieldInfo.getKey());
             fieldInfo.getValue().getRight().accept(writer);

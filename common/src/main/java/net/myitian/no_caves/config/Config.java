@@ -172,6 +172,7 @@ public class Config {
 
     public static boolean load(File configFile) {
         try (var reader = new JsonReader(new FileReader(configFile))) {
+            reader.setLenient(true);
             return CODEC.deserialize(reader);
         } catch (Exception e) {
             NoCaves.LOGGER.info("Failed to read config: {}", e.getLocalizedMessage());
@@ -181,6 +182,8 @@ public class Config {
 
     public static boolean save(File configFile) {
         try (var writer = new JsonWriter(new FileWriter(configFile))) {
+            writer.setHtmlSafe(false);
+            writer.setIndent("  ");
             return CODEC.serialize(writer);
         } catch (Exception e) {
             NoCaves.LOGGER.warn("Failed to write config: {}", e.getLocalizedMessage());
