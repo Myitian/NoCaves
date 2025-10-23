@@ -2,6 +2,11 @@
 
 <img src="common/src/main/resources/logo.png" alt="logo" width="256"/>
 
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/1367527?style=for-the-badge&logo=curseforge&label=CurseForge%20Downloads&color=F16436)
+](https://www.curseforge.com/minecraft/mc-mods/no-caves-mod)\
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/HqI1ld6l?style=for-the-badge&logo=modrinth&label=Modrinth%20Downloads&color=00AF5C)](https://modrinth.com/mod/no-caves-mod)\
+[![MC百科](https://img.shields.io/badge/mcmod.cn-MC%E7%99%BE%E7%A7%91-58b6d8?style=for-the-badge)](https://www.mcmod.cn/class/22615.html)
+
 Disables Noise Caves, Density Function Caves, Carver Caves, and Carver Canyons based on the configuration, and maintains
 compatibility with other terrain modification mods and data packs as much as possible. Affects all biomes and all world
 generation presets by default.
@@ -35,6 +40,13 @@ List of regular expressions
 
 The specified biome will not be affected by carver filter.\
 指定的生物群系不会受到雕刻器过滤器影响。
+
+### `biomeSpecificOverrideForDisabledCarverPatterns`
+
+Mapping between strings and lists of regular expressions
+
+Biome-specific override for `disabledCarverPatterns`.\
+生物群系特定的对`disabledCarverPatterns`的覆盖。
 
 ### `enableDensityFunctionTransformation`
 
