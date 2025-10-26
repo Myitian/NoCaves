@@ -46,7 +46,8 @@ public final class DensityFunctionCaveCleaner {
                     throw new RuntimeException("An unhandled exception occurred in transformer " + id, e);
                 }
             }
-        } else if (original instanceof DensityFunctionTypes.RegistryEntryHolder holder) {
+        }
+        if (original instanceof DensityFunctionTypes.RegistryEntryHolder holder) {
             return transformRegistryEntryHolder(holder);
         } else if (original instanceof DensityFunctionTypes.Noise noise) {
             return transformNoise(noise);

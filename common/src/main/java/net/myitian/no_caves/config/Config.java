@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -19,43 +20,49 @@ public class Config {
     /// Set to true to enable the carver filter.
     private static boolean enableCarverFilter = true;
     /// The specified carvers will be filtered.
-    private static final PatternSet disabledCarverPatterns = new PatternSet(
+    private static final List<Pattern> defaultDisabledCarverPatterns = List.of(
             // vanilla
             Pattern.compile("^minecraft:ca(?:nyon|ve(?:_extra_underground)?)$"),
             // mod: Biomes O' Plenty
             Pattern.compile("^biomesoplenty:origin_cave$")
     );
+    private static final PatternSet disabledCarverPatterns = new PatternSet(defaultDisabledCarverPatterns);
     /// The specified biome will not be affected by carver filter.
-    private static final PatternSet carverFilterBiomeExclusionPatterns = new PatternSet();
+    private static final List<Pattern> defaultCarverFilterBiomeExclusionPatterns = List.of();
+    private static final PatternSet carverFilterBiomeExclusionPatterns = new PatternSet(defaultCarverFilterBiomeExclusionPatterns);
     /// Biome-specific override for disabledCarverPatterns.
     private static final LinkedHashMap<String, PatternSet> biomeSpecificOverrideForDisabledCarverPatterns = new LinkedHashMap<>();
     /// Set to true to enable the density function transformation.
     private static boolean enableDensityFunctionTransformation = true;
     /// The specified density function will be transformed.
-    private static final PatternSet densityFunctionToTransformPatterns = new PatternSet(
+    private static final List<Pattern> defaultDensityFunctionToTransformPatterns = List.of(
             // mod: Tectonic or Terralith
             Pattern.compile("^minecraft:overworld(?:_large_biomes)?/noise_router/final_density$")
     );
+    private static final PatternSet densityFunctionToTransformPatterns = new PatternSet(defaultDensityFunctionToTransformPatterns);
     /// Set to true to enable the final density transformation.
     private static boolean enableFinalDensityTransformation = true;
     /// The specified noise settings' final density will not be transformed.
-    private static final PatternSet finalDensityTransformationExclusionPatterns = new PatternSet();
+    private static final List<Pattern> defaultFinalDensityTransformationExclusionPatterns = List.of();
+    private static final PatternSet finalDensityTransformationExclusionPatterns = new PatternSet(defaultFinalDensityTransformationExclusionPatterns);
     /// Set to true to filter noise caves in the density function (including the final density).
     private static boolean enableNoiseCaveFilter = true;
     /// The names of the noise caves to filter.
-    private static final PatternSet noiseCavePatterns = new PatternSet(
+    private static final List<Pattern> defaultNoiseCavePatterns = List.of(
             // vanilla
             Pattern.compile("^minecraft:cave_")
     );
+    private static final PatternSet noiseCavePatterns = new PatternSet(defaultNoiseCavePatterns);
     /// Set to true to filter references to other cave density functions in the density function (including the final density).
     private static boolean enableDensityFunctionCaveFilter = true;
     /// The names of the cave density functions to filter.
-    private static final PatternSet densityFunctionCavePatterns = new PatternSet(
+    private static final List<Pattern> defaultDensityFunctionCavePatterns = List.of(
             // vanilla
             Pattern.compile("^minecraft:overworld/caves/"),
             // mod: Tectonic
             Pattern.compile("^tectonic:overworld/caves$")
     );
+    private static final PatternSet densityFunctionCavePatterns = new PatternSet(defaultDensityFunctionCavePatterns);
 
     static {
         var map = CODEC.getFieldMap();
@@ -109,8 +116,16 @@ public class Config {
         enableCarverFilter = status;
     }
 
+    public static List<Pattern> getDefaultDisabledCarverPatterns() {
+        return defaultDisabledCarverPatterns;
+    }
+
     public static PatternSet getDisabledCarverPatterns() {
         return disabledCarverPatterns;
+    }
+
+    public static List<Pattern> getDefaultCarverFilterBiomeExclusionPatterns() {
+        return defaultCarverFilterBiomeExclusionPatterns;
     }
 
     public static PatternSet getCarverFilterBiomeExclusionPatterns() {
@@ -130,6 +145,10 @@ public class Config {
         enableDensityFunctionTransformation = status;
     }
 
+    public static List<Pattern> getDefaultDensityFunctionToTransformPatterns() {
+        return defaultDensityFunctionToTransformPatterns;
+    }
+
     public static PatternSet getDensityFunctionToTransformPatterns() {
         return densityFunctionToTransformPatterns;
     }
@@ -140,6 +159,10 @@ public class Config {
 
     public static void setEnableFinalDensityTransformation(boolean status) {
         enableFinalDensityTransformation = status;
+    }
+
+    public static List<Pattern> getDefaultFinalDensityTransformationExclusionPatterns() {
+        return defaultFinalDensityTransformationExclusionPatterns;
     }
 
     public static PatternSet getFinalDensityTransformationExclusionPatterns() {
@@ -154,6 +177,10 @@ public class Config {
         enableNoiseCaveFilter = status;
     }
 
+    public static List<Pattern> getDefaultNoiseCavePatterns() {
+        return defaultNoiseCavePatterns;
+    }
+
     public static PatternSet getNoiseCavePatterns() {
         return noiseCavePatterns;
     }
@@ -164,6 +191,11 @@ public class Config {
 
     public static void setEnableDensityFunctionCaveFilter(boolean status) {
         enableDensityFunctionCaveFilter = status;
+    }
+
+
+    public static List<Pattern> getDefaultDensityFunctionCavePatterns() {
+        return defaultDensityFunctionCavePatterns;
     }
 
     public static PatternSet getDensityFunctionCavePatterns() {

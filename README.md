@@ -45,8 +45,8 @@ The specified biome will not be affected by carver filter.\
 
 Mapping between biome names and lists of regular expressions
 
-Biome-specific override for `disabledCarverPatterns`.\
-生物群系特定的对`disabledCarverPatterns`的覆盖。
+The specified biome will only filter out carvers with the corresponding value. Overrides `disabledCarverPatterns` within the current biome.\
+指定的生物群系只会将对应值中的雕刻器过滤掉。在当前生物群系内覆盖`disabledCarverPatterns`。
 
 ### `enableDensityFunctionTransformation`
 
@@ -80,8 +80,8 @@ The specified noise settings' final density will not be transformed.\
 
 Boolean, default = `true`
 
-Set to `true` to filter noise caves in the density function (including the final density).\
-设置为`true`以在密度函数（包括最终密度）中过滤噪声洞穴。
+Set to `true` to enable noise cave filter, which filters noise caves in the density function (including the final density).\
+设置为`true`以启用噪声洞穴过滤器，在密度函数（包括最终密度）中过滤噪声洞穴。
 
 ### `noiseCavePatterns`
 
@@ -94,16 +94,16 @@ The names of the noise caves to filter.\
 
 Boolean, default = `true`
 
-Set to `true` to filter references to other cave density functions in the density function (including the final
+Set to `true` to enable density function cave filter, which filters references to other cave density functions in the density function (including the final
 density).\
-设置为`true`以在密度函数（包括最终密度）中过滤对其他洞穴密度函数的引用。
+设置为`true`以启用密度函数洞穴过滤器，在密度函数（包括最终密度）中过滤对其他洞穴密度函数的引用。
 
 ### `densityFunctionCavePatterns`
 
 List of regular expressions
 
-The names of the cave density functions to filter.\
-要过滤的洞穴密度函数名称。
+The names of the density function caves to filter.\
+要过滤的密度函数洞穴名称。
 
 ## Glossary 词汇表
 

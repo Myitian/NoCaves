@@ -4,8 +4,13 @@
   "package": "net.myitian.no_caves.mixin",
   "compatibilityLevel": "JAVA_13",
   "refmap": "no_caves-common-refmap.json",
+  "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
   "mixins": [
     "RegistryLoaderMixin"
+  ],
+  "client": [
+    "BaseListEntryMixin",
+    "BaseListEntry$ListLabelWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

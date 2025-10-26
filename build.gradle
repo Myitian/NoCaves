@@ -49,6 +49,7 @@ allprojects {
         maven { url "https://maven.architectury.dev" }
         maven { url "https://maven.neoforged.net" }
         maven { url "https://maven.parchmentmc.org" }
+        maven { url "https://maven.terraformersmc.com" }
     }
 
     tasks.withType(JavaCompile).configureEach {

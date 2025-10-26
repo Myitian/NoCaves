@@ -37,6 +37,10 @@ public class PatternSet extends AbstractSet<Pattern> {
         return false;
     }
 
+    public Set<PatternKey> keySet() {
+        return map.keySet();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this) {
@@ -146,8 +150,8 @@ public class PatternSet extends AbstractSet<Pattern> {
         private boolean canRemove;
 
         public PatternIterator() {
-            this.iterator = map.entrySet().iterator();
-            this.canRemove = false;
+            iterator = map.entrySet().iterator();
+            canRemove = false;
         }
 
         @Override
