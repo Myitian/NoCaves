@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -212,7 +213,6 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
             } else {
                 cellBounds.reshape(0, 0, 0, 0);
             }
-
         }
 
         @Override

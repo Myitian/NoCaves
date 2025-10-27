@@ -115,13 +115,15 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         return this;
     }
 
-    public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, Cell<T, INNER>, String2ListMapListEntry<T, INNER>> implements ReferenceProvider<T> {
-        private final INNER nestedEntry;
-
+    public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends NestedListCellShim<Map.Entry<String, T>, INNER, Cell<T, INNER>, String2ListMapListEntry<T, INNER>> implements ReferenceProvider<T> {
         @ApiStatus.Internal
         public Cell(@Nullable Map.Entry<String, T> value, String2ListMapListEntry<T, INNER> listListEntry, INNER nestedEntry) {
-            super(value, listListEntry);
-            this.nestedEntry = nestedEntry;
+            super(value, nestedEntry, listListEntry);
+        }
+
+        @Override
+        public boolean isMouseOver(double mouseX, double mouseY) {
+            return super.isMouseOver(mouseX, mouseY) || nestedEntry.isMouseOver(mouseX, mouseY);
         }
 
         public @NotNull AbstractConfigEntry<T> provideReferenceEntry() {

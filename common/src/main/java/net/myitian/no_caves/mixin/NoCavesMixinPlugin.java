@@ -20,9 +20,28 @@ public class NoCavesMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if (NoCaves.is_1_21_9_orHigher()) {
+            switch (mixinClassName) {
+                case "net.myitian.no_caves.mixin.variant.BaseListEntry$ListLabelWidgetMixin":
+                    return NoCaves.CLOTH_CONFIG_DETECTED;
+                case "net.myitian.no_caves.mixin.BaseListEntry$ListLabelWidgetMixin":
+                    return false;
+            }
+        }
+        if (NoCaves.is_1_21_6_orHigher()) {
+            switch (mixinClassName) {
+                case "net.myitian.no_caves.mixin.variant.BaseListEntryMixin":
+                    return NoCaves.CLOTH_CONFIG_DETECTED;
+                case "net.myitian.no_caves.mixin.BaseListEntryMixin":
+                    return false;
+            }
+        }
         return switch (mixinClassName) {
+            case "net.myitian.no_caves.mixin.variant.NestedListCellShimMixin" -> NoCaves.CLOTH_CONFIG_V17_OR_HIGHER;
             case "net.myitian.no_caves.mixin.BaseListEntryMixin",
                  "net.myitian.no_caves.mixin.BaseListEntry$ListLabelWidgetMixin" -> NoCaves.CLOTH_CONFIG_DETECTED;
+            case "net.myitian.no_caves.mixin.variant.BaseListEntryMixin",
+                 "net.myitian.no_caves.mixin.variant.BaseListEntry$ListLabelWidgetMixin" -> false;
             default -> true;
         };
     }

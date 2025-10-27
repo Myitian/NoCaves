@@ -1,0 +1,35 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+configurations {
+    common
+    shadowCommon
+}
+
+base {
+    archivesName = "${project.mod_id}-variant-neoforge-wrapper"
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${project.high_neoforge_version}"
+
+    common(project(path: ":variant", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":variant", configuration: "transformProductionNeoForge")) { transitive = false }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+}
+
+sourcesJar {
+    def commonSources = project(":variant").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
