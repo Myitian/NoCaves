@@ -14,19 +14,18 @@ import java.util.List;
 import java.util.Map;
 
 public final class NoCaves {
-    static {
-        SharedConstants.createGameVersion();
-    }
-
     public static final String MOD_ID = "no_caves";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
     public static final boolean CLOTH_CONFIG_EXISTED = isClothConfigExisted();
     public static final int DATA_VERSION = DataFixTypes.getSaveVersionId();
-
     public static int processedGenerationSettings = 0;
     public static int transformedFinalDensity = 0;
     public static int transformedDensityFunctions = 0;
+
+    static {
+        SharedConstants.createGameVersion();
+    }
 
     public static void init() {
         File configFile = CONFIG_PATH.toFile();

@@ -9,7 +9,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -32,8 +31,8 @@ import java.util.regex.Pattern;
 @Environment(EnvType.CLIENT)
 public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEntry.Cell, PatternSetListEntry> {
     protected final Supplier<PatternSet> defaultValue;
-    protected Function<Pattern, Optional<Text>> cellErrorSupplier;
     protected final Set<PatternKey> original;
+    protected Function<Pattern, Optional<Text>> cellErrorSupplier;
 
     public PatternSetListEntry(Text fieldName, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Text[]>> tooltipSupplier, Consumer<List<Pattern>> saveConsumer, Supplier<PatternSet> defaultValue, Text resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
         super(
