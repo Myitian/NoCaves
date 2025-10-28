@@ -24,13 +24,6 @@ public interface NameEditableListEntry<T> {
         return true;
     }
 
-    static boolean isInTextFieldWidget(Object obj, double mouseX, double mouseY) {
-        if (!(obj instanceof NameEditableListEntry<?> self)) {
-            return false;
-        }
-        return self.nameFieldWidget().isMouseOver(mouseX, mouseY);
-    }
-
     default String getName() {
         return nameFieldWidget().getText();
     }

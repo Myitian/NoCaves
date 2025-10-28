@@ -31,7 +31,7 @@ public class NameEditablePatternSetListEntry extends PatternSetListEntry impleme
                 requiresRestart,
                 deleteButtonEnabled,
                 insertInFront);
-        widgets.add(nameFieldWidget = initTextField(name));
+        widgets.addFirst(nameFieldWidget = initTextField(name));
     }
 
     public NameEditablePatternSetListEntry(@Nullable String name, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Text[]>> tooltipSupplier, Supplier<List<Pattern>> defaultValue, Consumer<List<Pattern>> saveConsumer, Text resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
@@ -46,7 +46,7 @@ public class NameEditablePatternSetListEntry extends PatternSetListEntry impleme
                 requiresRestart,
                 deleteButtonEnabled,
                 insertInFront);
-        widgets.add(nameFieldWidget = initTextField(name));
+        widgets.addFirst(nameFieldWidget = initTextField(name));
     }
 
     @Override

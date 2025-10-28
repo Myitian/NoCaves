@@ -13,6 +13,8 @@ base {
 
 dependencies {
     forge "net.minecraftforge:forge:${project.high_forge_version}"
+    modImplementation "me.shedaniel.cloth:cloth-config-neoforge:${project.main_cloth_config_version}"
+    // use cloth-config neoforge as dependency because no cloth-config for mc 1.21.9 forge
 
     common(project(path: ":variant", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":variant", configuration: "transformProductionForge")) { transitive = false }

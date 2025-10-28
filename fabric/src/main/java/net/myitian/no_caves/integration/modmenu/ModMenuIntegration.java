@@ -9,7 +9,7 @@ import net.myitian.no_caves.integration.clothconfig.ConfigScreen;
 public final class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        if (NoCaves.CLOTH_CONFIG_DETECTED) {
+        if (NoCaves.CLOTH_CONFIG_EXISTED) {
             return ConfigScreen::buildConfigScreen;
         } else {
             return parent -> null;

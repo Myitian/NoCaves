@@ -13,6 +13,7 @@ base {
 
 dependencies {
     neoForge "net.neoforged:neoforge:${project.high_neoforge_version}"
+    modImplementation "me.shedaniel.cloth:cloth-config-neoforge:${project.main_cloth_config_version}"
 
     common(project(path: ":variant", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":variant", configuration: "transformProductionNeoForge")) { transitive = false }

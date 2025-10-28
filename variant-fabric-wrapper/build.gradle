@@ -12,6 +12,8 @@ base {
 }
 
 dependencies {
+    modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.high_cloth_config_version}"
+
     common(project(path: ":variant", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":variant", configuration: "transformProductionFabric")) { transitive = false }
 }

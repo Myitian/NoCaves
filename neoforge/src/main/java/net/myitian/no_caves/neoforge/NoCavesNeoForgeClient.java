@@ -10,13 +10,11 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 @Mod(value = NoCaves.MOD_ID, dist = Dist.CLIENT)
 public class NoCavesNeoForgeClient {
     public NoCavesNeoForgeClient(ModContainer modContainer) {
-        try {
-            Class.forName("me.shedaniel.clothconfig2.api.ConfigBuilder");
+        if (NoCaves.CLOTH_CONFIG_EXISTED) {
             modContainer.registerExtensionPoint(
                     IConfigScreenFactory.class,
                     (container, parent) -> ConfigScreen.buildConfigScreen(parent)
             );
-        } catch (Exception ignored) {
         }
     }
 }

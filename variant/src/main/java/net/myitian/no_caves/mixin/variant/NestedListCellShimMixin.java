@@ -4,7 +4,6 @@ import me.shedaniel.clothconfig2.gui.entries.AbstractListListEntry;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
 import me.shedaniel.math.Rectangle;
 import net.myitian.no_caves.integration.clothconfig.NestedListCellShim;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 abstract class NestedListCellShimMixin<T, SELF extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF>, OUTER_SELF extends AbstractListListEntry<T, SELF, OUTER_SELF>> extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF> {
     @Final
     @Shadow
-    protected DynamicElementListWidget.Entry<?> nestedEntry;
+    public DynamicElementListWidget.Entry<?> nestedEntry;
 
     NestedListCellShimMixin() {
         super(null, null);

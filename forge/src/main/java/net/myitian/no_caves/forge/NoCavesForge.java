@@ -10,13 +10,11 @@ import net.myitian.no_caves.integration.clothconfig.ConfigScreen;
 public class NoCavesForge {
     public NoCavesForge(FMLJavaModLoadingContext context) {
         NoCaves.init();
-        try {
-            Class.forName("me.shedaniel.clothconfig2.api.ConfigBuilder");
+        if (NoCaves.CLOTH_CONFIG_EXISTED) {
             context.registerExtensionPoint(
                     ConfigScreenHandler.ConfigScreenFactory.class,
                     () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> ConfigScreen.buildConfigScreen(parent))
             );
-        } catch (Exception ignored) {
         }
     }
 }

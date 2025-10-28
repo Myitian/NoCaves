@@ -9,8 +9,7 @@
     "RegistryLoaderMixin"
   ],
   "client": [
-    "BaseListEntryMixin",
-    "BaseListEntry$ListLabelWidgetMixin"
+    "BaseListEntryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -4,8 +4,9 @@ import me.shedaniel.clothconfig2.gui.entries.AbstractListListEntry;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 public abstract class NestedListCellShim<T, INNER extends DynamicElementListWidget.Entry<?>, SELF extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF>, OUTER_SELF extends AbstractListListEntry<T, SELF, OUTER_SELF>> extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF> {
-    protected final INNER nestedEntry;
+    public final INNER nestedEntry;
 
     public NestedListCellShim(@Nullable T value, INNER nestedEntry, OUTER_SELF listListEntry) {
         super(value, listListEntry);

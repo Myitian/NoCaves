@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
-public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>> {
+public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends NestedListShim<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>> {
     protected final Supplier<Map<String, T>> defaultValue;
     protected final Map<String, T> original;
     private final List<ReferenceProvider<?>> referencableEntries = Lists.newArrayList();
@@ -116,9 +116,12 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
     }
 
     public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends NestedListCellShim<Map.Entry<String, T>, INNER, Cell<T, INNER>, String2ListMapListEntry<T, INNER>> implements ReferenceProvider<T> {
+        private final List<INNER> child;
+
         @ApiStatus.Internal
         public Cell(@Nullable Map.Entry<String, T> value, String2ListMapListEntry<T, INNER> listListEntry, INNER nestedEntry) {
             super(value, nestedEntry, listListEntry);
+            child = List.of(nestedEntry);
         }
 
         @Override
@@ -161,7 +164,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         }
 
         public List<? extends Element> children() {
-            return Collections.singletonList(nestedEntry);
+            return child;
         }
 
         public boolean isRequiresRestart() {
@@ -193,6 +196,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         }
 
         public void appendNarrations(NarrationMessageBuilder narrationElementOutput) {
+            nestedEntry.appendNarrations(narrationElementOutput);
         }
     }
 }

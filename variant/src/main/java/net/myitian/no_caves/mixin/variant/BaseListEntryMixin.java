@@ -20,11 +20,10 @@ abstract class BaseListEntryMixin {
                     remap = true
             ))
     private void render_Redirect_drawTextWithShadow(DrawContext instance, TextRenderer textRenderer, OrderedText text, int x1, int y1, int color, DrawContext graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
-        if (NameEditableListEntry.drawTextFieldWidget(this,
+        if (!NameEditableListEntry.drawTextFieldWidget(this,
                 graphics, x1, y, color,
                 mouseX, mouseY, delta)) {
-            return;
+            instance.drawTextWithShadow(textRenderer, text, x1, y1, color);
         }
-        instance.drawTextWithShadow(textRenderer, text, x1, y1, color);
     }
 }

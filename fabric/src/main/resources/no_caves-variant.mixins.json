@@ -7,8 +7,8 @@
   "refmap": "no_caves-variant-refmap.json",
   "client": [
     "BaseListEntryMixin",
-    "BaseListEntry$ListLabelWidgetMixin",
-    "NestedListCellShimMixin"
+    "NestedListCellShimMixin",
+    "ParentElementMixin"
   ],
   "injectors": {
     "defaultRequire": 1

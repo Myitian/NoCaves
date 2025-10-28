@@ -6,8 +6,8 @@
   "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
   "client": [
     "BaseListEntryMixin",
-    "BaseListEntry$ListLabelWidgetMixin",
-    "NestedListCellShimMixin"
+    "NestedListCellShimMixin",
+    "ParentElementMixin"
   ],
   "injectors": {
     "defaultRequire": 1

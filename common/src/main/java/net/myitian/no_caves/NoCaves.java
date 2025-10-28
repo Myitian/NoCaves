@@ -21,8 +21,7 @@ public final class NoCaves {
     public static final String MOD_ID = "no_caves";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
-    public static final boolean CLOTH_CONFIG_DETECTED = isClothConfigExisted();
-    public static final boolean CLOTH_CONFIG_V17_OR_HIGHER = isClothConfigV17OrHigher();
+    public static final boolean CLOTH_CONFIG_EXISTED = isClothConfigExisted();
     public static final int DATA_VERSION = DataFixTypes.getSaveVersionId();
 
     public static int processedGenerationSettings = 0;
@@ -38,18 +37,7 @@ public final class NoCaves {
 
     public static boolean isClothConfigExisted() {
         try {
-            Class.forName("me.shedaniel.clothconfig2.gui.entries.BaseListCell");
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public static boolean isClothConfigV17OrHigher() {
-        if (!CLOTH_CONFIG_DETECTED) return false;
-        try {
-            Class<?> clazz = Class.forName("me.shedaniel.clothconfig2.gui.entries.BaseListCell");
-            clazz.getMethod("updateBounds", boolean.class, int.class, int.class, int.class, int.class);
+            Class.forName("me.shedaniel.clothconfig2.api.ConfigBuilder");
             return true;
         } catch (Exception e) {
             return false;
@@ -62,6 +50,10 @@ public final class NoCaves {
 
     public static boolean is_1_21_6_orHigher() {
         return DATA_VERSION >= 4422; // 25w15a: return type change - drawTextWithShadow
+    }
+
+    public static boolean is_1_21_4_orHigher() {
+        return DATA_VERSION >= 4174; // 24w44a: cloth-config V17
     }
 
     public static boolean is_1_21_2_orHigher() {
