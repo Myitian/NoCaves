@@ -21,7 +21,7 @@ public class NoCavesMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         switch (mixinClassName) {
-            case "net.myitian.no_caves.mixin.variant.NestedListCellShimMixin":
+            case "net.myitian.no_caves.mixin.variant.String2ListMapListEntry$CellMixin":
                 return NoCaves.CLOTH_CONFIG_EXISTED && NoCaves.is_1_21_4_orHigher();
             case "net.myitian.no_caves.mixin.variant.ParentElementMixin":
                 return NoCaves.CLOTH_CONFIG_EXISTED && NoCaves.is_1_21_9_orHigher();

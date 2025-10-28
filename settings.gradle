@@ -8,7 +8,6 @@ pluginManagement {
     }
 }
 
-include "shared"
 include "variant"
 include "variant-fabric-wrapper"
 include "variant-forge-wrapper"

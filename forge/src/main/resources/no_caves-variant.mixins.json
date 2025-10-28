@@ -6,7 +6,7 @@
   "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
   "client": [
     "BaseListEntryMixin",
-    "NestedListCellShimMixin",
+    "String2ListMapListEntry$CellMixin",
     "ParentElementMixin"
   ],
   "injectors": {
