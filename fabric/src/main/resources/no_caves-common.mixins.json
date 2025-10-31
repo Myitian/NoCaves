@@ -9,7 +9,8 @@
     "RegistryLoaderMixin"
   ],
   "client": [
-    "BaseListEntryMixin"
+    "BaseListEntryMixin",
+    "BiomeGenerationSettingsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

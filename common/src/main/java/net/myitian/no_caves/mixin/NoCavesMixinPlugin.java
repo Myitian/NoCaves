@@ -1,12 +1,13 @@
 package net.myitian.no_caves.mixin;
 
-import net.myitian.no_caves.NoCaves;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
 import java.util.Set;
+
+import static net.myitian.no_caves.NoCaves.*;
 
 public class NoCavesMixinPlugin implements IMixinConfigPlugin {
     @Override
@@ -21,14 +22,19 @@ public class NoCavesMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         switch (mixinClassName) {
-            case "net.myitian.no_caves.mixin.variant.String2ListMapListEntry$CellMixin":
-                return NoCaves.CLOTH_CONFIG_EXISTED && NoCaves.is_1_21_4_orHigher();
             case "net.myitian.no_caves.mixin.variant.ContainerEventHandlerMixin":
-                return NoCaves.CLOTH_CONFIG_EXISTED && NoCaves.is_1_21_9_orHigher();
+                return CLOTH_CONFIG_EXISTED && DATA_VERSION >= MC_1_21_9__25w36a;
+            case "net.myitian.no_caves.mixin.variant.String2ListMapListEntry$CellMixin":
+                return CLOTH_CONFIG_EXISTED && DATA_VERSION >= MC_1_21_4__24w44a;
             case "net.myitian.no_caves.mixin.variant.BaseListEntryMixin":
-                return NoCaves.CLOTH_CONFIG_EXISTED && NoCaves.is_1_21_6_orHigher();
+                return CLOTH_CONFIG_EXISTED && DATA_VERSION >= MC_1_21_6__25w15a;
+            case "net.myitian.no_caves.mixin.variant.BiomeGenerationSettingsMixin":
+            case "net.myitian.no_caves.mixin.variant.RegistryValuePreprocessorMixin":
+                return DATA_VERSION >= MC_1_21_2__24w33a;
             case "net.myitian.no_caves.mixin.BaseListEntryMixin":
-                return NoCaves.CLOTH_CONFIG_EXISTED && !NoCaves.is_1_21_6_orHigher();
+                return CLOTH_CONFIG_EXISTED && DATA_VERSION < MC_1_21_6__25w15a;
+            case "net.myitian.no_caves.mixin.BiomeGenerationSettingsMixin":
+                return DATA_VERSION < MC_1_21_2__24w33a;
             default:
                 return true;
         }

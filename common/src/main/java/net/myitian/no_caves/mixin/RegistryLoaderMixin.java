@@ -8,7 +8,7 @@ import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.Resource;
-import net.myitian.no_caves.RegistryLoaderHelper;
+import net.myitian.no_caves.RegistryValuePreprocessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -29,6 +29,6 @@ abstract class RegistryLoaderMixin {
             ResourceKey<?> key,
             Resource unused_3,
             RegistrationInfo unused_4) {
-        return RegistryLoaderHelper.process(key, instance.getOrThrow());
+        return RegistryValuePreprocessor.process(key, instance.getOrThrow());
     }
 }

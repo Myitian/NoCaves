@@ -7,7 +7,9 @@
   "refmap": "no_caves-variant-refmap.json",
   "client": [
     "BaseListEntryMixin",
+    "BiomeGenerationSettingsMixin",
     "String2ListMapListEntry$CellMixin",
+    "RegistryValuePreprocessorMixin",
     "ContainerEventHandlerMixin"
   ],
   "injectors": {

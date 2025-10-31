@@ -7,21 +7,18 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.levelgen.DensityFunction;
-import net.minecraft.world.level.levelgen.DensityFunctions;
-import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.NoiseRouter;
+import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.carver.CarverConfiguration;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.myitian.no_caves.config.Config;
+import net.myitian.no_caves.mixin.BiomeGenerationSettingsMixin;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
-public final class RegistryLoaderHelper {
+public final class RegistryValuePreprocessor {
     public static Object process(ResourceKey<?> key, Object rawValue) {
         boolean newObject = false;
         boolean useOptional = false;
@@ -58,12 +55,12 @@ public final class RegistryLoaderHelper {
         }
     }
 
-    public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings chunkGeneratorSettings) {
+    public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings settings) {
         if (!(Config.isEnableFinalDensityTransformation()
                 && !Config.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
             return;
         }
-        NoiseRouter noiseRouter = chunkGeneratorSettings.noiseRouter();
+        NoiseRouter noiseRouter = settings.noiseRouter();
         DensityFunction finalDensity = DensityFunctionCaveCleaner.transform(noiseRouter.finalDensity());
         if (finalDensity == null) {
             NoCaves.LOGGER.warn(
@@ -100,13 +97,23 @@ public final class RegistryLoaderHelper {
                 && !Config.getCarverFilterBiomeExclusionPatterns().matches(key.toString()))) {
             return;
         }
-        BiomeGenerationSettings generationSettings = biome.getGenerationSettings();
+        BiomeGenerationSettings settings = biome.getGenerationSettings();
         PatternSet patterns = Config.getBiomeSpecificOverrideForDisabledCarverPatterns()
                 .getOrDefault(key.toString(), Config.getDisabledCarverPatterns());
+        processBiome(settings, patterns);
+        NoCaves.LOGGER.debug(
+                "NoCaves.processedGenerationSettings {} {}",
+                ++NoCaves.processedGenerationSettings,
+                key);
+    }
+
+    private static void processBiome(BiomeGenerationSettings settings,PatternSet patterns){
+        BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin)settings;
+        Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers = wrapper.getCarvers();
         @SuppressWarnings("unchecked")
-        Pair<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] carvers = new Pair[generationSettings.carvers.size()];
+        Pair<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] tmp = new Pair[carvers.size()];
         int i = 0;
-        for (var entry : generationSettings.carvers.entrySet()) {
+        for (var entry : carvers.entrySet()) {
             HolderSet<ConfiguredWorldCarver<?>> originalList = entry.getValue();
             ArrayList<Holder<ConfiguredWorldCarver<?>>> list = new ArrayList<>(originalList.size());
             for (var regEntry : originalList) {
@@ -115,12 +122,8 @@ public final class RegistryLoaderHelper {
                     list.add(regEntry);
                 }
             }
-            carvers[i++] = Pair.of(entry.getKey(), HolderSet.direct(list));
+            tmp[i++] = Pair.of(entry.getKey(), HolderSet.direct(list));
         }
-        generationSettings.carvers = Map.ofEntries(carvers);
-        NoCaves.LOGGER.debug(
-                "NoCaves.processedGenerationSettings {} {}",
-                ++NoCaves.processedGenerationSettings,
-                key);
+        wrapper.setCarvers(Map.ofEntries(tmp));
     }
 }

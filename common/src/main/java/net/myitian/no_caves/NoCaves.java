@@ -20,6 +20,10 @@ public final class NoCaves {
     public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
     public static final boolean CLOTH_CONFIG_EXISTED = isClothConfigExisted();
     public static final int DATA_VERSION;
+    public static final int MC_1_21_9__25w36a = 4545;
+    public static final int MC_1_21_6__25w15a = 4422;
+    public static final int MC_1_21_4__24w44a = 4174;
+    public static final int MC_1_21_2__24w33a = 4058;
     public static int processedGenerationSettings = 0;
     public static int transformedFinalDensity = 0;
     public static int transformedDensityFunctions = 0;
@@ -43,26 +47,6 @@ public final class NoCaves {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public static boolean is_1_21_9_orHigher() {
-        return DATA_VERSION >= 4545; // 25w36a: arg type change - mouseClicked
-    }
-
-    public static boolean is_1_21_6_orHigher() {
-        return DATA_VERSION >= 4422; // 25w15a: return type change - drawTextWithShadow
-    }
-
-    public static boolean is_1_21_4_orHigher() {
-        return DATA_VERSION >= 4174; // 24w44a: cloth-config V17
-    }
-
-    public static boolean is_1_21_2_orHigher() {
-        return DATA_VERSION >= 4058; // 24w33a: type change - GenerationSettings.carvers
-    }
-
-    public static boolean is_1_20_5_orHigher() {
-        return DATA_VERSION >= 3815; // 24w06a: new method - parseAndAdd
     }
 
     public static <K, V> @NotNull Map<K, V> createMap(List<Map.Entry<K, V>> entryList) {

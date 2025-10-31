@@ -12,7 +12,7 @@ base {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${project.high_forge_version}"
+    forge "net.minecraftforge:forge:${project.variant_forge_version}"
     modImplementation "me.shedaniel.cloth:cloth-config-neoforge:${project.main_cloth_config_version}"
     // use cloth-config neoforge as dependency because no cloth-config for mc 1.21.9 forge
 

@@ -3,8 +3,6 @@ accessible method net/minecraft/util/datafix/DataFixTypes currentVersion ()I
 
 accessible field net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
 mutable    field net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
-mutable    field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
 
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$TwoArgumentSimpleFunction
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$PureTransformer

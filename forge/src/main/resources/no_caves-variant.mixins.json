@@ -6,7 +6,9 @@
   "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
   "client": [
     "BaseListEntryMixin",
+    "BiomeGenerationSettingsMixin",
     "String2ListMapListEntry$CellMixin",
+    "RegistryValuePreprocessorMixin",
     "ContainerEventHandlerMixin"
   ],
   "injectors": {

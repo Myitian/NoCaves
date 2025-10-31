@@ -147,7 +147,7 @@ public class CustomConfigEntryBuilder implements ConfigEntryBuilder {
     }
 
     public NameEditablePatternSetBuilder startNameEditablePatternList(String name, PatternSet value) {
-        return new NameEditablePatternSetBuilder(getResetButtonKey(), name, value);
+        return new NameEditablePatternSetBuilder(getResetButtonKey(), name == null ? "" : name, value);
     }
 
     public <T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> String2ListMapBuilder<T, INNER> startString2ListMap(Component fieldNameKey, List<Map.Entry<String, T>> value) {
