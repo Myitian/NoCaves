@@ -24,8 +24,6 @@ architectury {
     minecraft = rootProject.main_minecraft_version
 }
 
-def customFix = file("fix.tiny")
-
 subprojects {
     apply plugin: "dev.architectury.loom"
 
