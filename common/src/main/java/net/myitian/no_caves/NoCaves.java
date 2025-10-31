@@ -18,12 +18,14 @@ public final class NoCaves {
     public static final String MOD_ID = "no_caves";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
-    public static final boolean CLOTH_CONFIG_EXISTED = isClothConfigExisted();
+
     public static final int DATA_VERSION;
     public static final int MC_1_21_9__25w36a = 4545;
     public static final int MC_1_21_6__25w15a = 4422;
     public static final int MC_1_21_4__24w44a = 4174;
     public static final int MC_1_21_2__24w33a = 4058;
+    public static final boolean CLOTH_CONFIG_EXISTED;
+
     public static int processedGenerationSettings = 0;
     public static int transformedFinalDensity = 0;
     public static int transformedDensityFunctions = 0;
@@ -31,6 +33,7 @@ public final class NoCaves {
     static {
         SharedConstants.tryDetectVersion();
         DATA_VERSION = DataFixTypes.currentVersion();
+        CLOTH_CONFIG_EXISTED = isClothConfigExisted();
     }
 
     public static void init() {

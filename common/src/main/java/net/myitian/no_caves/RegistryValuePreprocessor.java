@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.carver.CarverConfiguration;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.myitian.no_caves.config.Config;
 import net.myitian.no_caves.mixin.BiomeGenerationSettingsMixin;
@@ -107,8 +106,8 @@ public final class RegistryValuePreprocessor {
                 key);
     }
 
-    private static void processBiome(BiomeGenerationSettings settings,PatternSet patterns){
-        BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin)settings;
+    private static void processBiome(BiomeGenerationSettings settings, PatternSet patterns) {
+        BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin) settings;
         Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers = wrapper.getCarvers();
         @SuppressWarnings("unchecked")
         Pair<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] tmp = new Pair[carvers.size()];

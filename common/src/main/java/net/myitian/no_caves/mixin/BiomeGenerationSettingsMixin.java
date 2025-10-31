@@ -13,6 +13,7 @@ import java.util.Map;
 public interface BiomeGenerationSettingsMixin {
     @Accessor
     Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> getCarvers();
+
     @Accessor
     void setCarvers(Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers);
 }

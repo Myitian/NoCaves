@@ -1,7 +1,7 @@
 import net.fabricmc.loom.LoomGradleExtension
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.gradleup.shadow" version "9.2.2"
 }
 
 architectury {
@@ -19,6 +19,10 @@ configurations {
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentNeoForge.extendsFrom common
+}
+
+shadow {
+    addShadowVariantIntoJavaComponent = false
 }
 
 base {
@@ -50,7 +54,7 @@ shadowJar {
     archiveClassifier = "dev-shadow"
 }
 
-remapJar {//net.fabricmc.loom.task.RemapJarTask
+remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
 }
@@ -59,12 +63,6 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-}
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
 }
 
 afterEvaluate {

@@ -9,7 +9,7 @@ public record PatternKey(String pattern, int flags) {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof PatternKey key && pattern.equals(key.pattern) && flags == key.flags;
+        return o instanceof PatternKey(String pattern1, int flags1) && pattern.equals(pattern1) && flags == flags1;
     }
 
     @Override

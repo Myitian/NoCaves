@@ -68,8 +68,8 @@ public final class DensityFunctionCaveCleaner {
     }
 
     public static boolean isCaveDensityFunction(DensityFunction densityFunction) {
-        return densityFunction instanceof DensityFunctions.HolderHolder holder
-                && isCaveDensityFunction(holder.function());
+        return densityFunction instanceof DensityFunctions.HolderHolder(Holder<DensityFunction> function)
+                && isCaveDensityFunction(function);
     }
 
     public static boolean isCaveDensityFunction(Holder<DensityFunction> densityFunction) {

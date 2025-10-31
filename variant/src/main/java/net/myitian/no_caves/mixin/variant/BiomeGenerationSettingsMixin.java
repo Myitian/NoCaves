@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface BiomeGenerationSettingsMixin {
     @Accessor
     HolderSet<ConfiguredWorldCarver<?>> getCarvers();
+
     @Accessor
     void setCarvers(HolderSet<ConfiguredWorldCarver<?>> carvers);
 }

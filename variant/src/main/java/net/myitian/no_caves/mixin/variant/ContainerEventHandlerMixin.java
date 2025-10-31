@@ -11,7 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ContainerEventHandler.class)
 interface ContainerEventHandlerMixin {
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "mouseClicked",
+            at = @At("HEAD"),
+            cancellable = true)
     default void mouseClicked_Inject(MouseButtonEvent click, boolean doubled, CallbackInfoReturnable<Boolean> ci) {
         if (this instanceof String2ListMapListEntry.Cell<?, ?> self) {
             if (self.nestedEntry.mouseClicked(click, doubled)) {
