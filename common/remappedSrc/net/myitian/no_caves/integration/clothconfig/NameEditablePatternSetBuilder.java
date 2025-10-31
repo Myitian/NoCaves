@@ -8,7 +8,7 @@ public class NameEditablePatternSetBuilder extends AbstractPatternSetBuilder<Nam
     protected final String newName;
 
     public NameEditablePatternSetBuilder(Component resetButtonKey, String name, PatternSet value) {
-        super(resetButtonKey, Component.literal(name), value);
+        super(resetButtonKey, Component.nullToEmpty(name), value);
         newName = name;
     }
 

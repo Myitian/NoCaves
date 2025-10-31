@@ -8,7 +8,7 @@
   "client": [
     "BaseListEntryMixin",
     "String2ListMapListEntry$CellMixin",
-    "ParentElementMixin"
+    "ContainerEventHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

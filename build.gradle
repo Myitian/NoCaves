@@ -37,16 +37,15 @@ subprojects {
             case "variant-neoforge-wrapper":
                 minecraft "com.mojang:minecraft:${project.high_minecraft_version}"
                 mappings loom.layered {
-                    it.mappings("net.fabricmc:yarn:${project.high_yarn_mappings}:v2")
-                    it.mappings("dev.architectury:yarn-mappings-patch-neoforge:${project.yarn_mappings_patch_neoforge_version}")
-                    it.mappings(customFix)
+                    officialMojangMappings()
+                    parchment("org.parchmentmc.data:parchment-${project.high_parchment_mappings}@zip")
                 }
                 break
             default:
                 minecraft "com.mojang:minecraft:${project.main_minecraft_version}"
                 mappings loom.layered {
-                    it.mappings("net.fabricmc:yarn:${project.main_yarn_mappings}:v2")
-                    it.mappings("dev.architectury:yarn-mappings-patch-neoforge:${project.yarn_mappings_patch_neoforge_version}")
+                    officialMojangMappings()
+                    parchment("org.parchmentmc.data:parchment-${project.high_parchment_mappings}@zip")
                 }
                 break
         }

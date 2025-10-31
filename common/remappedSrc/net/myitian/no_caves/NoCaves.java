@@ -1,7 +1,6 @@
 package net.myitian.no_caves;
 
 import net.minecraft.SharedConstants;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.myitian.no_caves.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ public final class NoCaves {
 
     static {
         SharedConstants.tryDetectVersion();
-        DATA_VERSION = DataFixTypes.currentVersion();
+        DATA_VERSION = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
     }
 
     public static void init() {
@@ -63,6 +62,10 @@ public final class NoCaves {
 
     public static boolean is_1_20_5_orHigher() {
         return DATA_VERSION >= 3815; // 24w06a: new method - parseAndAdd
+    }
+
+    public static boolean is_1_20_orHigher() {
+        return DATA_VERSION >= 3449; // 23w16a: new type - DrawContext
     }
 
     public static <K, V> @NotNull Map<K, V> createMap(List<Map.Entry<K, V>> entryList) {

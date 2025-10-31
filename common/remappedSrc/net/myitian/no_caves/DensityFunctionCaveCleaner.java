@@ -1,26 +1,27 @@
 package net.myitian.no_caves;
 
 import net.minecraft.core.Holder;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions;
 import net.minecraft.world.level.levelgen.NoiseChunk;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.myitian.no_caves.config.Config;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class DensityFunctionCaveCleaner {
-    private static final Map<String, Pair<Predicate<DensityFunction>, Function<DensityFunction, DensityFunction>>> customTransformerRegistry = new LinkedHashMap<>();
+    private static final Map<String, Tuple<Predicate<DensityFunction>, Function<DensityFunction, DensityFunction>>> customTransformerRegistry = new LinkedHashMap<>();
 
     /**
      * @return a mutable map that preserves insertion order
      */
-    public static Map<String, Pair<Predicate<DensityFunction>, Function<DensityFunction, @Nullable DensityFunction>>> getCustomTransformerRegistry() {
+    public static Map<String, Tuple<Predicate<DensityFunction>, Function<DensityFunction, @Nullable DensityFunction>>> getCustomTransformerRegistry() {
         return customTransformerRegistry;
     }
 
@@ -37,10 +38,10 @@ public final class DensityFunctionCaveCleaner {
                 try {
                     var pair = entry.getValue();
                     if (pair != null
-                            && pair.getLeft() != null
-                            && pair.getRight() != null
-                            && pair.getLeft().test(original)) {
-                        return pair.getRight().apply(original);
+                            && pair.getA() != null
+                            && pair.getB() != null
+                            && pair.getA().test(original)) {
+                        return pair.getB().apply(original);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException("An unhandled exception occurred in transformer " + id, e);
@@ -74,7 +75,7 @@ public final class DensityFunctionCaveCleaner {
 
     public static boolean isCaveDensityFunction(Holder<DensityFunction> densityFunction) {
         return densityFunction instanceof Holder.Reference<DensityFunction> reference
-                && Config.getDensityFunctionCavePatterns().matches(reference.key().registry().toString());
+                && Config.getDensityFunctionCavePatterns().matches(reference.key().location().toString());
     }
 
     public static boolean isCaveNoise(DensityFunction.NoiseHolder noise) {
@@ -83,7 +84,7 @@ public final class DensityFunctionCaveCleaner {
 
     public static boolean isCaveNoise(Holder<NormalNoise.NoiseParameters> noise) {
         return noise instanceof Holder.Reference<NormalNoise.NoiseParameters> reference
-                && Config.getNoiseCavePatterns().matches(reference.key().registry().toString());
+                && Config.getNoiseCavePatterns().matches(reference.key().location().toString());
     }
 
     @Nullable

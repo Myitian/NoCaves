@@ -11,6 +11,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.myitian.no_caves.NoCaves;
@@ -167,7 +168,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
             nestedEntry.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isSelected, delta);
         }
 
-        public @NotNull List<? extends GuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
             return child;
         }
 
@@ -195,7 +196,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
             listListEntry.requestReferenceRebuilding();
         }
 
-        public @NotNull NarrationPriority narrationPriority() {
+        public NarratableEntry.NarrationPriority narrationPriority() {
             return NarrationPriority.NONE;
         }
 

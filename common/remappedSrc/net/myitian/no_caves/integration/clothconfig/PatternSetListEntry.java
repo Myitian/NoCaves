@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -160,14 +161,13 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
         protected final EditBox flagsFieldWidget;
         protected final PatternSetListEntry listListEntry;
         protected final Rectangle cellBounds = new Rectangle();
-        protected final List<GuiEventListener> children;
         private boolean isSelected;
         private boolean isHovered;
 
         public Cell(@Nullable Pattern value, PatternSetListEntry listListEntry) {
             this.listListEntry = listListEntry;
-            Font font = Minecraft.getInstance().font;
-            patternFieldWidget = new EditBox(font, 0, 0, 80, 18, CommonComponents.EMPTY) {
+            Font textRenderer = Minecraft.getInstance().font;
+            patternFieldWidget = new EditBox(textRenderer, 0, 0, 80, 18, CommonComponents.EMPTY) {
                 @Override
                 public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
                     setFocused(isSelected && isFocused());
@@ -183,7 +183,7 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
             patternFieldWidget.setValue(value == null ? "" : value.pattern());
             patternFieldWidget.moveCursorToStart(false);
             patternFieldWidget.setResponder(s -> patternFieldWidget.setTextColor(getPreferredTextColor()));
-            flagsFieldWidget = new EditBox(font, 0, 0, 20, 18, CommonComponents.EMPTY) {
+            flagsFieldWidget = new EditBox(textRenderer, 0, 0, 20, 18, CommonComponents.EMPTY) {
                 @Override
                 public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
                     setFocused(isSelected && isFocused());
@@ -204,7 +204,6 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
             flagsFieldWidget.setValue(value == null ? "0" : String.valueOf(value.flags()));
             flagsFieldWidget.moveCursorToStart(false);
             flagsFieldWidget.setResponder(s -> flagsFieldWidget.setTextColor(getPreferredTextColor()));
-            children = List.of(patternFieldWidget, flagsFieldWidget);
         }
 
         public void updateBounds(boolean expanded, int x, int y, int entryWidth, int entryHeight) {
@@ -233,11 +232,11 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
         @Override
         public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
             boolean isEditable = listListEntry.isEditable();
-            Font font = Minecraft.getInstance().font;
+            Font textRenderer = Minecraft.getInstance().font;
             int innerWidth = entryWidth - 12;
             int patternWidth = innerWidth - 34;
             int mid;
-            if (font.isBidirectional()) {
+            if (textRenderer.isBidirectional()) {
                 mid = x + 30;
                 flagsFieldWidget.setWidth(30);
                 flagsFieldWidget.setX(x);
@@ -267,12 +266,12 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
         }
 
         @Override
-        public @NotNull List<? extends GuiEventListener> children() {
-            return children;
+        public List<? extends GuiEventListener> children() {
+            return List.of(patternFieldWidget, flagsFieldWidget);
         }
 
         @Override
-        public @NotNull NarrationPriority narrationPriority() {
+        public NarratableEntry.NarrationPriority narrationPriority() {
             return isSelected ? NarrationPriority.FOCUSED : (isHovered ? NarrationPriority.HOVERED : NarrationPriority.NONE);
         }
 

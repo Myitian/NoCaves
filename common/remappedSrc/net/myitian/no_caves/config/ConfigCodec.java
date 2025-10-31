@@ -3,19 +3,20 @@ package net.myitian.no_caves.config;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import net.minecraft.util.Tuple;
 import net.myitian.no_caves.PatternSet;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public class ConfigCodec {
-    private final LinkedHashMap<String, Pair<ConsumerWithIOException<JsonReader>, ConsumerWithIOException<JsonWriter>>> fieldMap = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Tuple<ConsumerWithIOException<JsonReader>, ConsumerWithIOException<JsonWriter>>> fieldMap = new LinkedHashMap<>();
 
     @Nullable
     public static Pattern readPattern(JsonReader reader) throws IOException {
@@ -157,7 +158,7 @@ public class ConfigCodec {
         writer.endObject();
     }
 
-    public Map<String, Pair<ConsumerWithIOException<JsonReader>, ConsumerWithIOException<JsonWriter>>> getFieldMap() {
+    public Map<String, Tuple<ConsumerWithIOException<JsonReader>, ConsumerWithIOException<JsonWriter>>> getFieldMap() {
         return fieldMap;
     }
 
@@ -172,7 +173,7 @@ public class ConfigCodec {
             var pair = fieldMap.get(name);
             if (pair != null) {
                 nameSet.add(name);
-                pair.getLeft().accept(reader);
+                pair.getA().accept(reader);
             } else {
                 reader.skipValue();
             }
@@ -184,7 +185,7 @@ public class ConfigCodec {
         writer.beginObject();
         for (var fieldInfo : fieldMap.entrySet()) {
             writer.name(fieldInfo.getKey());
-            fieldInfo.getValue().getRight().accept(writer);
+            fieldInfo.getValue().getB().accept(writer);
         }
         writer.endObject();
         return true;

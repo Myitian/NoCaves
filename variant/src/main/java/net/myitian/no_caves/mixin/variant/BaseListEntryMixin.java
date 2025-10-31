@@ -1,9 +1,9 @@
 package net.myitian.no_caves.mixin.variant;
 
 import me.shedaniel.clothconfig2.gui.entries.BaseListEntry;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.OrderedText;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.FormattedCharSequence;
 import net.myitian.no_caves.integration.clothconfig.NameEditableListEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,14 +16,14 @@ abstract class BaseListEntryMixin {
             remap = false,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/OrderedText;III)V",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)V",
                     remap = true
             ))
-    private void render_Redirect_drawTextWithShadow(DrawContext instance, TextRenderer textRenderer, OrderedText text, int x1, int y1, int color, DrawContext graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+    private void render_Redirect_drawTextWithShadow(GuiGraphics instance, Font textRenderer, FormattedCharSequence text, int x1, int y1, int color, GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         if (!NameEditableListEntry.drawTextFieldWidget(this,
                 graphics, x1, y, color,
                 mouseX, mouseY, delta)) {
-            instance.drawTextWithShadow(textRenderer, text, x1, y1, color);
+            instance.drawString(textRenderer, text, x1, y1, color);
         }
     }
 }

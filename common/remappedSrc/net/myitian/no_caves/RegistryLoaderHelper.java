@@ -9,12 +9,16 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.NoiseRouter;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.myitian.no_caves.config.Config;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 public final class RegistryLoaderHelper {
@@ -54,12 +58,12 @@ public final class RegistryLoaderHelper {
         }
     }
 
-    public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings settings) {
+    public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings chunkGeneratorSettings) {
         if (!(Config.isEnableFinalDensityTransformation()
                 && !Config.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
             return;
         }
-        NoiseRouter noiseRouter = settings.noiseRouter();
+        NoiseRouter noiseRouter = chunkGeneratorSettings.noiseRouter();
         DensityFunction finalDensity = DensityFunctionCaveCleaner.transform(noiseRouter.finalDensity());
         if (finalDensity == null) {
             NoCaves.LOGGER.warn(
@@ -96,17 +100,24 @@ public final class RegistryLoaderHelper {
                 && !Config.getCarverFilterBiomeExclusionPatterns().matches(key.toString()))) {
             return;
         }
-        BiomeGenerationSettings settings = biome.getGenerationSettings();
+        BiomeGenerationSettings generationSettings = biome.getGenerationSettings();
         PatternSet patterns = Config.getBiomeSpecificOverrideForDisabledCarverPatterns()
                 .getOrDefault(key.toString(), Config.getDisabledCarverPatterns());
-        ArrayList<Holder<ConfiguredWorldCarver<?>>> carvers = new ArrayList<>(settings.carvers.size());
-        for (var entry : settings.carvers) {
-            Optional<ResourceKey<ConfiguredWorldCarver<?>>> regKey = entry.unwrapKey();
-            if (regKey.isPresent() && !patterns.matches(regKey.get().location().toString())) {
-                carvers.add(entry);
+        @SuppressWarnings("unchecked")
+        Pair<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] carvers = new Pair[generationSettings.carvers.size()];
+        int i = 0;
+        for (var entry : generationSettings.carvers.entrySet()) {
+            HolderSet<ConfiguredWorldCarver<?>> originalList = entry.getValue();
+            ArrayList<Holder<ConfiguredWorldCarver<?>>> list = new ArrayList<>(originalList.size());
+            for (var regEntry : originalList) {
+                Optional<ResourceKey<ConfiguredWorldCarver<?>>> regKey = regEntry.unwrapKey();
+                if (regKey.isPresent() && !patterns.matches(regKey.get().location().toString())) {
+                    list.add(regEntry);
+                }
             }
+            carvers[i++] = Pair.of(entry.getKey(), HolderSet.direct(list));
         }
-        settings.carvers = HolderSet.direct(carvers);
+        generationSettings.carvers = Map.ofEntries(carvers);
         NoCaves.LOGGER.debug(
                 "NoCaves.processedGenerationSettings {} {}",
                 ++NoCaves.processedGenerationSettings,

@@ -21,7 +21,7 @@ public class NameEditablePatternSetListEntry extends PatternSetListEntry impleme
 
     public NameEditablePatternSetListEntry(@Nullable String name, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Consumer<List<Pattern>> saveConsumer, Supplier<PatternSet> defaultValue, Component resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
         super(
-                name == null ? CommonComponents.EMPTY : Component.literal(name),
+                name == null ? CommonComponents.EMPTY : Component.nullToEmpty(name),
                 value,
                 defaultExpanded,
                 tooltipSupplier,
@@ -31,12 +31,12 @@ public class NameEditablePatternSetListEntry extends PatternSetListEntry impleme
                 requiresRestart,
                 deleteButtonEnabled,
                 insertInFront);
-        widgets.addFirst(nameFieldWidget = initTextField(name));
+        widgets.add(0, nameFieldWidget = initTextField(name));
     }
 
     public NameEditablePatternSetListEntry(@Nullable String name, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Supplier<List<Pattern>> defaultValue, Consumer<List<Pattern>> saveConsumer, Component resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
         super(
-                name == null ? CommonComponents.EMPTY : Component.literal(name),
+                name == null ? CommonComponents.EMPTY : Component.nullToEmpty(name),
                 value,
                 defaultExpanded,
                 tooltipSupplier,
@@ -46,7 +46,7 @@ public class NameEditablePatternSetListEntry extends PatternSetListEntry impleme
                 requiresRestart,
                 deleteButtonEnabled,
                 insertInFront);
-        widgets.addFirst(nameFieldWidget = initTextField(name));
+        widgets.add(0, nameFieldWidget = initTextField(name));
     }
 
     @Override
@@ -61,6 +61,6 @@ public class NameEditablePatternSetListEntry extends PatternSetListEntry impleme
 
     @Override
     public Component getFieldName() {
-        return Component.literal(nameFieldWidget.getValue());
+        return Component.nullToEmpty(nameFieldWidget.getValue());
     }
 }
