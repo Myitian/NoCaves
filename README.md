@@ -126,8 +126,7 @@ The names of the density function caves to filter.\
 ## Branch Information 分支信息
 
 - 1.20.2: support MC 1.19.3~1.20.4
-- 1.20.6: support MC 1.20.5~1.21.1
-- 1.21.3 (main): support MC 1.21.2+
+- main: support MC 1.20.5~1.21.10
 
 ## How It Works 工作原理
 
