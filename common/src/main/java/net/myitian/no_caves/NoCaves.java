@@ -54,19 +54,16 @@ public final class NoCaves {
      * is used to obtain the version.</p>
      */
     public static int getDataVersion() {
-        int dataVersion = Integer.MIN_VALUE;
         try (var inputStream = DetectedVersion.class.getResourceAsStream("/version.json")) {
             if (inputStream != null) {
                 try (var inputStreamReader = new InputStreamReader(inputStream)) {
-                    dataVersion = GsonHelper.getAsInt(GsonHelper.parse(inputStreamReader), "world_version");
+                    return GsonHelper.getAsInt(GsonHelper.parse(inputStreamReader), "world_version");
                 }
             }
         } catch (Exception ignored) {
         }
-        if (dataVersion == Integer.MIN_VALUE) {
-            LOGGER.error("Failed to obtain Minecraft version. Most mixins will not run due to the inability to detect the game version, so the in-game configuration screen will be disabled.");
-        }
-        return dataVersion;
+        LOGGER.error("Failed to obtain Minecraft version. Most mixins will not run due to the inability to detect the game version, so the in-game configuration screen will be disabled.");
+        return Integer.MIN_VALUE;
     }
 
     public static boolean isClothConfigExisted() {
