@@ -31,7 +31,7 @@ shadow {
 }
 
 base {
-    archivesName = "${project.mod_id}-forge-${project.main_minecraft_version}"
+    archivesName = "${project.mod_id}-${project.name}-${project.version_id}"
 }
 
 dependencies {
@@ -54,6 +54,7 @@ processResources {
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
+    exclude "*-refmap.json"
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
 }

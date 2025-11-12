@@ -24,7 +24,7 @@ shadow {
 }
 
 base {
-    archivesName = "${project.mod_id}-fabric-${project.main_minecraft_version}"
+    archivesName = "${project.mod_id}-${project.name}-${project.version_id}"
 }
 
 dependencies {

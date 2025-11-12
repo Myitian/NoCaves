@@ -4,7 +4,6 @@
   "package": "net.myitian.no_caves.mixin.variant",
   "compatibilityLevel": "JAVA_17",
   "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
-  "refmap": "no_caves-variant-refmap.json",
   "client": [
     "BaseListEntryMixin",
     "BiomeGenerationSettingsMixin",
@@ -14,5 +13,6 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "no_caves-variant-refmap.json"
 }

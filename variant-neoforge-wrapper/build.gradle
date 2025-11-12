@@ -8,7 +8,7 @@ configurations {
 }
 
 base {
-    archivesName = "${project.mod_id}-variant-neoforge-wrapper"
+    archivesName = "${project.mod_id}-${project.name}"
 }
 
 dependencies {

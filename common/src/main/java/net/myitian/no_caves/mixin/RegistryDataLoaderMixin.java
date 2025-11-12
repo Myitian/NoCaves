@@ -14,14 +14,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(RegistryDataLoader.class)
-abstract class RegistryLoaderMixin {
+abstract class RegistryDataLoaderMixin {
     @Redirect(
             method = "loadElementFromResource",
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/mojang/serialization/DataResult;getOrThrow()Ljava/lang/Object;",
                     remap = false))
-    private static Object parseAndAdd_Redirect_getOrThrow(
+    private static Object loadElementFromResource_Redirect_getOrThrow(
             DataResult<?> instance,
             WritableRegistry<?> unused_0,
             Decoder<?> unused_1,

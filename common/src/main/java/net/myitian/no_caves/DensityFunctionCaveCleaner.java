@@ -3,7 +3,6 @@ package net.myitian.no_caves;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions;
-import net.minecraft.world.level.levelgen.NoiseChunk;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.myitian.no_caves.config.Config;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,9 +24,9 @@ public final class DensityFunctionCaveCleaner {
     }
 
     /**
-     * @return null if the original DensityFunction is a cave DensityFunction,
-     * otherwise the original DensityFunction will be transformed and returned.
-     * @apiNote Some in-place transformations will be done, so the original DensityFunction may change!
+     * @return null if the original DensityFunction is a cave DensityFunction;<br/>
+     * new DensityFunction if the original DensityFunction contains cave DensityFunctions;<br/>
+     * otherwise the original DensityFunction will be returned.
      */
     @Nullable
     public static DensityFunction transform(DensityFunction original) {
@@ -55,12 +54,12 @@ public final class DensityFunctionCaveCleaner {
             return transformRangeChoice(rangeChoice);
         } else if (original instanceof DensityFunctions.MulOrAdd linear) {
             return transformLinear(linear);
+        } else if (original instanceof DensityFunctions.Marker marker) {
+            return transformMarker(marker);
         } else if (original instanceof DensityFunctions.TwoArgumentSimpleFunction binary) {
             return transformBinary(binary);
         } else if (original instanceof DensityFunctions.PureTransformer unary) {
             return transformUnary(unary);
-        } else if (original instanceof DensityFunctions.MarkerOrMarked wrapper) {
-            return transformWrapper(wrapper);
         } else if (original instanceof DensityFunctions.TransformerWithContext positional) {
             return transformPositional(positional);
         }
@@ -125,9 +124,12 @@ public final class DensityFunctionCaveCleaner {
             } else if (transformedChild2 == null) {
                 return transformedChild1;
             } else {
-                rangeChoice.whenInRange = transformedChild1;
-                rangeChoice.whenOutOfRange = transformedChild2;
-                return rangeChoice;
+                return DensityFunctions.rangeChoice(
+                        input,
+                        rangeChoice.minInclusive(),
+                        rangeChoice.maxExclusive(),
+                        transformedChild1,
+                        transformedChild2);
             }
         }
     }
@@ -140,8 +142,12 @@ public final class DensityFunctionCaveCleaner {
         } else if (transformedChild instanceof DensityFunctions.Constant constant) {
             return DensityFunctions.constant(linear.transform(constant.value()));
         } else {
-            linear.input = transformedChild;
-            return linear;
+            return new DensityFunctions.MulOrAdd(
+                    linear.specificType(),
+                    transformedChild,
+                    linear.minValue(),
+                    linear.maxValue(),
+                    linear.argument());
         }
     }
 
@@ -191,7 +197,7 @@ public final class DensityFunctionCaveCleaner {
             return DensityFunctions.constant(unary.transform(constant.value()));
         } else if (transformedChild != originalChild) {
             if (unary instanceof DensityFunctions.Clamp typedUnary) {
-                typedUnary.input = transformedChild;
+                return new DensityFunctions.Clamp(transformedChild, typedUnary.minValue(), typedUnary.maxValue());
             } else if (unary instanceof DensityFunctions.Mapped typedUnary) {
                 return DensityFunctions.Mapped.create(typedUnary.type(), transformedChild);
             }
@@ -201,30 +207,15 @@ public final class DensityFunctionCaveCleaner {
     }
 
     @Nullable
-    private static DensityFunction transformWrapper(DensityFunctions.MarkerOrMarked wrapper) {
-        DensityFunction originalChild = wrapper.wrapped();
+    private static DensityFunction transformMarker(DensityFunctions.Marker marker) {
+        DensityFunction originalChild = marker.wrapped();
         DensityFunction transformedChild = transform(originalChild);
         if (transformedChild == null) {
             return null;
         } else if (transformedChild != originalChild) {
-            if (wrapper instanceof NoiseChunk.Cache2D typedWrapper) {
-                typedWrapper.function = transformedChild;
-            } else if (wrapper instanceof NoiseChunk.Cache2D typedWrapper) {
-                typedWrapper.function = transformedChild;
-            } else if (wrapper instanceof NoiseChunk.CacheOnce typedWrapper) {
-                typedWrapper.function = transformedChild;
-            } else if (wrapper instanceof NoiseChunk.CacheAllInCell typedWrapper) {
-                typedWrapper.noiseFiller = transformedChild;
-            } else if (wrapper instanceof NoiseChunk.NoiseInterpolator typedWrapper) {
-                typedWrapper.noiseFiller = transformedChild;
-            } else if (wrapper instanceof NoiseChunk.FlatCache typedWrapper) {
-                typedWrapper.noiseFiller = transformedChild;
-            } else if (wrapper instanceof DensityFunctions.Marker typedWrapper) {
-                typedWrapper.wrapped = transformedChild;
-            }
-            // Unknown types will be left as is
+            return new DensityFunctions.Marker(marker.type(), transformedChild);
         }
-        return wrapper;
+        return marker;
     }
 
     @Nullable
@@ -234,10 +225,13 @@ public final class DensityFunctionCaveCleaner {
         if (transformedChild == null) {
             return null;
         } else if (transformedChild != originalChild) {
-            if (positional instanceof DensityFunctions.BlendDensity typedPositional) {
-                typedPositional.input = transformedChild;
+            if (positional instanceof DensityFunctions.BlendDensity) {
+                return DensityFunctions.blendDensity(transformedChild);
             } else if (positional instanceof DensityFunctions.WeirdScaledSampler typedPositional) {
-                typedPositional.input = transformedChild;
+                return new DensityFunctions.WeirdScaledSampler(
+                        transformedChild,
+                        typedPositional.noise(),
+                        typedPositional.rarityValueMapper());
             }
             // Unknown types will be left as is
         }
