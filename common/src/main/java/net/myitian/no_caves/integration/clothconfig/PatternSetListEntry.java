@@ -10,8 +10,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.narration.NarrationSupplier;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.myitian.no_caves.NoCaves;
@@ -28,7 +31,9 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
-public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEntry.Cell, PatternSetListEntry> {
+public class PatternSetListEntry
+        extends BaseListEntry<Pattern, PatternSetListEntry.Cell, PatternSetListEntry>
+        implements ContainerEventHandler, NarratableEntry, NarrationSupplier {
     protected final Supplier<PatternSet> defaultValue;
     protected final Set<PatternKey> original;
     protected Function<Pattern, Optional<Component>> cellErrorSupplier;
@@ -155,7 +160,9 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
         return new Cell(pattern, this);
     }
 
-    public static class Cell extends BaseListCell {
+    public static class Cell
+            extends BaseListCell
+            implements ContainerEventHandler, NarratableEntry, NarrationSupplier {
         protected final EditBox patternFieldWidget;
         protected final EditBox flagsFieldWidget;
         protected final PatternSetListEntry listListEntry;

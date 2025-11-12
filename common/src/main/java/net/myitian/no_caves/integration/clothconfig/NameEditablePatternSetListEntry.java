@@ -4,6 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarrationSupplier;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.myitian.no_caves.PatternSet;
@@ -16,7 +19,9 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 @Environment(EnvType.CLIENT)
-public class NameEditablePatternSetListEntry extends PatternSetListEntry implements NameEditableListEntry<List<Pattern>> {
+public class NameEditablePatternSetListEntry
+        extends PatternSetListEntry
+        implements NameEditableListEntry<List<Pattern>>, ContainerEventHandler, NarratableEntry, NarrationSupplier {
     private final EditBox nameFieldWidget;
 
     public NameEditablePatternSetListEntry(@Nullable String name, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Consumer<List<Pattern>> saveConsumer, Supplier<PatternSet> defaultValue, Component resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {

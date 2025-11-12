@@ -46,6 +46,13 @@ public interface NameEditableListEntry<T> {
         nameFieldWidget.setBordered(true);
         nameFieldWidget.setValue(name == null ? "" : name);
         nameFieldWidget.setResponder(s -> nameFieldWidget.setTextColor(getPreferredTextColor()));
-        return nameFieldWidget;
+        return MixinTarget.initTextField(nameFieldWidget);
+    }
+
+    class MixinTarget {
+        /// Provides mixin targets for Mixin v0.8.6 or earlier that do not support some interface mixins.
+        public static EditBox initTextField(EditBox nameFieldWidget) {
+            return nameFieldWidget;
+        }
     }
 }

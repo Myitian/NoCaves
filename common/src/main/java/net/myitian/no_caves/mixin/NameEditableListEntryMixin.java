@@ -7,10 +7,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = NameEditableListEntry.class, remap = false)
-interface NameEditableListEntryMixin {
+@Mixin(value = NameEditableListEntry.MixinTarget.class, remap = false)
+abstract class NameEditableListEntryMixin {
     @Inject(method = "initTextField", at = @At("TAIL"))
-    default void initTextField_Inject(String name, CallbackInfoReturnable<EditBox> ci) {
+    private static void initTextField_Inject(CallbackInfoReturnable<EditBox> ci) {
         ci.getReturnValue().moveCursorToStart(false);
     }
 }

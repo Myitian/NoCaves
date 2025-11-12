@@ -10,8 +10,11 @@ import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.narration.NarrationSupplier;
 import net.minecraft.network.chat.Component;
 import net.myitian.no_caves.NoCaves;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -26,7 +29,9 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
-public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>> {
+public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>>
+        extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+        implements ContainerEventHandler, NarratableEntry, NarrationSupplier {
     protected final Supplier<Map<String, T>> defaultValue;
     protected final Map<String, T> original;
     private final List<ReferenceProvider<?>> referencableEntries = Lists.newArrayList();
@@ -114,7 +119,9 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         return this;
     }
 
-    public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, Cell<T, INNER>, String2ListMapListEntry<T, INNER>> implements ReferenceProvider<T> {
+    public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>>
+            extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+            implements ReferenceProvider<T>, ContainerEventHandler, NarratableEntry, NarrationSupplier {
         public final INNER nestedEntry;
         private final List<INNER> child;
 
@@ -130,7 +137,9 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
 
         @Override
         public boolean isMouseOver(double mouseX, double mouseY) {
-            return super.isMouseOver(mouseX, mouseY) || nestedEntry.isMouseOver(mouseX, mouseY);
+            @SuppressWarnings("UnnecessaryLocalVariable") GuiEventListener entry = nestedEntry;
+            // Do not simplify, otherwise it may not be able to be remapped correctly!
+            return entry.isMouseOver(mouseX, mouseY);
         }
 
         public @NotNull AbstractConfigEntry<T> provideReferenceEntry() {
@@ -200,7 +209,9 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         }
 
         public void updateNarration(NarrationElementOutput narrationElementOutput) {
-            nestedEntry.updateNarration(narrationElementOutput);
+            @SuppressWarnings("UnnecessaryLocalVariable") NarrationSupplier entry = nestedEntry;
+            // Do not simplify, otherwise it may not be able to be remapped correctly!
+            entry.updateNarration(narrationElementOutput);
         }
     }
 }
