@@ -10,7 +10,6 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.myitian.no_caves.config.Config;
-import net.myitian.no_caves.mixin.BiomeGenerationSettingsMixin;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -99,8 +98,7 @@ public final class RegistryValuePreprocessor {
         BiomeGenerationSettings settings = biome.getGenerationSettings();
         PatternSet patterns = Config.getBiomeSpecificOverrideForDisabledCarverPatterns()
                 .getOrDefault(key.toString(), Config.getDisabledCarverPatterns());
-        BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin) settings;
-        Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers = wrapper.getCarvers();
+        Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers = settings.carvers;
         @SuppressWarnings("unchecked")
         Pair<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] tmp = new Pair[carvers.size()];
         int i = 0;
@@ -115,7 +113,7 @@ public final class RegistryValuePreprocessor {
             }
             tmp[i++] = Pair.of(entry.getKey(), HolderSet.direct(list));
         }
-        wrapper.setCarvers(Map.ofEntries(tmp));
+        settings.carvers = Map.ofEntries(tmp);
         NoCaves.LOGGER.debug(
                 "NoCaves.processedGenerationSettings {} {}",
                 ++NoCaves.processedGenerationSettings,

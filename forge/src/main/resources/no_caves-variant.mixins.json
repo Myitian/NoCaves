@@ -10,5 +10,6 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "no_caves-variant-refmap.json"
 }

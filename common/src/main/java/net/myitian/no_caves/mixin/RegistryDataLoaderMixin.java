@@ -32,7 +32,7 @@ abstract class RegistryDataLoaderMixin {
                     value = "INVOKE",
                     target = "Lcom/mojang/serialization/DataResult;getOrThrow(ZLjava/util/function/Consumer;)Ljava/lang/Object;",
                     remap = false))
-    private static Object load_Redirect_getOrThrow(DataResult<?> instance, boolean allowPartial, Consumer<String> onError) {
+    private static Object loadRegistryContents_Redirect_getOrThrow(DataResult<?> instance, boolean allowPartial, Consumer<String> onError) {
         ResourceKey<?> key = tmp$registryKey.get();
         tmp$registryKey.remove();
         return RegistryValuePreprocessor.process(key, instance.getOrThrow(allowPartial, onError));

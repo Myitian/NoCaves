@@ -48,6 +48,7 @@ processResources {
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
+    exclude "*-refmap.json"
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
 }
