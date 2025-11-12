@@ -1,61 +1,24 @@
-accessWidener v2 named
-accessible field net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
+accessWidener v2  named
+accessible field  net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
+mutable    field  net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
 
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$TwoArgumentSimpleFunction
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$PureTransformer
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Constant
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$TransformerWithContext
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Ap2
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Noise
-accessible field net/minecraft/core/Holder$Direct value Ljava/lang/Object;
-mutable    field net/minecraft/core/Holder$Direct value Ljava/lang/Object;
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$BlendDensity
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$Constant
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$Mapped
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$Noise
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$RangeChoice
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$PureTransformer
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$TransformerWithContext
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$TwoArgumentSimpleFunction
 
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$RangeChoice
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$RangeChoice whenInRange Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$RangeChoice whenInRange Lnet/minecraft/world/level/levelgen/DensityFunction;
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$RangeChoice whenOutOfRange Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$RangeChoice whenOutOfRange Lnet/minecraft/world/level/levelgen/DensityFunction;
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$Clamp
+accessible method net/minecraft/world/level/levelgen/DensityFunctions$Clamp <init> (Lnet/minecraft/world/level/levelgen/DensityFunction;DD)V
 
-accessible class net/minecraft/world/level/levelgen/NoiseChunk$Cache2D
-accessible field net/minecraft/world/level/levelgen/NoiseChunk$Cache2D function Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/NoiseChunk$Cache2D function Lnet/minecraft/world/level/levelgen/DensityFunction;
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$Marker
+accessible method net/minecraft/world/level/levelgen/DensityFunctions$Marker <init> (Lnet/minecraft/world/level/levelgen/DensityFunctions$Marker$Type;Lnet/minecraft/world/level/levelgen/DensityFunction;)V
 
-accessible class net/minecraft/world/level/levelgen/NoiseChunk$CacheOnce
-accessible field net/minecraft/world/level/levelgen/NoiseChunk$CacheOnce function Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/NoiseChunk$CacheOnce function Lnet/minecraft/world/level/levelgen/DensityFunction;
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd
+accessible method net/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd <init> (Lnet/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd$Type;Lnet/minecraft/world/level/levelgen/DensityFunction;DDD)V
 
-accessible class net/minecraft/world/level/levelgen/NoiseChunk$CacheAllInCell
-accessible field net/minecraft/world/level/levelgen/NoiseChunk$CacheAllInCell noiseFiller Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/NoiseChunk$CacheAllInCell noiseFiller Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible field net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolator noiseFiller Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolator noiseFiller Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible class net/minecraft/world/level/levelgen/NoiseChunk$FlatCache
-accessible field net/minecraft/world/level/levelgen/NoiseChunk$FlatCache noiseFiller Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/NoiseChunk$FlatCache noiseFiller Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Marker
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$Marker wrapped Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$Marker wrapped Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Clamp
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$Clamp input Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$Clamp input Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd input Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd input Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Mapped
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$Mapped input Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$Mapped input Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$BlendDensity
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$BlendDensity input Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$BlendDensity input Lnet/minecraft/world/level/levelgen/DensityFunction;
-
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler
-accessible field net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler input Lnet/minecraft/world/level/levelgen/DensityFunction;
-mutable    field net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler input Lnet/minecraft/world/level/levelgen/DensityFunction;
+accessible class  net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler
+accessible method net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler <init> (Lnet/minecraft/world/level/levelgen/DensityFunction;Lnet/minecraft/world/level/levelgen/DensityFunction$NoiseHolder;Lnet/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler$RarityValueMapper;)V
