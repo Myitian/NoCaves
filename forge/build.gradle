@@ -44,10 +44,12 @@ dependencies {
 }
 
 processResources {
-    inputs.properties props
+    def propsCopy = new HashMap(props)
+    propsCopy.replace("mod_version", "${rootProject.mod_version}-${project.name}-${rootProject.version_id}")
+    inputs.properties propsCopy
 
     filesMatching(["pack.mcmeta", "META-INF/mods.toml"]) {
-        expand props
+        expand propsCopy
     }
 }
 
