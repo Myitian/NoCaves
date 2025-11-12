@@ -8,6 +8,7 @@ import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.myitian.no_caves.PatternSet;
 import net.myitian.no_caves.RegistryValuePreprocessor;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -15,13 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@Mixin(value = RegistryValuePreprocessor.class, remap = false)
+@Mixin(value = RegistryValuePreprocessor.class)
 public class RegistryValuePreprocessorMixin {
-    @Inject(
-            method = "processBiome(Lnet/minecraft/world/level/biome/BiomeGenerationSettings;Lnet/myitian/no_caves/PatternSet;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private static void processBiome(BiomeGenerationSettings settings, PatternSet patterns, CallbackInfo ci) {
+    /**
+     * @author Myitian
+     * @reason Replace impl in higher version MC
+     */
+    @Overwrite
+    private static void processBiome(BiomeGenerationSettings settings, PatternSet patterns) {
         BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin) settings;
         HolderSet<ConfiguredWorldCarver<?>> carvers = wrapper.getCarvers();
         ArrayList<Holder<ConfiguredWorldCarver<?>>> tmp = new ArrayList<>(carvers.size());
@@ -32,6 +34,5 @@ public class RegistryValuePreprocessorMixin {
             }
         }
         wrapper.setCarvers(HolderSet.direct(tmp));
-        ci.cancel();
     }
 }

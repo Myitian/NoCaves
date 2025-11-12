@@ -75,6 +75,10 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         setReferenceProviderEntries(referencableEntries);
     }
 
+    public void setFocusedProxy(GuiEventListener focused) {
+        setFocused(focused); // mixins in variant subproject seems cannot remap setFocused() correctly
+    }
+
     @Override
     public boolean isEdited() {
         if (super.isEdited() || original == null) {
@@ -126,6 +130,10 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         }
 
         public void updateBounds(boolean expanded, int x, int y, int entryWidth, int entryHeight) {
+        }
+
+        public void setFocusedProxy(GuiEventListener focused) {
+            setFocused(focused); // mixins in variant subproject seems cannot remap setFocused() correctly
         }
 
         @Override
