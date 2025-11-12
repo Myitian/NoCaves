@@ -13,16 +13,24 @@
   "license": "${mod_license}",
   "icon": "${mod_icon}",
   "accessWidener": "${mod_id}.accesswidener",
-  "environment": "client",
+  "environment": "*",
   "mixins": [
-    "${mod_id}-common.mixins.json"
+    "${mod_id}-common.mixins.json",
+    "${mod_id}-variant.mixins.json"
   ],
   "entrypoints": {
     "main": [
       "${maven_group}.fabric.NoCavesFabric"
+    ],
+    "modmenu": [
+      "${maven_group}.integration.modmenu.ModMenuIntegration"
     ]
   },
   "depends": {
     "minecraft": "${supported_minecraft_version_fabric}"
+  },
+  "suggests": {
+    "modmenu": "*",
+    "cloth-config": "*"
   }
 }

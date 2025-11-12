@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.myitian.no_caves.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
+  "mixins": [
+    "BiomeGenerationSettingsMixin",
+    "RegistryDataLoaderMixin"
+  ],
+  "client": [
+    "BaseListEntryMixin",
+    "NameEditableListEntryMixin",
+    "PatternSetListEntry$CellMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

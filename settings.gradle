@@ -8,6 +8,9 @@ pluginManagement {
     }
 }
 
+include "variant"
+include "variant-fabric-wrapper"
+include "variant-forge-wrapper"
 include "common"
 include "fabric"
 include "forge"

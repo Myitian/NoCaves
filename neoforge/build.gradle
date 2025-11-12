@@ -1,8 +1,7 @@
 import net.fabricmc.loom.LoomGradleExtension
-import net.fabricmc.loom.util.aw2at.Aw2At
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.gradleup.shadow" version "9.2.2"
 }
 
 architectury {
@@ -22,12 +21,17 @@ configurations {
     developmentNeoForge.extendsFrom common
 }
 
+shadow {
+    addShadowVariantIntoJavaComponent = false
+}
+
 base {
-    archivesName = "${project.mod_id}-neoforge-${project.minecraft_version}"
+    archivesName = "${project.mod_id}-${project.name}-${project.version_id}"
 }
 
 dependencies {
-    neoForge "net.neoforged:neoforge:${project.neoforge_version}"
+    neoForge "net.neoforged:neoforge:${project.main_neoforge_version}"
+    modImplementation "me.shedaniel.cloth:cloth-config-neoforge:${project.main_cloth_config_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
@@ -36,7 +40,7 @@ dependencies {
 processResources {
     inputs.properties props
 
-    filesMatching(["META-INF/pack.mcmeta", "META-INF/*mods.toml"]) {
+    filesMatching(["pack.mcmeta", "META-INF/*mods.toml"]) {
         expand props
     }
 }
@@ -59,34 +63,28 @@ sourcesJar {
     from commonSources.archiveFile.map { zipTree(it) }
 }
 
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
-}
-
 afterEvaluate {
 //  copied from Aw2At.setup
-    LoomGradleExtension extension = LoomGradleExtension.get(project);
+    LoomGradleExtension extension = LoomGradleExtension.get(project)
     if (extension.getAccessWidenerPath().isPresent()) {
         // Find the relative AW file name
-        String awName = null;
-        java.nio.file.Path awPath = extension.getAccessWidenerPath().get().getAsFile().toPath();
-        SourceSetContainer sourceSets = project.getExtensions().getByType(SourceSetContainer.class);
-        SourceSet main = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-        boolean found = false;
+        String awName = null
+        java.nio.file.Path awPath = extension.getAccessWidenerPath().get().getAsFile().toPath()
+        SourceSetContainer sourceSets = project.getExtensions().getByType(SourceSetContainer.class)
+        SourceSet main = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+        boolean found = false
         for (File srcDir : main.getResources().getSrcDirs()) {
-            java.nio.file.Path srcDirPath = srcDir.toPath().toAbsolutePath();
+            java.nio.file.Path srcDirPath = srcDir.toPath().toAbsolutePath()
             if (awPath.startsWith(srcDirPath)) {
-                awName = srcDirPath.relativize(awPath).toString().replace(File.separator, "/");
-                found = true;
-                break;
+                awName = srcDirPath.relativize(awPath).toString().replace(File.separator, "/")
+                found = true
+                break
             }
         }
         if (!found) {
-            awName = awPath.getFileName().toString();
+            awName = awPath.getFileName().toString()
         }
-        remapJar.getAtAccessWideners().add(awName);
+        remapJar.getAtAccessWideners().add(awName)
     }
 }
 

@@ -3,8 +3,8 @@ package net.myitian.no_caves.config;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import net.minecraft.util.Pair;
 import net.myitian.no_caves.PatternSet;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.myitian.no_caves.mixin.variant",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
+  "client": [
+    "NameEditableListEntryMixin",
+    "PatternSetListEntry$CellMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "no_caves-variant-refmap.json"
+}

@@ -1,27 +1,24 @@
 package net.myitian.no_caves;
 
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.carver.ConfiguredCarver;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.densityfunction.DensityFunction;
-import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
-import net.minecraft.world.gen.noise.NoiseRouter;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.myitian.no_caves.config.Config;
+import net.myitian.no_caves.mixin.BiomeGenerationSettingsMixin;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
-public final class RegistryLoaderHelper {
-    public static Object process(RegistryKey<?> key, Object rawValue) {
+public final class RegistryValuePreprocessor {
+    public static Object process(ResourceKey<?> key, Object rawValue) {
         boolean newObject = false;
         boolean useOptional = false;
         Object value = rawValue;
@@ -33,19 +30,19 @@ public final class RegistryLoaderHelper {
             value = optional.get();
             useOptional = true;
         }
-        Identifier registryId = key.getRegistry();
-        if (registryId.equals(RegistryKeys.CHUNK_GENERATOR_SETTINGS.getValue())) {
-            if (value instanceof ChunkGeneratorSettings checkedValue) {
-                processChunkGeneratorSettings(key.getValue(), checkedValue);
+        ResourceLocation registryId = key.registry();
+        if (registryId.equals(Registries.NOISE_SETTINGS.location())) {
+            if (value instanceof NoiseGeneratorSettings checkedValue) {
+                processChunkGeneratorSettings(key.location(), checkedValue);
             }
-        } else if (registryId.equals(RegistryKeys.DENSITY_FUNCTION.getValue())) {
+        } else if (registryId.equals(Registries.DENSITY_FUNCTION.location())) {
             if (value instanceof DensityFunction checkedValue) {
-                value = processDensityFunction(key.getValue(), checkedValue);
+                value = processDensityFunction(key.location(), checkedValue);
                 newObject = true;
             }
-        } else if (registryId.equals(RegistryKeys.BIOME.getValue())) {
+        } else if (registryId.equals(Registries.BIOME.location())) {
             if (value instanceof Biome checkedValue) {
-                processBiome(key.getValue(), checkedValue);
+                processBiome(key.location(), checkedValue);
             }
         }
         if (!newObject) {
@@ -57,18 +54,18 @@ public final class RegistryLoaderHelper {
         }
     }
 
-    public static void processChunkGeneratorSettings(Identifier key, ChunkGeneratorSettings chunkGeneratorSettings) {
+    public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings settings) {
         if (!(Config.isEnableFinalDensityTransformation()
                 && !Config.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
             return;
         }
-        NoiseRouter noiseRouter = chunkGeneratorSettings.noiseRouter();
+        NoiseRouter noiseRouter = settings.noiseRouter();
         DensityFunction finalDensity = DensityFunctionCaveCleaner.transform(noiseRouter.finalDensity());
         if (finalDensity == null) {
             NoCaves.LOGGER.warn(
                     "Null FinalDensity detected in {}. This shouldn't happen unless there are worlds that only use cave noise functions.",
                     key);
-            finalDensity = DensityFunctionTypes.zero();
+            finalDensity = DensityFunctions.zero();
         }
         noiseRouter.finalDensity = finalDensity;
         NoCaves.LOGGER.debug("NoCaves.transformedFinalDensity {} {}",
@@ -76,7 +73,7 @@ public final class RegistryLoaderHelper {
                 key);
     }
 
-    public static DensityFunction processDensityFunction(Identifier key, DensityFunction densityFunction) {
+    public static DensityFunction processDensityFunction(ResourceLocation key, DensityFunction densityFunction) {
         if (!(Config.isEnableDensityFunctionTransformation()
                 && Config.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
             return densityFunction;
@@ -86,7 +83,7 @@ public final class RegistryLoaderHelper {
             NoCaves.LOGGER.warn(
                     "Null DensityFunction detected in {}. Consider adding this function to densityFunctionCavePatterns, otherwise it may negatively impact world generation.",
                     key);
-            densityFunction = DensityFunctionTypes.zero();
+            densityFunction = DensityFunctions.zero();
         }
         NoCaves.LOGGER.debug("NoCaves.transformedDensityFunctions {} {}",
                 ++NoCaves.transformedDensityFunctions,
@@ -94,29 +91,31 @@ public final class RegistryLoaderHelper {
         return densityFunction;
     }
 
-    public static void processBiome(Identifier key, Biome biome) {
+    public static void processBiome(ResourceLocation key, Biome biome) {
         if (!(Config.isEnableCarverFilter()
                 && !Config.getCarverFilterBiomeExclusionPatterns().matches(key.toString()))) {
             return;
         }
-        GenerationSettings generationSettings = biome.getGenerationSettings();
+        BiomeGenerationSettings settings = biome.getGenerationSettings();
         PatternSet patterns = Config.getBiomeSpecificOverrideForDisabledCarverPatterns()
                 .getOrDefault(key.toString(), Config.getDisabledCarverPatterns());
+        BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin) settings;
+        Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers = wrapper.getCarvers();
         @SuppressWarnings("unchecked")
-        Pair<GenerationStep.Carver, RegistryEntryList<ConfiguredCarver<?>>>[] carvers = new Pair[generationSettings.carvers.size()];
+        Pair<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] tmp = new Pair[carvers.size()];
         int i = 0;
-        for (var entry : generationSettings.carvers.entrySet()) {
-            RegistryEntryList<ConfiguredCarver<?>> originalList = entry.getValue();
-            ArrayList<RegistryEntry<ConfiguredCarver<?>>> list = new ArrayList<>(originalList.size());
+        for (var entry : carvers.entrySet()) {
+            HolderSet<ConfiguredWorldCarver<?>> originalList = entry.getValue();
+            ArrayList<Holder<ConfiguredWorldCarver<?>>> list = new ArrayList<>(originalList.size());
             for (var regEntry : originalList) {
-                Optional<RegistryKey<ConfiguredCarver<?>>> regKey = regEntry.getKey();
-                if (regKey.isPresent() && !patterns.matches(regKey.get().getValue().toString())) {
+                Optional<ResourceKey<ConfiguredWorldCarver<?>>> regKey = regEntry.unwrapKey();
+                if (regKey.isPresent() && !patterns.matches(regKey.get().location().toString())) {
                     list.add(regEntry);
                 }
             }
-            carvers[i++] = Pair.of(entry.getKey(), RegistryEntryList.of(list));
+            tmp[i++] = Pair.of(entry.getKey(), HolderSet.direct(list));
         }
-        generationSettings.carvers = Map.ofEntries(carvers);
+        wrapper.setCarvers(Map.ofEntries(tmp));
         NoCaves.LOGGER.debug(
                 "NoCaves.processedGenerationSettings {} {}",
                 ++NoCaves.processedGenerationSettings,

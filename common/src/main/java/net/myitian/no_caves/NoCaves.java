@@ -1,25 +1,75 @@
 package net.myitian.no_caves;
 
+import net.minecraft.SharedConstants;
 import net.myitian.no_caves.config.Config;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class NoCaves {
     public static final String MOD_ID = "no_caves";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve("no_caves.json");
+    public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
+
+    public static final int DATA_VERSION;
+    public static final int MC_1_20_2__23w31a = 3567;
+    public static final int MC_1_20__23w16a = 3449;
+    public static final boolean CLOTH_CONFIG_EXISTED;
 
     public static int processedGenerationSettings = 0;
     public static int transformedFinalDensity = 0;
     public static int transformedDensityFunctions = 0;
+
+    static {
+        SharedConstants.tryDetectVersion();
+        DATA_VERSION = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
+        CLOTH_CONFIG_EXISTED = isClothConfigExisted();
+    }
 
     public static void init() {
         File configFile = CONFIG_PATH.toFile();
         if (!Config.load(configFile)) {
             Config.save(configFile);
         }
+    }
+
+    public static boolean isClothConfigExisted() {
+        try {
+            Class.forName("me.shedaniel.clothconfig2.api.ConfigBuilder");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static <K, V> @NotNull Map<K, V> createMap(List<Map.Entry<K, V>> entryList) {
+        Map<K, V> resultMap = new HashMap<>();
+        for (Map.Entry<K, V> entry : entryList) {
+            resultMap.put(entry.getKey(), entry.getValue());
+        }
+        return resultMap;
+    }
+
+    public static String getFirstLine(String str) {
+        if (str == null) {
+            return null;
+        }
+        if (str.isEmpty()) {
+            return "";
+        }
+        int len = str.length();
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            if (c == '\n' || c == '\r' || c == '\f' || c == '\u0085' || c == '\u2028' || c == '\u2029') {
+                return str.substring(0, i);
+            }
+        }
+        return str;
     }
 }
