@@ -81,7 +81,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
 
     @Override
     public boolean isEdited() {
-        if (super.isEdited() || original == null) {
+        if (getConfigError().isPresent() || original == null) {
             return true;
         }
         return !isMatch(original);
