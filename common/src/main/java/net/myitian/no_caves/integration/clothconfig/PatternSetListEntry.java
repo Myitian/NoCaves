@@ -101,10 +101,18 @@ public class PatternSetListEntry
 
     @Override
     public boolean isEdited() {
-        if (super.isEdited() || original == null) {
+        if (getConfigError().isPresent() || original == null) {
             return true;
         }
         return !isMatch(original);
+    }
+
+    @Override
+    public boolean isMatchDefault() {
+        if (defaultValue == null) {
+            return false;
+        }
+        return isMatch(defaultValue.get().keySet());
     }
 
     public boolean isMatch(List<Pattern> patterns) {
@@ -131,14 +139,6 @@ public class PatternSetListEntry
             keySet.add(key);
         }
         return keySet.size() == patterns.size();
-    }
-
-    @Override
-    public boolean isMatchDefault() {
-        if (defaultValue == null) {
-            return false;
-        }
-        return isMatch(defaultValue.get().keySet());
     }
 
     @Override
