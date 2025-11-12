@@ -22,7 +22,7 @@ abstract class PatternSetListEntry$CellMixin {
     protected EditBox flagsFieldWidget;
 
     @Inject(method = "<init>*", at = @At("TAIL"))
-    void initTextField(Pattern value, PatternSetListEntry listListEntry, CallbackInfo ci) {
+    void init_Inject(Pattern value, PatternSetListEntry listListEntry, CallbackInfo ci) {
         patternFieldWidget.moveCursorToStart();
         flagsFieldWidget.moveCursorToStart();
     }
