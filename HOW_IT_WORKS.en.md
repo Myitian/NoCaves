@@ -31,36 +31,36 @@ The `DensityFunctionCaveCleaner` class will recursively transform the density fu
 </thead>
 <tbody>
 <tr>
-<td><code>DensityFunctionTypes.RegistryEntryHolder</code></td>
+<td><code>DensityFunctions.HolderHolder</code></td>
 <td>If the type is <code>Reference</code>, it checks whether the referenced density function is a cave density function. If so, it returns <code>null</code>; otherwise, it returns the object itself.<br>If the type is <code>Direct</code>, it transforms the stored density function and returns it.</td>
 </tr>
 <tr>
-<td><code>DensityFunctionTypes.Noise</code></td>
+<td><code>DensityFunctions.Noise</code></td>
 <td>If the noise parameter is identified as cave noise, it returns <code>null</code>; otherwise, it returns the object itself.</td>
 </tr>
 <tr>
-<td><code>DensityFunctionTypes.RangeChoice</code></td>
-<td>If the input is identified as a cave density function, the <code>whenOutOfRange</code> branch is always selected and transformed and returned.<br>If the input is identified as a constant, optimization is performed, the corresponding branch is selected, transformed and returned.<br>In other cases, both branches are transformed. If one branch is <code>null</code>, the other branch is returned; otherwise, the original object's fields are updated and the original object is returned.</td>
+<td><code>DensityFunctions.RangeChoice</code></td>
+<td>If the input is identified as a cave density function, the <code>whenOutOfRange</code> branch is always selected and transformed and returned.<br>If the input is identified as a constant, optimization is performed, the corresponding branch is selected, transformed and returned.<br>In other cases, both branches will be transformed. If one branch is <code>null</code>, the other branch will be returned directly. If there is no change, the original object will be returned. Otherwise, a new object will be returned, in which the corresponding density function will be replaced with the transformed one.</td>
 </tr>
 <tr>
-<td><code>DensityFunctionTypes.LinearOperation</code></td>
-<td>The input is transformed.<br>If the result is <code>null</code>, the linear operation's argument is returned as a constant.<br>If the result is a constant, optimization is performed and the calculated constant is returned.<br>In other cases, the original object's fields are updated and the original object is returned.</td>
+<td><code>DensityFunctions.MulOrAdd</code></td>
+<td>The input is transformed.<br>If the result is <code>null</code>, the linear operation's argument is returned as a constant.<br>If the result is a constant, optimization is performed and the calculated constant is returned.<br>In other cases, if there is no change, the original object is returned; otherwise, a new object is returned, in which the corresponding density function is replaced with the transformed one.</td>
 </tr>
 <tr>
-<td><code>DensityFunctionTypes.BinaryOperationLike</code></td>
+<td><code>DensityFunctions.Marker</code></td>
+<td>The wrapped density function is transformed.<br>If the result is <code>null</code>, <code>null</code> is returned.<br>In other cases, if there is no change or the type is unknown, the original object is returned; otherwise, a new object is returned, in which the corresponding density function is replaced with the transformed one.</td>
+</tr>
+<tr>
+<td><code>DensityFunctions.TwoArgumentSimpleFunction</code></td>
 <td>Both arguments are converted.<br>If either result is <code>null</code>, the other is returned directly.<br>If both results are constants, optimization is performed and the calculated constant is returned.<br>In other cases, a new binary operation of the same type is created using both results and returned.</td>
 </tr>
 <tr>
-<td><code>DensityFunctionTypes.Unary</code></td>
+<td><code>DensityFunctions.PureTransformer</code></td>
 <td>The input is transformed.<br>If the result is <code>null</code>, <code>null</code> is returned.<br>If the result is a constant, optimization is performed and the calculated constant is returned.<br>In other cases, if the type is <code>Clamp</code>, the original object's fields are updated and the original object is returned; if the type is <code>UnaryOperation</code>, a new unary operation of the same type is created using the transformation result and returned; otherwise, the original object is returned (unknown types cannot be handled).</td>
 </tr>
 <tr>
-<td><code>DensityFunctionTypes.Wrapper</code></td>
-<td>The wrapped density function is transformed.<br>If the result is <code>null</code>, <code>null</code> is returned.<br>In other cases, if the type is known, the original object's fields are updated and the original object is returned; otherwise, the original object is returned (unknown types cannot be handled).</td>
-</tr>
-<tr>
-<td><code>DensityFunctionTypes.Positional</code></td>
-<td>The input is transformed.<br>If the result is <code>null</code>, <code>null</code> is returned.<br>In other cases, if the type is known, the original object's fields are updated and the original object is returned; otherwise, the original object is returned (unknown types cannot be handled).</td>
+<td><code>DensityFunctions.TransformerWithContext</code></td>
+<td>The input is transformed.<br>If the result is <code>null</code>, <code>null</code> is returned.<br>In other cases, if there is no change or the type is unknown, the original object is returned; otherwise, a new object is returned, in which the corresponding density function is replaced with the transformed one.</td>
 </tr>
 </tbody>
 </table>

@@ -152,6 +152,18 @@ public final class DensityFunctionCaveCleaner {
     }
 
     @Nullable
+    private static DensityFunction transformMarker(DensityFunctions.Marker marker) {
+        DensityFunction originalChild = marker.wrapped();
+        DensityFunction transformedChild = transform(originalChild);
+        if (transformedChild == null) {
+            return null;
+        } else if (transformedChild != originalChild) {
+            return new DensityFunctions.Marker(marker.type(), transformedChild);
+        }
+        return marker;
+    }
+
+    @Nullable
     private static DensityFunction transformBinary(DensityFunctions.TwoArgumentSimpleFunction binary) {
         DensityFunction originalChild1 = binary.argument1();
         DensityFunction transformedChild1 = transform(originalChild1);
@@ -204,18 +216,6 @@ public final class DensityFunctionCaveCleaner {
             // Unknown types will be left as is
         }
         return unary;
-    }
-
-    @Nullable
-    private static DensityFunction transformMarker(DensityFunctions.Marker marker) {
-        DensityFunction originalChild = marker.wrapped();
-        DensityFunction transformedChild = transform(originalChild);
-        if (transformedChild == null) {
-            return null;
-        } else if (transformedChild != originalChild) {
-            return new DensityFunctions.Marker(marker.type(), transformedChild);
-        }
-        return marker;
     }
 
     @Nullable
