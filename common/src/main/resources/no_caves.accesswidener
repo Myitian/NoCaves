@@ -1,6 +1,4 @@
 accessWidener v2  named
-accessible method net/minecraft/util/datafix/DataFixTypes currentVersion ()I
-
 accessible field  net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
 mutable    field  net/minecraft/world/level/levelgen/NoiseRouter finalDensity Lnet/minecraft/world/level/levelgen/DensityFunction;
 
