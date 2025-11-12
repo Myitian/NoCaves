@@ -1,7 +1,6 @@
 package net.myitian.no_caves.mixin.variant;
 
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.core.Registry;
 import net.myitian.no_caves.integration.clothconfig.PatternSetListEntry;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
