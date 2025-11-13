@@ -76,5 +76,5 @@ Function<DensityFunction, DensityFunction> func = df -> {
     return df;
 };
 var reg = DensityFunctionCaveCleaner.getCustomTransformerRegistry();
-reg.put("id", new Pair<>(pred, func));
+reg.put("your_id", Pair.of(pred, func));
 ```
