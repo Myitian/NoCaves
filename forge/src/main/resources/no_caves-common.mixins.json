@@ -9,7 +9,8 @@
   ],
   "client": [
     "BaseListEntryMixin",
-    "BiomeGenerationSettingsMixin"
+    "BiomeGenerationSettings_CarversMixin",
+    "BiomeGenerationSettings_FeaturesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.myitian.no_caves.NoCaves;
 import net.myitian.no_caves.PatternSet;
 import net.myitian.no_caves.config.Config;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.File;
 import java.util.List;
@@ -24,148 +23,168 @@ public class ConfigScreen {
                 .setTitle(Component.translatable("title.no_caves.config"))
                 .setSavingRunnable(() -> Config.save(configFile));
         CustomConfigEntryBuilder entryBuilder = CustomConfigEntryBuilder.create();
-        createCarverFilterCategory(builder, entryBuilder);
-        createDensityFunctionTransformationCategory(builder, entryBuilder);
-        createFinalDensityTransformationCategory(builder, entryBuilder);
+        createBiomeGenerationSettingsCategory(builder, entryBuilder);
+        createDensityFunctionSourcesCategory(builder, entryBuilder);
         createTransformationSettingsCategory(builder, entryBuilder);
         return builder.build();
     }
 
-    private static void createCarverFilterCategory(ConfigBuilder builder, CustomConfigEntryBuilder entryBuilder) {
-        ConfigCategory category = builder.getOrCreateCategory(Component.translatable("category.no_caves.carverFilter"));
+    private static void createBiomeGenerationSettingsCategory(ConfigBuilder builder, CustomConfigEntryBuilder entryBuilder) {
+        ConfigCategory category = builder.getOrCreateCategory(Component.translatable("category.no_caves.BiomeGenerationSettings"));
         category.addEntry(entryBuilder.startBooleanToggle(
                         Component.translatable("option.no_caves.enableCarverFilter"),
-                        Config.isEnableCarverFilter())
-                .setDefaultValue(true)
+                        Config.BiomeGenerationSettings.isEnableCarverFilter())
+                .setDefaultValue(Config.BiomeGenerationSettings::defaultEnableCarverFilter)
                 .setTooltip(Component.translatable("option.no_caves.enableCarverFilter.tooltip", Component.translatable("text.cloth-config.boolean.value.true")))
-                .setSaveConsumer(Config::setEnableCarverFilter)
+                .setSaveConsumer(Config.BiomeGenerationSettings::setEnableCarverFilter)
                 .build());
+        Component name_DisabledCarverPatterns = Component.translatable("option.no_caves.disabledCarverPatterns");
         category.addEntry(entryBuilder.startPatternList(
-                        Component.translatable("option.no_caves.disabledCarverPatterns"),
-                        Config.getDisabledCarverPatterns())
-                .setDefaultValue(Config.getDefaultDisabledCarverPatterns())
+                        name_DisabledCarverPatterns,
+                        Config.BiomeGenerationSettings.getDisabledCarverPatterns())
+                .setDefaultValue(Config.BiomeGenerationSettings::defaultDisabledCarverPatterns)
                 .setTooltip(Component.translatable("option.no_caves.disabledCarverPatterns.tooltip"))
-                .setSaveConsumer(list -> {
-                    PatternSet set = Config.getDisabledCarverPatterns();
-                    set.clear();
-                    set.addAll(list);
-                })
+                .setSaveConsumer(list -> savePatternSet(Config.BiomeGenerationSettings.getDisabledCarverPatterns(), list))
                 .build());
         category.addEntry(entryBuilder.startPatternList(
                         Component.translatable("option.no_caves.carverFilterBiomeExclusionPatterns"),
-                        Config.getCarverFilterBiomeExclusionPatterns())
-                .setDefaultValue(Config.getDefaultCarverFilterBiomeExclusionPatterns())
+                        Config.BiomeGenerationSettings.getCarverFilterBiomeExclusionPatterns())
+                .setDefaultValue(Config.BiomeGenerationSettings::defaultCarverFilterBiomeExclusionPatterns)
                 .setTooltip(Component.translatable("option.no_caves.carverFilterBiomeExclusionPatterns.tooltip"))
-                .setSaveConsumer(list -> {
-                    PatternSet set = Config.getCarverFilterBiomeExclusionPatterns();
-                    set.clear();
-                    set.addAll(list);
-                })
+                .setSaveConsumer(list -> savePatternSet(Config.BiomeGenerationSettings.getCarverFilterBiomeExclusionPatterns(), list))
                 .build());
         category.addEntry(entryBuilder.<List<Pattern>, NameEditablePatternSetListEntry>startString2ListMap(
                         Component.translatable("option.no_caves.biomeSpecificOverrideForDisabledCarverPatterns"),
-                        Config.getBiomeSpecificOverrideForDisabledCarverPatterns()
+                        Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledCarverPatterns()
                                 .entrySet()
                                 .stream()
-                                .map(it -> ImmutablePair.of(it.getKey(), List.copyOf(it.getValue())))
+                                .map(ConfigScreen::createEntry)
                                 .collect(Collectors.toList()))
-                .setDefaultValue(Map.of())
-                .setTooltip(Component.translatable("option.no_caves.biomeSpecificOverrideForDisabledCarverPatterns.tooltip"))
-                .setSaveConsumer(list -> {
-                    Map<String, PatternSet> map = Config.getBiomeSpecificOverrideForDisabledCarverPatterns();
-                    map.clear();
-                    for (Map.Entry<String, List<Pattern>> entry : list) {
-                        map.put(entry.getKey(), new PatternSet(entry.getValue()));
-                    }
-                })
-                .setNewCellFactory((it, instance) -> entryBuilder.startNameEditablePatternList(
-                        it == null ? null : it.getKey(),
-                        it == null ? null : new PatternSet(it.getValue())
-                ).setDefaultValue(List.of()).build())
+                .setDefaultValue2(Map::of)
+                .setTooltip(Component.translatable("option.no_caves.biomeSpecificOverrideForDisabledCarverPatterns.tooltip", name_DisabledCarverPatterns))
+                .setSaveConsumer(list -> saveMapString2PatternSet(Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledCarverPatterns(), list))
+                .setNewCellFactory((it, instance) -> createCell(it, entryBuilder))
+                .build());
+        category.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("option.no_caves.enableFeatureFilter"),
+                        Config.BiomeGenerationSettings.isEnableFeatureFilter())
+                .setDefaultValue(Config.BiomeGenerationSettings::defaultEnableFeatureFilter)
+                .setTooltip(Component.translatable("option.no_caves.enableFeatureFilter.tooltip", Component.translatable("text.cloth-config.boolean.value.true")))
+                .setSaveConsumer(Config.BiomeGenerationSettings::setEnableFeatureFilter)
+                .build());
+        Component name_DisabledFeaturePatterns = Component.translatable("option.no_caves.disabledFeaturePatterns");
+        category.addEntry(entryBuilder.startPatternList(
+                        name_DisabledFeaturePatterns,
+                        Config.BiomeGenerationSettings.getDisabledFeaturePatterns())
+                .setDefaultValue(Config.BiomeGenerationSettings::defaultDisabledFeaturePatterns)
+                .setTooltip(Component.translatable("option.no_caves.disabledFeaturePatterns.tooltip"))
+                .setSaveConsumer(list -> savePatternSet(Config.BiomeGenerationSettings.getDisabledFeaturePatterns(), list))
+                .build());
+        category.addEntry(entryBuilder.startPatternList(
+                        Component.translatable("option.no_caves.featureFilterBiomeExclusionPatterns"),
+                        Config.BiomeGenerationSettings.getFeatureFilterBiomeExclusionPatterns())
+                .setDefaultValue(Config.BiomeGenerationSettings::defaultFeatureFilterBiomeExclusionPatterns)
+                .setTooltip(Component.translatable("option.no_caves.featureFilterBiomeExclusionPatterns.tooltip"))
+                .setSaveConsumer(list -> savePatternSet(Config.BiomeGenerationSettings.getFeatureFilterBiomeExclusionPatterns(), list))
+                .build());
+        category.addEntry(entryBuilder.<List<Pattern>, NameEditablePatternSetListEntry>startString2ListMap(
+                        Component.translatable("option.no_caves.biomeSpecificOverrideForDisabledFeaturePatterns"),
+                        Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledFeaturePatterns()
+                                .entrySet()
+                                .stream()
+                                .map(ConfigScreen::createEntry)
+                                .collect(Collectors.toList()))
+                .setDefaultValue2(Map::of)
+                .setTooltip(Component.translatable("option.no_caves.biomeSpecificOverrideForDisabledFeaturePatterns.tooltip", name_DisabledFeaturePatterns))
+                .setSaveConsumer(list -> saveMapString2PatternSet(Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledFeaturePatterns(), list))
+                .setNewCellFactory((it, instance) -> createCell(it, entryBuilder))
                 .build());
     }
 
-    private static void createDensityFunctionTransformationCategory(ConfigBuilder builder, CustomConfigEntryBuilder entryBuilder) {
-        ConfigCategory category = builder.getOrCreateCategory(Component.translatable("category.no_caves.densityFunctionTransformation"));
+    private static void createDensityFunctionSourcesCategory(ConfigBuilder builder, CustomConfigEntryBuilder entryBuilder) {
+        ConfigCategory category = builder.getOrCreateCategory(Component.translatable("category.no_caves.DensityFunctionSources"));
         category.addEntry(entryBuilder.startBooleanToggle(
                         Component.translatable("option.no_caves.enableDensityFunctionTransformation"),
-                        Config.isEnableDensityFunctionTransformation())
-                .setDefaultValue(true)
+                        Config.DensityFunctionSources.isEnableDensityFunctionTransformation())
+                .setDefaultValue(Config.DensityFunctionSources::defaultEnableDensityFunctionTransformation)
                 .setTooltip(Component.translatable("option.no_caves.enableDensityFunctionTransformation.tooltip", Component.translatable("text.cloth-config.boolean.value.true")))
-                .setSaveConsumer(Config::setEnableDensityFunctionTransformation)
+                .setSaveConsumer(Config.DensityFunctionSources::setEnableDensityFunctionTransformation)
                 .build());
         category.addEntry(entryBuilder.startPatternList(
                         Component.translatable("option.no_caves.densityFunctionToTransformPatterns"),
-                        Config.getDensityFunctionToTransformPatterns())
-                .setDefaultValue(Config.getDefaultDensityFunctionToTransformPatterns())
+                        Config.DensityFunctionSources.getDensityFunctionToTransformPatterns())
+                .setDefaultValue(Config.DensityFunctionSources::defaultDensityFunctionToTransformPatterns)
                 .setTooltip(Component.translatable("option.no_caves.densityFunctionToTransformPatterns.tooltip"))
-                .setSaveConsumer(list -> {
-                    PatternSet set = Config.getDensityFunctionToTransformPatterns();
-                    set.clear();
-                    set.addAll(list);
-                })
+                .setSaveConsumer(list -> savePatternSet(Config.DensityFunctionSources.getDensityFunctionToTransformPatterns(), list))
                 .build());
-    }
-
-    private static void createFinalDensityTransformationCategory(ConfigBuilder builder, CustomConfigEntryBuilder entryBuilder) {
-        ConfigCategory category = builder.getOrCreateCategory(Component.translatable("category.no_caves.finalDensityTransformation"));
         category.addEntry(entryBuilder.startBooleanToggle(
                         Component.translatable("option.no_caves.enableFinalDensityTransformation"),
-                        Config.isEnableFinalDensityTransformation())
-                .setDefaultValue(true)
+                        Config.DensityFunctionSources.isEnableFinalDensityTransformation())
+                .setDefaultValue(Config.DensityFunctionSources::defaultEnableFinalDensityTransformation)
                 .setTooltip(Component.translatable("option.no_caves.enableFinalDensityTransformation.tooltip", Component.translatable("text.cloth-config.boolean.value.true")))
-                .setSaveConsumer(Config::setEnableFinalDensityTransformation)
+                .setSaveConsumer(Config.DensityFunctionSources::setEnableFinalDensityTransformation)
                 .build());
         category.addEntry(entryBuilder.startPatternList(
                         Component.translatable("option.no_caves.finalDensityTransformationExclusionPatterns"),
-                        Config.getFinalDensityTransformationExclusionPatterns())
-                .setDefaultValue(Config.getDefaultFinalDensityTransformationExclusionPatterns())
+                        Config.DensityFunctionSources.getFinalDensityTransformationExclusionPatterns())
+                .setDefaultValue(Config.DensityFunctionSources::defaultFinalDensityTransformationExclusionPatterns)
                 .setTooltip(Component.translatable("option.no_caves.finalDensityTransformationExclusionPatterns.tooltip"))
-                .setSaveConsumer(list -> {
-                    PatternSet set = Config.getFinalDensityTransformationExclusionPatterns();
-                    set.clear();
-                    set.addAll(list);
-                })
+                .setSaveConsumer(list -> savePatternSet(Config.DensityFunctionSources.getFinalDensityTransformationExclusionPatterns(), list))
                 .build());
     }
 
     private static void createTransformationSettingsCategory(ConfigBuilder builder, CustomConfigEntryBuilder entryBuilder) {
-        ConfigCategory category = builder.getOrCreateCategory(Component.translatable("category.no_caves.transformationSettings"));
+        ConfigCategory category = builder.getOrCreateCategory(Component.translatable("category.no_caves.TransformationSettings"));
         category.addEntry(entryBuilder.startBooleanToggle(
                         Component.translatable("option.no_caves.enableNoiseCaveFilter"),
-                        Config.isEnableNoiseCaveFilter())
-                .setDefaultValue(true)
+                        Config.TransformationSettings.isEnableNoiseCaveFilter())
+                .setDefaultValue(Config.TransformationSettings::defaultEnableNoiseCaveFilter)
                 .setTooltip(Component.translatable("option.no_caves.enableNoiseCaveFilter.tooltip", Component.translatable("text.cloth-config.boolean.value.true")))
-                .setSaveConsumer(Config::setEnableNoiseCaveFilter)
+                .setSaveConsumer(Config.TransformationSettings::setEnableNoiseCaveFilter)
                 .build());
         category.addEntry(entryBuilder.startPatternList(
                         Component.translatable("option.no_caves.noiseCavePatterns"),
-                        Config.getNoiseCavePatterns())
-                .setDefaultValue(Config.getDefaultNoiseCavePatterns())
+                        Config.TransformationSettings.getNoiseCavePatterns())
+                .setDefaultValue(Config.TransformationSettings::defaultNoiseCavePatterns)
                 .setTooltip(Component.translatable("option.no_caves.noiseCavePatterns.tooltip"))
-                .setSaveConsumer(list -> {
-                    PatternSet set = Config.getNoiseCavePatterns();
-                    set.clear();
-                    set.addAll(list);
-                })
+                .setSaveConsumer(list -> savePatternSet(Config.TransformationSettings.getNoiseCavePatterns(), list))
                 .build());
         category.addEntry(entryBuilder.startBooleanToggle(
                         Component.translatable("option.no_caves.enableDensityFunctionCaveFilter"),
-                        Config.isEnableDensityFunctionCaveFilter())
-                .setDefaultValue(true)
+                        Config.TransformationSettings.isEnableDensityFunctionCaveFilter())
+                .setDefaultValue(Config.TransformationSettings::defaultEnableDensityFunctionCaveFilter)
                 .setTooltip(Component.translatable("option.no_caves.enableDensityFunctionCaveFilter.tooltip", Component.translatable("text.cloth-config.boolean.value.true")))
-                .setSaveConsumer(Config::setEnableDensityFunctionCaveFilter)
+                .setSaveConsumer(Config.TransformationSettings::setEnableDensityFunctionCaveFilter)
                 .build());
         category.addEntry(entryBuilder.startPatternList(
                         Component.translatable("option.no_caves.densityFunctionCavePatterns"),
-                        Config.getDensityFunctionCavePatterns())
-                .setDefaultValue(Config.getDefaultDensityFunctionCavePatterns())
+                        Config.TransformationSettings.getDensityFunctionCavePatterns())
+                .setDefaultValue(Config.TransformationSettings::defaultDensityFunctionCavePatterns)
                 .setTooltip(Component.translatable("option.no_caves.densityFunctionCavePatterns.tooltip"))
-                .setSaveConsumer(list -> {
-                    PatternSet set = Config.getDensityFunctionCavePatterns();
-                    set.clear();
-                    set.addAll(list);
-                })
+                .setSaveConsumer(list -> savePatternSet(Config.TransformationSettings.getDensityFunctionCavePatterns(), list))
                 .build());
+    }
+
+    private static Map.Entry<String, List<Pattern>> createEntry(Map.Entry<String, PatternSet> it) {
+        return Map.entry(it.getKey(), List.copyOf(it.getValue()));
+    }
+
+    private static NameEditablePatternSetListEntry createCell(Map.Entry<String, List<Pattern>> it, CustomConfigEntryBuilder entryBuilder) {
+        return entryBuilder.startNameEditablePatternList(
+                it == null ? null : it.getKey(),
+                it == null ? null : new PatternSet(it.getValue())
+        ).setDefaultValue(List::of).build();
+    }
+
+    private static void savePatternSet(PatternSet set, List<Pattern> list) {
+        set.clear();
+        set.addAll(list);
+    }
+
+    private static void saveMapString2PatternSet(Map<String, PatternSet> map, List<Map.Entry<String, List<Pattern>>> list) {
+        map.clear();
+        for (Map.Entry<String, List<Pattern>> entry : list) {
+            map.put(entry.getKey(), new PatternSet(entry.getValue()));
+        }
     }
 }

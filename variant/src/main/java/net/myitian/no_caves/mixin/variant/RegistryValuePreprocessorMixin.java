@@ -20,8 +20,8 @@ public class RegistryValuePreprocessorMixin {
      * @reason Replace impl in higher version MC
      */
     @Overwrite
-    private static void processBiome(BiomeGenerationSettings settings, PatternSet patterns) {
-        BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin) settings;
+    private static void processBiomeCarvers(BiomeGenerationSettings settings, PatternSet patterns) {
+        BiomeGenerationSettings_CarversMixin wrapper = (BiomeGenerationSettings_CarversMixin) settings;
         HolderSet<ConfiguredWorldCarver<?>> carvers = wrapper.getCarvers();
         ArrayList<Holder<ConfiguredWorldCarver<?>>> tmp = new ArrayList<>(carvers.size());
         for (var entry : carvers) {

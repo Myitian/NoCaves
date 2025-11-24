@@ -1,5 +1,7 @@
 package net.myitian.no_caves;
 
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -9,13 +11,17 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.myitian.no_caves.config.Config;
-import net.myitian.no_caves.mixin.BiomeGenerationSettingsMixin;
-import org.apache.commons.lang3.tuple.Pair;
+import net.myitian.no_caves.mixin.BiomeGenerationSettings_CarversMixin;
+import net.myitian.no_caves.mixin.BiomeGenerationSettings_FeaturesMixin;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class RegistryValuePreprocessor {
     public static Object process(ResourceKey<?> key, Object rawValue) {
@@ -55,8 +61,8 @@ public final class RegistryValuePreprocessor {
     }
 
     public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings settings) {
-        if (!(Config.isEnableFinalDensityTransformation()
-                && !Config.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
+        if (!(Config.DensityFunctionSources.isEnableFinalDensityTransformation()
+                && !Config.DensityFunctionSources.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
             return;
         }
         NoiseRouter noiseRouter = settings.noiseRouter();
@@ -74,8 +80,8 @@ public final class RegistryValuePreprocessor {
     }
 
     public static DensityFunction processDensityFunction(ResourceLocation key, DensityFunction densityFunction) {
-        if (!(Config.isEnableDensityFunctionTransformation()
-                && Config.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
+        if (!(Config.DensityFunctionSources.isEnableDensityFunctionTransformation()
+                && Config.DensityFunctionSources.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
             return densityFunction;
         }
         densityFunction = DensityFunctionCaveCleaner.transform(densityFunction);
@@ -92,37 +98,87 @@ public final class RegistryValuePreprocessor {
     }
 
     public static void processBiome(ResourceLocation key, Biome biome) {
-        if (!(Config.isEnableCarverFilter()
-                && !Config.getCarverFilterBiomeExclusionPatterns().matches(key.toString()))) {
-            return;
-        }
         BiomeGenerationSettings settings = biome.getGenerationSettings();
-        PatternSet patterns = Config.getBiomeSpecificOverrideForDisabledCarverPatterns()
-                .getOrDefault(key.toString(), Config.getDisabledCarverPatterns());
-        processBiome(settings, patterns);
-        NoCaves.LOGGER.debug(
-                "NoCaves.processedGenerationSettings {} {}",
-                ++NoCaves.processedGenerationSettings,
-                key);
+        String keyString = key.toString();
+        boolean processed = false;
+        if (Config.BiomeGenerationSettings.isEnableCarverFilter()
+                && !Config.BiomeGenerationSettings.getCarverFilterBiomeExclusionPatterns().matches(keyString)) {
+            PatternSet patterns = Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledCarverPatterns()
+                    .getOrDefault(keyString, Config.BiomeGenerationSettings.getDisabledCarverPatterns());
+            processBiomeCarvers(settings, patterns);
+            processed = true;
+        }
+        if (Config.BiomeGenerationSettings.isEnableFeatureFilter()
+                && !Config.BiomeGenerationSettings.getFeatureFilterBiomeExclusionPatterns().matches(keyString)) {
+            PatternSet patterns = Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledFeaturePatterns()
+                    .getOrDefault(keyString, Config.BiomeGenerationSettings.getDisabledFeaturePatterns());
+            processBiomeFeatures(settings, patterns);
+            processed = true;
+        }
+        if (processed) {
+            NoCaves.LOGGER.debug(
+                    "NoCaves.processedGenerationSettings {} {}",
+                    ++NoCaves.processedGenerationSettings,
+                    key);
+        }
     }
 
-    private static void processBiome(BiomeGenerationSettings settings, PatternSet patterns) {
-        BiomeGenerationSettingsMixin wrapper = (BiomeGenerationSettingsMixin) settings;
+    private static void processBiomeCarvers(BiomeGenerationSettings settings, PatternSet patterns) {
+        BiomeGenerationSettings_CarversMixin wrapper = (BiomeGenerationSettings_CarversMixin) settings;
         Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers = wrapper.getCarvers();
+        if (carvers.isEmpty()) {
+            return;
+        }
         @SuppressWarnings("unchecked")
-        Pair<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] tmp = new Pair[carvers.size()];
+        Map.Entry<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] tmp = new Map.Entry[carvers.size()];
         int i = 0;
+        ArrayList<Holder<ConfiguredWorldCarver<?>>> list = new ArrayList<>();
         for (var entry : carvers.entrySet()) {
             HolderSet<ConfiguredWorldCarver<?>> originalList = entry.getValue();
-            ArrayList<Holder<ConfiguredWorldCarver<?>>> list = new ArrayList<>(originalList.size());
             for (var regEntry : originalList) {
                 Optional<ResourceKey<ConfiguredWorldCarver<?>>> regKey = regEntry.unwrapKey();
                 if (regKey.isPresent() && !patterns.matches(regKey.get().location().toString())) {
                     list.add(regEntry);
                 }
             }
-            tmp[i++] = Pair.of(entry.getKey(), HolderSet.direct(list));
+            tmp[i++] = Map.entry(entry.getKey(), list.isEmpty() ? HolderSet.empty() : HolderSet.direct(list));
+            list.clear();
         }
         wrapper.setCarvers(Map.ofEntries(tmp));
+    }
+
+    private static void processBiomeFeatures(BiomeGenerationSettings settings, PatternSet patterns) {
+        List<HolderSet<PlacedFeature>> features = settings.features();
+        if (features.isEmpty()) {
+            return;
+        }
+        ArrayList<HolderSet<PlacedFeature>> newFeatures = new ArrayList<>(features.size());
+        ArrayList<Holder<PlacedFeature>> list = new ArrayList<>();
+        for (var originalList : features) {
+            for (var regEntry : originalList) {
+                Optional<ResourceKey<PlacedFeature>> regKey = regEntry.unwrapKey();
+                if (regKey.isPresent() && !patterns.matches(regKey.get().location().toString())) {
+                    list.add(regEntry);
+                }
+            }
+            newFeatures.add(list.isEmpty() ? HolderSet.empty() : HolderSet.direct(list));
+            list.clear();
+        }
+        applyBiomeFeatures(settings, newFeatures);
+    }
+
+    private static void applyBiomeFeatures(BiomeGenerationSettings settings, List<HolderSet<PlacedFeature>> features) {
+        BiomeGenerationSettings_FeaturesMixin wrapper = (BiomeGenerationSettings_FeaturesMixin) settings;
+        wrapper.setFeatures(features);
+        wrapper.setFlowerFeatures(Suppliers.memoize(() -> features.stream()
+                .flatMap(HolderSet::stream)
+                .map(Holder::value)
+                .flatMap(PlacedFeature::getFeatures)
+                .filter(it -> it.feature() == Feature.FLOWER)
+                .collect(ImmutableList.toImmutableList())));
+        wrapper.setFeatureSet(Suppliers.memoize(() -> features.stream()
+                .flatMap(HolderSet::stream)
+                .map(Holder::value)
+                .collect(Collectors.toSet())));
     }
 }

@@ -28,12 +28,12 @@ public class NoCavesMixinPlugin implements IMixinConfigPlugin {
                 return CLOTH_CONFIG_EXISTED && DATA_VERSION >= MC_1_21_4__24w44a;
             case "net.myitian.no_caves.mixin.variant.BaseListEntryMixin":
                 return CLOTH_CONFIG_EXISTED && DATA_VERSION >= MC_1_21_6__25w15a;
-            case "net.myitian.no_caves.mixin.variant.BiomeGenerationSettingsMixin":
+            case "net.myitian.no_caves.mixin.variant.BiomeGenerationSettings_CarversMixin":
             case "net.myitian.no_caves.mixin.variant.RegistryValuePreprocessorMixin":
                 return DATA_VERSION >= MC_1_21_2__24w33a;
             case "net.myitian.no_caves.mixin.BaseListEntryMixin":
-                return CLOTH_CONFIG_EXISTED && DATA_VERSION < MC_1_21_6__25w15a && DATA_VERSION > Integer.MIN_VALUE;
-            case "net.myitian.no_caves.mixin.BiomeGenerationSettingsMixin":
+                return CLOTH_CONFIG_EXISTED && DATA_VERSION < MC_1_21_6__25w15a;
+            case "net.myitian.no_caves.mixin.BiomeGenerationSettings_CarversMixin":
                 return DATA_VERSION < MC_1_21_2__24w33a && DATA_VERSION > Integer.MIN_VALUE;
             default:
                 return true;

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.Map;
 
 @Mixin(BiomeGenerationSettings.class)
-public interface BiomeGenerationSettingsMixin {
+public interface BiomeGenerationSettings_CarversMixin {
     @Accessor
     Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> getCarvers();
 
