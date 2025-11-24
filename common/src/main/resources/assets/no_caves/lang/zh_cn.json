@@ -1,6 +1,6 @@
 {
   "modmenu.nameTranslation.no_caves": "无洞穴",
-  "modmenu.descriptionTranslation.no_caves": "根据配置禁用噪声洞穴、密度函数洞穴、雕刻器洞穴和雕刻器峡谷，并尽可能保持与其他地形修改模组和数据包的兼容性。默认影响所有生物群系和所有世界生成预设。",
+  "modmenu.descriptionTranslation.no_caves": "根据配置禁用噪声洞穴、密度函数洞穴、地物、雕刻器洞穴和峡谷，并尽可能保持与其他地形修改模组和数据包的兼容性。默认影响所有生物群系和所有世界生成预设。",
   "tooltip.no_caves.pattern.pattern": "正则表达式文本",
   "tooltip.no_caves.pattern.flags": "正则表达式标志",
   "tooltip.no_caves.map.name": "名称",
