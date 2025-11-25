@@ -140,8 +140,8 @@ The names of the density function caves to filter.\
 
 ## Branch Information 分支信息
 
-- **1.20**: support MC 1.19.3\~1.20.4 (do not support in-game configuration on MC 1.19.3\~1.19.4)
-- **1.21** (current branch): support MC 1.20.5~1.21.11
+- **1.20** (current branch): support MC 1.19.3\~1.20.4 (do not support in-game configuration on MC 1.19.3\~1.19.4)
+- **1.21**: support MC 1.20.5~1.21.11
 
 ## How It Works 工作原理
 
