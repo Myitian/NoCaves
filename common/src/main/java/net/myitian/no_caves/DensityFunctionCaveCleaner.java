@@ -73,7 +73,8 @@ public final class DensityFunctionCaveCleaner {
 
     public static boolean isCaveDensityFunction(Holder<DensityFunction> densityFunction) {
         return densityFunction instanceof Holder.Reference<DensityFunction> reference
-                && Config.getDensityFunctionCavePatterns().matches(reference.key().location().toString());
+                && Config.TransformationSettings.getDensityFunctionCavePatterns()
+                .matches(reference.key().location().toString());
     }
 
     public static boolean isCaveNoise(DensityFunction.NoiseHolder noise) {
@@ -82,13 +83,15 @@ public final class DensityFunctionCaveCleaner {
 
     public static boolean isCaveNoise(Holder<NormalNoise.NoiseParameters> noise) {
         return noise instanceof Holder.Reference<NormalNoise.NoiseParameters> reference
-                && Config.getNoiseCavePatterns().matches(reference.key().location().toString());
+                && Config.TransformationSettings.getNoiseCavePatterns()
+                .matches(reference.key().location().toString());
     }
 
     @Nullable
     public static DensityFunction transformRegistryEntryHolder(DensityFunctions.HolderHolder holder) {
         Holder<DensityFunction> function = holder.function();
-        if (Config.isEnableDensityFunctionCaveFilter() && isCaveDensityFunction(function)) {
+        if (Config.TransformationSettings.isEnableDensityFunctionCaveFilter()
+                && isCaveDensityFunction(function)) {
             return null;
         } else if (function instanceof Holder.Direct<DensityFunction>) {
             return transform(function.value());
@@ -98,7 +101,8 @@ public final class DensityFunctionCaveCleaner {
 
     @Nullable
     public static DensityFunction transformNoise(DensityFunctions.Noise noise) {
-        return Config.isEnableNoiseCaveFilter() && isCaveNoise(noise.noise()) ? null : noise;
+        return Config.TransformationSettings.isEnableNoiseCaveFilter()
+                && isCaveNoise(noise.noise()) ? null : noise;
     }
 
     @Nullable
