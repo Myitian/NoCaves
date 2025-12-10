@@ -6,9 +6,9 @@
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/HqI1ld6l?style=for-the-badge&logo=modrinth&label=Modrinth%20Downloads&color=00AF5C)](https://modrinth.com/mod/no-caves-mod)\
 [![MC百科](https://img.shields.io/badge/mcmod.cn-MC%E7%99%BE%E7%A7%91-58b6d8?style=for-the-badge)](https://www.mcmod.cn/class/22615.html)
 
-Disables Noise Caves, Density Function Caves, Generated Features, Carver Caves and Canyons based on the configuration, and maintains compatibility with other terrain modification mods and data packs as much as possible. Affects all biomes and all world generation presets by default.
+Disables **Noise Caves**, **Density Function Caves**, **Generated Features**, **Carver Caves and Canyons** based on the configuration, and maintains compatibility with other terrain modification mods and data packs as much as possible. Affects all biomes and all world generation presets by default.
 
-根据配置禁用噪声洞穴、密度函数洞穴、地物、雕刻器洞穴和峡谷，并尽可能保持与其他地形修改模组和数据包的兼容性。默认影响所有生物群系和所有世界生成预设。
+根据配置禁用**噪声洞穴**、**密度函数洞穴**、**地物**、**雕刻器洞穴和峡谷**，并尽可能保持与其他地形修改模组和数据包的兼容性。默认影响所有生物群系和所有世界生成预设。
 
 ## Configuration 配置
 
