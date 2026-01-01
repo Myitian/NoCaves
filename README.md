@@ -142,8 +142,8 @@ The names of the density function caves to filter.\
 
 - **[1.20](https://github.com/Myitian/NoCaves/tree/1.20)**: support MC 1.19.3\~1.20.4 (do not support in-game configuration on MC 1.19.3\~1.19.4)
 - **[1.21](https://github.com/Myitian/NoCaves/tree/1.21)**: support MC 1.20.5~1.21.10 (also supports MC 1.21.11 on Fabric)
-- **[1.21.11](https://github.com/Myitian/NoCaves/tree/1.21.11) (current branch)**: support MC 1.21.11
-- ***26** (in development): support MC 26.1*
+- **[1.21.11](https://github.com/Myitian/NoCaves/tree/1.21.11)**: support MC 1.21.11
+- ***26** (current branch, in development): support MC 26.1*
 
 ## How It Works 工作原理
 
