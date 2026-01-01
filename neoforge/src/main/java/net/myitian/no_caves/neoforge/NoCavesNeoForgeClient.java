@@ -38,7 +38,7 @@ public final class NoCavesNeoForgeClient {
                 // NeoForge commit 7d465ab changes IConfigScreenFactory:
                 // - Screen createScreen(Minecraft minecraft, Screen modListScreen);
                 // + Screen createScreen(ModContainer container, Screen modListScreen);
-            } catch (Exception ex) {
+            } catch (ReflectiveOperationException ex) {
                 NoCaves.LOGGER.warn("Cannot load config screen: {}", ex.getLocalizedMessage());
             }
         }
