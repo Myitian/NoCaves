@@ -61,10 +61,10 @@ allprojects {
     apply plugin: "architectury-plugin"
 
     repositories {
-        maven { url "https://maven.shedaniel.me" }
-        maven { url "https://maven.architectury.dev" }
-        maven { url "https://maven.neoforged.net" }
-        maven { url "https://maven.parchmentmc.org" }
-        maven { url "https://maven.terraformersmc.com" }
+        maven { url = "https://maven.shedaniel.me" }
+        maven { url = "https://maven.architectury.dev" }
+        maven { url = "https://maven.neoforged.net" }
+        maven { url = "https://maven.parchmentmc.org" }
+        maven { url = "https://maven.terraformersmc.com" }
     }
 }
