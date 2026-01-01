@@ -1,5 +1,6 @@
 package net.myitian.no_caves.config;
 
+import com.google.gson.Strictness;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.myitian.no_caves.NoCaves;
@@ -305,7 +306,7 @@ public final class Config {
 
     public static boolean load(File configFile) {
         try (var reader = new JsonReader(new FileReader(configFile))) {
-            reader.setLenient(true);
+            reader.setStrictness(Strictness.LENIENT);
             return CODEC.deserialize(reader);
         } catch (Exception e) {
             NoCaves.LOGGER.info("Failed to read config: {}", e.getLocalizedMessage());

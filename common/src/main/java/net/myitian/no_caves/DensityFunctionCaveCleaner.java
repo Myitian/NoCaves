@@ -74,7 +74,7 @@ public final class DensityFunctionCaveCleaner {
     public static boolean isCaveDensityFunction(Holder<DensityFunction> densityFunction) {
         return densityFunction instanceof Holder.Reference<DensityFunction> reference
             && Config.TransformationSettings.getDensityFunctionCavePatterns()
-            .matches(reference.key().location().toString());
+            .matches(reference.key().identifier().toString());
     }
 
     public static boolean isCaveNoise(DensityFunction.NoiseHolder noise) {
@@ -84,7 +84,7 @@ public final class DensityFunctionCaveCleaner {
     public static boolean isCaveNoise(Holder<NormalNoise.NoiseParameters> noise) {
         return noise instanceof Holder.Reference<NormalNoise.NoiseParameters> reference
             && Config.TransformationSettings.getNoiseCavePatterns()
-            .matches(reference.key().location().toString());
+            .matches(reference.key().identifier().toString());
     }
 
     @Nullable

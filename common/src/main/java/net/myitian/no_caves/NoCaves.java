@@ -1,14 +1,11 @@
 package net.myitian.no_caves;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.util.GsonHelper;
 import net.myitian.no_caves.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +14,8 @@ import java.util.Map;
 public final class NoCaves {
     public static final String MOD_ID = "no_caves";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final int DATA_VERSION = getDataVersion();
-    public static final boolean CLOTH_CONFIG_EXISTED = DATA_VERSION > Integer.MIN_VALUE && isClothConfigExisted();
+    public static final boolean CLOTH_CONFIG_EXISTED = isClothConfigExisted();
     public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
-    public static final int MC_1_21_9__25w36a = 4545;
-    public static final int MC_1_21_6__25w15a = 4422;
-    public static final int MC_1_21_4__24w44a = 4174;
-    public static final int MC_1_21_2__24w33a = 4058;
 
     public static int processedGenerationSettings = 0;
     public static int transformedFinalDensity = 0;
@@ -34,29 +26,6 @@ public final class NoCaves {
         if (!Config.load(configFile)) {
             Config.save(configFile);
         }
-    }
-
-    /**
-     * <p>Other methods for obtaining the Minecraft version might load
-     * the <code>com.mojang.serialization.DataResult</code> class.</p>
-     *
-     * <p>However, owo-lib requires a <code>DataResultMixin</code>.</p>
-     *
-     * <p>To maintain compatibility, it is necessary to avoid loading
-     * the <code>DataResult</code> class, so the following workaround
-     * is used to obtain the version.</p>
-     */
-    public static int getDataVersion() {
-        try (var inputStream = DetectedVersion.class.getResourceAsStream("/version.json")) {
-            if (inputStream != null) {
-                try (var inputStreamReader = new InputStreamReader(inputStream)) {
-                    return GsonHelper.getAsInt(GsonHelper.parse(inputStreamReader), "world_version");
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        LOGGER.error("Failed to obtain Minecraft version. All mixins will not run due to the inability to detect the game version, and the in-game configuration screen will be disabled too.");
-        return Integer.MIN_VALUE;
     }
 
     public static boolean isClothConfigExisted() {

@@ -7,6 +7,7 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ReferenceProvider;
 import me.shedaniel.clothconfig2.gui.entries.AbstractListListEntry;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
+import me.shedaniel.math.Rectangle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,7 +30,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
 public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>>
-    extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+    extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.@NotNull Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
     implements ContainerEventHandler, NarratableEntry, GuiEventListener {
     protected final Supplier<Map<String, T>> defaultValue;
     protected final Map<String, T> original;
@@ -119,7 +120,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
     }
 
     public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T> & ContainerEventHandler & NarratableEntry>
-        extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+        extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, @NotNull Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
         implements ContainerEventHandler, NarratableEntry, ReferenceProvider<T> {
         public final INNER nestedEntry;
         private final List<INNER> child;
@@ -131,8 +132,15 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
             child = List.of(nestedEntry);
         }
 
-        @SuppressWarnings("unused")
+        @SuppressWarnings("deprecation")
+        @Override
         public void updateBounds(boolean expanded, int x, int y, int entryWidth, int entryHeight) {
+            super.updateBounds(expanded, x, y, entryWidth, entryHeight);
+            if (expanded) {
+                nestedEntry.setBounds(new Rectangle(x, y, entryWidth, nestedEntry.getItemHeight()));
+            } else {
+                nestedEntry.setBounds(new Rectangle());
+            }
         }
 
         @Override
@@ -206,7 +214,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
             return NarrationPriority.NONE;
         }
 
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        public void updateNarration(@NotNull NarrationElementOutput narrationElementOutput) {
             nestedEntry.updateNarration(narrationElementOutput);
         }
     }

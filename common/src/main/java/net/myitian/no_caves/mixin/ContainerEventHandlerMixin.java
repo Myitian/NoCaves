@@ -1,4 +1,4 @@
-package net.myitian.no_caves.mixin.variant;
+package net.myitian.no_caves.mixin;
 
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;

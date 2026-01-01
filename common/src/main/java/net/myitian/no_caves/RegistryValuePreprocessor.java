@@ -5,11 +5,14 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.DensityFunctions;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseRouter;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -19,7 +22,6 @@ import net.myitian.no_caves.mixin.BiomeGenerationSettings_FeaturesAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,19 +38,19 @@ public final class RegistryValuePreprocessor {
             value = optional.get();
             useOptional = true;
         }
-        ResourceLocation registryId = key.registry();
-        if (registryId.equals(Registries.NOISE_SETTINGS.location())) {
+        Identifier registryId = key.registry();
+        if (registryId.equals(Registries.NOISE_SETTINGS.identifier())) {
             if (value instanceof NoiseGeneratorSettings checkedValue) {
-                processChunkGeneratorSettings(key.location(), checkedValue);
+                processChunkGeneratorSettings(key.identifier(), checkedValue);
             }
-        } else if (registryId.equals(Registries.DENSITY_FUNCTION.location())) {
+        } else if (registryId.equals(Registries.DENSITY_FUNCTION.identifier())) {
             if (value instanceof DensityFunction checkedValue) {
-                value = processDensityFunction(key.location(), checkedValue);
+                value = processDensityFunction(key.identifier(), checkedValue);
                 newObject = true;
             }
-        } else if (registryId.equals(Registries.BIOME.location())) {
+        } else if (registryId.equals(Registries.BIOME.identifier())) {
             if (value instanceof Biome checkedValue) {
-                processBiome(key.location(), checkedValue);
+                processBiome(key.identifier(), checkedValue);
             }
         }
         if (!newObject) {
@@ -60,7 +62,7 @@ public final class RegistryValuePreprocessor {
         }
     }
 
-    public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings settings) {
+    public static void processChunkGeneratorSettings(Identifier key, NoiseGeneratorSettings settings) {
         if (!(Config.DensityFunctionSources.isEnableFinalDensityTransformation()
             && !Config.DensityFunctionSources.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
             return;
@@ -79,7 +81,7 @@ public final class RegistryValuePreprocessor {
             key);
     }
 
-    public static DensityFunction processDensityFunction(ResourceLocation key, DensityFunction densityFunction) {
+    public static DensityFunction processDensityFunction(Identifier key, DensityFunction densityFunction) {
         if (!(Config.DensityFunctionSources.isEnableDensityFunctionTransformation()
             && Config.DensityFunctionSources.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
             return densityFunction;
@@ -97,7 +99,7 @@ public final class RegistryValuePreprocessor {
         return densityFunction;
     }
 
-    public static void processBiome(ResourceLocation key, Biome biome) {
+    public static void processBiome(Identifier key, Biome biome) {
         BiomeGenerationSettings settings = biome.getGenerationSettings();
         String keyString = key.toString();
         boolean processed = false;
@@ -125,26 +127,15 @@ public final class RegistryValuePreprocessor {
 
     private static void processBiomeCarvers(BiomeGenerationSettings settings, PatternSet patterns) {
         BiomeGenerationSettings_CarversAccessor wrapper = (BiomeGenerationSettings_CarversAccessor) settings;
-        Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers = wrapper.getCarvers();
-        if (carvers.isEmpty()) {
-            return;
-        }
-        @SuppressWarnings("unchecked")
-        Map.Entry<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>>[] tmp = new Map.Entry[carvers.size()];
-        int i = 0;
-        ArrayList<Holder<ConfiguredWorldCarver<?>>> list = new ArrayList<>();
-        for (var entry : carvers.entrySet()) {
-            HolderSet<ConfiguredWorldCarver<?>> originalList = entry.getValue();
-            for (var regEntry : originalList) {
-                Optional<ResourceKey<ConfiguredWorldCarver<?>>> regKey = regEntry.unwrapKey();
-                if (regKey.isPresent() && !patterns.matches(regKey.get().location().toString())) {
-                    list.add(regEntry);
-                }
+        HolderSet<ConfiguredWorldCarver<?>> carvers = wrapper.getCarvers();
+        ArrayList<Holder<ConfiguredWorldCarver<?>>> tmp = new ArrayList<>(carvers.size());
+        for (var entry : carvers) {
+            Optional<ResourceKey<ConfiguredWorldCarver<?>>> regKey = entry.unwrapKey();
+            if (regKey.isPresent() && !patterns.matches(regKey.get().identifier().toString())) {
+                tmp.add(entry);
             }
-            tmp[i++] = Map.entry(entry.getKey(), list.isEmpty() ? HolderSet.empty() : HolderSet.direct(list));
-            list.clear();
         }
-        wrapper.setCarvers(Map.ofEntries(tmp));
+        wrapper.setCarvers(HolderSet.direct(tmp));
     }
 
     private static void processBiomeFeatures(BiomeGenerationSettings settings, PatternSet patterns) {
@@ -157,7 +148,7 @@ public final class RegistryValuePreprocessor {
         for (var originalList : features) {
             for (var regEntry : originalList) {
                 Optional<ResourceKey<PlacedFeature>> regKey = regEntry.unwrapKey();
-                if (regKey.isPresent() && !patterns.matches(regKey.get().location().toString())) {
+                if (regKey.isPresent() && !patterns.matches(regKey.get().identifier().toString())) {
                     list.add(regEntry);
                 }
             }

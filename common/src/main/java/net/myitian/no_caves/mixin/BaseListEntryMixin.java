@@ -16,12 +16,11 @@ abstract class BaseListEntryMixin {
         remap = false,
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)I",
+            target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)V",
             remap = true))
-    private int render_Redirect_drawString(GuiGraphics instance, Font textRenderer, FormattedCharSequence text, int x1, int y1, int color, GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+    private void render_Redirect_drawTextWithShadow(GuiGraphics instance, Font textRenderer, FormattedCharSequence text, int x1, int y1, int color, GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         if (!NameEditableListEntry.drawTextFieldWidget(this, graphics, x1, y, color, mouseX, mouseY, delta)) {
-            return instance.drawString(textRenderer, text, x1, y1, color);
+            instance.drawString(textRenderer, text, x1, y1, color);
         }
-        return 0;
     }
 }
