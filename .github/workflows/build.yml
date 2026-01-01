@@ -16,8 +16,10 @@ jobs:
           distribution: "microsoft"
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: build
-        run: ./gradlew build --stacktrace
+        run: ./gradlew build
       - name: capture build artifacts - fabric
         uses: actions/upload-artifact@v4
         with:
