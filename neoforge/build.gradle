@@ -29,10 +29,10 @@ dependencies {
     neoForge "net.neoforged:neoforge:${project.main_neoforge_version}"
     modImplementation "me.shedaniel.cloth:cloth-config-neoforge:${project.main_cloth_config_version}"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common", configuration: "namedElements")) { transitive = false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
-    common(project(":variant-neoforge-wrapper")) { transitive false }
-    shadowCommon(project(":variant-neoforge-wrapper")) { transitive false }
+    common(project(":variant-neoforge-wrapper")) { transitive = false }
+    shadowCommon(project(":variant-neoforge-wrapper")) { transitive = false }
 }
 
 shadowJar {

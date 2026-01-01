@@ -29,10 +29,10 @@ dependencies {
     modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
     modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.main_cloth_config_version}"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
-    common(project(":variant-fabric-wrapper")) { transitive false }
-    shadowCommon(project(":variant-fabric-wrapper")) { transitive false }
+    common(project(path: ":common", configuration: "namedElements")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive = false }
+    common(project(":variant-fabric-wrapper")) { transitive = false }
+    shadowCommon(project(":variant-fabric-wrapper")) { transitive = false }
 }
 
 shadowJar {

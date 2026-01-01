@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
 public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>>
-    extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+    extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.@NotNull Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
     implements ContainerEventHandler, NarratableEntry, GuiEventListener {
     protected final Supplier<Map<String, T>> defaultValue;
     protected final Map<String, T> original;
@@ -119,7 +119,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
     }
 
     public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T> & ContainerEventHandler & NarratableEntry>
-        extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+        extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, @NotNull Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
         implements ContainerEventHandler, NarratableEntry, ReferenceProvider<T> {
         public final INNER nestedEntry;
         private final List<INNER> child;
@@ -206,7 +206,7 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
             return NarrationPriority.NONE;
         }
 
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        public void updateNarration(@NotNull NarrationElementOutput narrationElementOutput) {
             nestedEntry.updateNarration(narrationElementOutput);
         }
     }

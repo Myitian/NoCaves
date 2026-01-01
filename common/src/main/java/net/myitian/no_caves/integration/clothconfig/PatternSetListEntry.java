@@ -175,7 +175,7 @@ public class PatternSetListEntry
             Font font = Minecraft.getInstance().font;
             patternFieldWidget = new EditBox(font, 0, 0, 80, 18, CommonComponents.EMPTY) {
                 @Override
-                public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+                public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
                     setFocused(isSelected && isFocused());
                     if (getFocused() == this && !isFocused()) {
                         Cell.this.setFocused(null);
@@ -191,7 +191,7 @@ public class PatternSetListEntry
             patternFieldWidget.setResponder(s -> patternFieldWidget.setTextColor(getPreferredTextColor()));
             flagsFieldWidget = new EditBox(font, 0, 0, 20, 18, CommonComponents.EMPTY) {
                 @Override
-                public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+                public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
                     setFocused(isSelected && isFocused());
                     if (getFocused() == this && !isFocused()) {
                         Cell.this.setFocused(null);
@@ -200,7 +200,7 @@ public class PatternSetListEntry
                 }
 
                 @Override
-                public void insertText(String text) {
+                public void insertText(@NotNull String text) {
                     super.insertText(stripFlagText(text));
                 }
             };
@@ -284,7 +284,7 @@ public class PatternSetListEntry
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        public void updateNarration(@NotNull NarrationElementOutput narrationElementOutput) {
             patternFieldWidget.updateNarration(narrationElementOutput);
             flagsFieldWidget.updateNarration(narrationElementOutput);
         }
