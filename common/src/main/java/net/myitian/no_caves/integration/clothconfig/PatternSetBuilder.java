@@ -12,27 +12,27 @@ public class PatternSetBuilder extends AbstractPatternSetBuilder<PatternSetListE
     @Override
     public @NotNull PatternSetListEntry build() {
         return finishBuilding(newDefaultValue != null ?
-                new PatternSetListEntry(
-                        getFieldNameKey(),
-                        value,
-                        isExpanded(),
-                        null,
-                        getSaveConsumer(),
-                        newDefaultValue,
-                        getResetButtonKey(),
-                        isRequireRestart(),
-                        isDeleteButtonEnabled(),
-                        isInsertInFront()) :
-                new PatternSetListEntry(
-                        getFieldNameKey(),
-                        value,
-                        isExpanded(),
-                        null,
-                        defaultValue,
-                        getSaveConsumer(),
-                        getResetButtonKey(),
-                        isRequireRestart(),
-                        isDeleteButtonEnabled(),
-                        isInsertInFront()));
+            new PatternSetListEntry(
+                getFieldNameKey(),
+                value,
+                isExpanded(),
+                null,
+                getSaveConsumer(),
+                newDefaultValue,
+                getResetButtonKey(),
+                isRequireRestart(),
+                isDeleteButtonEnabled(),
+                isInsertInFront()) :
+            new PatternSetListEntry(
+                getFieldNameKey(),
+                value,
+                isExpanded(),
+                null,
+                defaultValue,
+                getSaveConsumer(),
+                getResetButtonKey(),
+                isRequireRestart(),
+                isDeleteButtonEnabled(),
+                isInsertInFront()));
     }
 }

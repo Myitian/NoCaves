@@ -18,20 +18,20 @@ abstract class RegistryDataLoaderMixin {
     private static final ThreadLocal<ResourceKey<?>> tmp$registryKey = new ThreadLocal<>();
 
     @ModifyVariable(
-            method = "loadRegistryContents",
-            at = @At("STORE"),
-            ordinal = 1)
+        method = "loadRegistryContents",
+        at = @At("STORE"),
+        ordinal = 1)
     private static ResourceKey<?> loadRegistryContents_ModifyVariable(ResourceKey<?> key) {
         tmp$registryKey.set(key);
         return key;
     }
 
     @Redirect(
-            method = "loadRegistryContents",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcom/mojang/serialization/DataResult;getOrThrow(ZLjava/util/function/Consumer;)Ljava/lang/Object;",
-                    remap = false))
+        method = "loadRegistryContents",
+        at = @At(
+            value = "INVOKE",
+            target = "Lcom/mojang/serialization/DataResult;getOrThrow(ZLjava/util/function/Consumer;)Ljava/lang/Object;",
+            remap = false))
     private static Object loadRegistryContents_Redirect_getOrThrow(DataResult<?> instance, boolean allowPartial, Consumer<String> onError) {
         ResourceKey<?> key = tmp$registryKey.get();
         tmp$registryKey.remove();

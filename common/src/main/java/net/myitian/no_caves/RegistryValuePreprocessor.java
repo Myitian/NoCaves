@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class RegistryValuePreprocessor {
+    private static final HolderSet.Direct<?> EMPTY = HolderSet.direct();
+
     public static Object process(ResourceKey<?> key, Object rawValue) {
         boolean newObject = false;
         boolean useOptional = false;
@@ -60,38 +62,38 @@ public final class RegistryValuePreprocessor {
 
     public static void processChunkGeneratorSettings(ResourceLocation key, NoiseGeneratorSettings settings) {
         if (!(Config.DensityFunctionSources.isEnableFinalDensityTransformation()
-                && !Config.DensityFunctionSources.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
+            && !Config.DensityFunctionSources.getFinalDensityTransformationExclusionPatterns().matches(key.toString()))) {
             return;
         }
         NoiseRouter noiseRouter = settings.noiseRouter();
         DensityFunction finalDensity = DensityFunctionCaveCleaner.transform(noiseRouter.finalDensity());
         if (finalDensity == null) {
             NoCaves.LOGGER.warn(
-                    "Null FinalDensity detected in {}. This shouldn't happen unless there are worlds that only use cave noise functions.",
-                    key);
+                "Null FinalDensity detected in {}. This shouldn't happen unless there are worlds that only use cave noise functions.",
+                key);
             finalDensity = DensityFunctions.zero();
         }
         noiseRouter.finalDensity = finalDensity;
         NoCaves.LOGGER.debug("NoCaves.transformedFinalDensity {} {}",
-                ++NoCaves.transformedFinalDensity,
-                key);
+            ++NoCaves.transformedFinalDensity,
+            key);
     }
 
     public static DensityFunction processDensityFunction(ResourceLocation key, DensityFunction densityFunction) {
         if (!(Config.DensityFunctionSources.isEnableDensityFunctionTransformation()
-                && Config.DensityFunctionSources.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
+            && Config.DensityFunctionSources.getDensityFunctionToTransformPatterns().matches(key.toString()))) {
             return densityFunction;
         }
         densityFunction = DensityFunctionCaveCleaner.transform(densityFunction);
         if (densityFunction == null) {
             NoCaves.LOGGER.warn(
-                    "Null DensityFunction detected in {}. Consider adding this function to densityFunctionCavePatterns, otherwise it may negatively impact world generation.",
-                    key);
+                "Null DensityFunction detected in {}. Consider adding this function to densityFunctionCavePatterns, otherwise it may negatively impact world generation.",
+                key);
             densityFunction = DensityFunctions.zero();
         }
         NoCaves.LOGGER.debug("NoCaves.transformedDensityFunctions {} {}",
-                ++NoCaves.transformedDensityFunctions,
-                key);
+            ++NoCaves.transformedDensityFunctions,
+            key);
         return densityFunction;
     }
 
@@ -100,28 +102,26 @@ public final class RegistryValuePreprocessor {
         String keyString = key.toString();
         boolean processed = false;
         if (Config.BiomeGenerationSettings.isEnableCarverFilter()
-                && !Config.BiomeGenerationSettings.getCarverFilterBiomeExclusionPatterns().matches(keyString)) {
+            && !Config.BiomeGenerationSettings.getCarverFilterBiomeExclusionPatterns().matches(keyString)) {
             PatternSet patterns = Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledCarverPatterns()
-                    .getOrDefault(keyString, Config.BiomeGenerationSettings.getDisabledCarverPatterns());
+                .getOrDefault(keyString, Config.BiomeGenerationSettings.getDisabledCarverPatterns());
             processBiomeCarvers(settings, patterns);
             processed = true;
         }
         if (Config.BiomeGenerationSettings.isEnableFeatureFilter()
-                && !Config.BiomeGenerationSettings.getFeatureFilterBiomeExclusionPatterns().matches(keyString)) {
+            && !Config.BiomeGenerationSettings.getFeatureFilterBiomeExclusionPatterns().matches(keyString)) {
             PatternSet patterns = Config.BiomeGenerationSettings.getBiomeSpecificOverrideForDisabledFeaturePatterns()
-                    .getOrDefault(keyString, Config.BiomeGenerationSettings.getDisabledFeaturePatterns());
+                .getOrDefault(keyString, Config.BiomeGenerationSettings.getDisabledFeaturePatterns());
             processBiomeFeatures(settings, patterns);
             processed = true;
         }
         if (processed) {
             NoCaves.LOGGER.debug(
-                    "NoCaves.processedGenerationSettings {} {}",
-                    ++NoCaves.processedGenerationSettings,
-                    key);
+                "NoCaves.processedGenerationSettings {} {}",
+                ++NoCaves.processedGenerationSettings,
+                key);
         }
     }
-
-    private static final HolderSet.Direct<?> EMPTY = HolderSet.direct();
 
     private static <T> HolderSet.Direct<T> empty() {
         //noinspection unchecked
@@ -168,20 +168,16 @@ public final class RegistryValuePreprocessor {
             newFeatures.add(list.isEmpty() ? empty() : HolderSet.direct(list));
             list.clear();
         }
-        applyBiomeFeatures(settings, newFeatures);
-    }
-
-    private static void applyBiomeFeatures(BiomeGenerationSettings settings, List<HolderSet<PlacedFeature>> features) {
-        settings.features = features;
-        settings.flowerFeatures = Suppliers.memoize(() -> features.stream()
-                .flatMap(HolderSet::stream)
-                .map(Holder::value)
-                .flatMap(PlacedFeature::getFeatures)
-                .filter(it -> it.feature() == Feature.FLOWER)
-                .collect(ImmutableList.toImmutableList()));
-        settings.featureSet = Suppliers.memoize(() -> features.stream()
-                .flatMap(HolderSet::stream)
-                .map(Holder::value)
-                .collect(Collectors.toSet()));
+        settings.features = newFeatures;
+        settings.flowerFeatures = Suppliers.memoize(() -> newFeatures.stream()
+            .flatMap(HolderSet::stream)
+            .map(Holder::value)
+            .flatMap(PlacedFeature::getFeatures)
+            .filter(it -> it.feature() == Feature.FLOWER)
+            .collect(ImmutableList.toImmutableList()));
+        settings.featureSet = Suppliers.memoize(() -> newFeatures.stream()
+            .flatMap(HolderSet::stream)
+            .map(Holder::value)
+            .collect(Collectors.toSet()));
     }
 }

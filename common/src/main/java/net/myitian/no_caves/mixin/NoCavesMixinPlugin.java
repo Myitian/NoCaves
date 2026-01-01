@@ -9,7 +9,7 @@ import java.util.Set;
 
 import static net.myitian.no_caves.NoCaves.*;
 
-public class NoCavesMixinPlugin implements IMixinConfigPlugin {
+public final class NoCavesMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
     }
@@ -29,7 +29,7 @@ public class NoCavesMixinPlugin implements IMixinConfigPlugin {
             case "net.myitian.no_caves.mixin.PatternSetListEntry$CellMixin":
                 return CLOTH_CONFIG_EXISTED && DATA_VERSION >= MC_1_20_2__23w31a;
             default:
-                return true;
+                return DATA_VERSION > Integer.MIN_VALUE;
         }
     }
 

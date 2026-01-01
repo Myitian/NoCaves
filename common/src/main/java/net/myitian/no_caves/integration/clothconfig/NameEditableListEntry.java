@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public interface NameEditableListEntry<T> {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     static boolean drawTextFieldWidget(Object obj, GuiGraphics graphics,
                                        int x, int y, int color,
                                        int mouseX, int mouseY, float delta) {
@@ -50,7 +51,7 @@ public interface NameEditableListEntry<T> {
     }
 
     class MixinTarget {
-        /// Provides mixin targets for Mixin v0.8.6 or earlier that do not support some interface mixins.
+        /// Provides mixin targets for Mixin v0.8.5 or earlier that do not support some interface mixins.
         public static EditBox initTextField(EditBox nameFieldWidget) {
             return nameFieldWidget;
         }

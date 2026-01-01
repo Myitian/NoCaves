@@ -14,7 +14,6 @@ import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.narration.NarrationSupplier;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.myitian.no_caves.NoCaves;
@@ -32,23 +31,23 @@ import java.util.regex.Pattern;
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
 public class PatternSetListEntry
-        extends BaseListEntry<Pattern, PatternSetListEntry.Cell, PatternSetListEntry>
-        implements ContainerEventHandler, NarratableEntry, NarrationSupplier {
+    extends BaseListEntry<Pattern, PatternSetListEntry.Cell, PatternSetListEntry>
+    implements ContainerEventHandler, NarratableEntry, GuiEventListener {
     protected final Supplier<PatternSet> defaultValue;
     protected final Set<PatternKey> original;
     protected Function<Pattern, Optional<Component>> cellErrorSupplier;
 
     public PatternSetListEntry(Component fieldName, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Consumer<List<Pattern>> saveConsumer, Supplier<PatternSet> defaultValue, Component resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
         super(
-                fieldName,
-                tooltipSupplier,
-                defaultValue == null ? null : () -> new ArrayList<>(defaultValue.get()),
-                e -> new Cell(null, e),
-                saveConsumer,
-                resetButtonKey,
-                requiresRestart,
-                deleteButtonEnabled,
-                insertInFront);
+            fieldName,
+            tooltipSupplier,
+            defaultValue == null ? null : () -> new ArrayList<>(defaultValue.get()),
+            e -> new Cell(null, e),
+            saveConsumer,
+            resetButtonKey,
+            requiresRestart,
+            deleteButtonEnabled,
+            insertInFront);
         this.defaultValue = defaultValue;
         if (value == null) {
             original = Set.of();
@@ -64,15 +63,15 @@ public class PatternSetListEntry
 
     public PatternSetListEntry(Component fieldName, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Supplier<List<Pattern>> defaultValue, Consumer<List<Pattern>> saveConsumer, Component resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
         super(
-                fieldName,
-                tooltipSupplier,
-                defaultValue,
-                e -> new Cell(null, e),
-                saveConsumer,
-                resetButtonKey,
-                requiresRestart,
-                deleteButtonEnabled,
-                insertInFront);
+            fieldName,
+            tooltipSupplier,
+            defaultValue,
+            e -> new Cell(null, e),
+            saveConsumer,
+            resetButtonKey,
+            requiresRestart,
+            deleteButtonEnabled,
+            insertInFront);
         this.defaultValue = defaultValue == null ? null : () -> new PatternSet(defaultValue.get());
         if (value == null) {
             original = Set.of();
@@ -161,8 +160,8 @@ public class PatternSetListEntry
     }
 
     public static class Cell
-            extends BaseListCell
-            implements ContainerEventHandler, NarratableEntry, NarrationSupplier {
+        extends BaseListCell
+        implements ContainerEventHandler, NarratableEntry {
         protected final EditBox patternFieldWidget;
         protected final EditBox flagsFieldWidget;
         protected final PatternSetListEntry listListEntry;
@@ -176,7 +175,7 @@ public class PatternSetListEntry
             Font font = Minecraft.getInstance().font;
             patternFieldWidget = new EditBox(font, 0, 0, 80, 18, CommonComponents.EMPTY) {
                 @Override
-                public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+                public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
                     setFocused(isSelected && isFocused());
                     if (getFocused() == this && !isFocused()) {
                         Cell.this.setFocused(null);
@@ -191,7 +190,7 @@ public class PatternSetListEntry
             patternFieldWidget.setResponder(s -> patternFieldWidget.setTextColor(getPreferredTextColor()));
             flagsFieldWidget = new EditBox(font, 0, 0, 20, 18, CommonComponents.EMPTY) {
                 @Override
-                public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+                public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
                     setFocused(isSelected && isFocused());
                     if (getFocused() == this && !isFocused()) {
                         Cell.this.setFocused(null);
@@ -200,7 +199,7 @@ public class PatternSetListEntry
                 }
 
                 @Override
-                public void insertText(String text) {
+                public void insertText(@NotNull String text) {
                     super.insertText(stripFlagText(text));
                 }
             };
@@ -212,6 +211,7 @@ public class PatternSetListEntry
             children = List.of(patternFieldWidget, flagsFieldWidget);
         }
 
+        @SuppressWarnings("unused")
         public void updateBounds(boolean expanded, int x, int y, int entryWidth, int entryHeight) {
             if (expanded) {
                 cellBounds.reshape(x, y, entryWidth, entryHeight);
@@ -282,7 +282,7 @@ public class PatternSetListEntry
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        public void updateNarration(@NotNull NarrationElementOutput narrationElementOutput) {
             patternFieldWidget.updateNarration(narrationElementOutput);
             flagsFieldWidget.updateNarration(narrationElementOutput);
         }

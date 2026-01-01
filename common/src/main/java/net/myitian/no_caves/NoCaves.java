@@ -15,24 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 public final class NoCaves {
-
     public static final String MOD_ID = "no_caves";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final int DATA_VERSION = getDataVersion();
+    public static final boolean CLOTH_CONFIG_EXISTED = DATA_VERSION > Integer.MIN_VALUE && isClothConfigExisted();
     public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
-
-    public static final int DATA_VERSION;
     public static final int MC_1_20_2__23w31a = 3567;
     public static final int MC_1_20__23w16a = 3449;
-    public static final boolean CLOTH_CONFIG_EXISTED;
-
     public static int processedGenerationSettings = 0;
     public static int transformedFinalDensity = 0;
     public static int transformedDensityFunctions = 0;
-
-    static {
-        DATA_VERSION = getDataVersion();
-        CLOTH_CONFIG_EXISTED = DATA_VERSION > Integer.MIN_VALUE && isClothConfigExisted();
-    }
 
     public static void init() {
         File configFile = CONFIG_PATH.toFile();
@@ -60,17 +52,13 @@ public final class NoCaves {
             }
         } catch (Exception ignored) {
         }
-        LOGGER.error("Failed to obtain Minecraft version. Most mixins will not run due to the inability to detect the game version, so the in-game configuration screen will be disabled.");
+        LOGGER.error("Failed to obtain Minecraft version. All mixins will not run due to the inability to detect the game version, and the in-game configuration screen will be disabled too.");
         return Integer.MIN_VALUE;
     }
 
     public static boolean isClothConfigExisted() {
-        try {
-            Class.forName("me.shedaniel.clothconfig2.api.ConfigBuilder");
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        return loader.getResource("me/shedaniel/clothconfig2/api/ConfigBuilder.class") != null;
     }
 
     public static <K, V> @NotNull Map<K, V> createMap(List<Map.Entry<K, V>> entryList) {
@@ -90,9 +78,10 @@ public final class NoCaves {
         }
         int len = str.length();
         for (int i = 0; i < len; i++) {
-            char c = str.charAt(i);
-            if (c == '\n' || c == '\r' || c == '\f' || c == '\u0085' || c == '\u2028' || c == '\u2029') {
-                return str.substring(0, i);
+            switch (str.charAt(i)) {
+                case '\n', '\r', '\f', '\u0085', '\u2028', '\u2029' -> {
+                    return str.substring(0, i);
+                }
             }
         }
         return str;

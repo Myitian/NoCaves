@@ -7,10 +7,6 @@ configurations {
     shadowCommon
 }
 
-base {
-    archivesName = "${project.mod_id}-${project.name}"
-}
-
 dependencies {
     modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.variant_cloth_config_version}"
 
@@ -29,7 +25,7 @@ remapJar {
 }
 
 sourcesJar {
-    def commonSources = project(":variant").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
+    def variantSources = project(":variant").sourcesJar
+    dependsOn variantSources
+    from variantSources.archiveFile.map { zipTree(it) }
 }

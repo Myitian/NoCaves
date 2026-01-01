@@ -313,6 +313,7 @@ public final class Config {
         return false;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean save(File configFile) {
         try (var writer = new JsonWriter(new FileWriter(configFile))) {
             writer.setHtmlSafe(false);
