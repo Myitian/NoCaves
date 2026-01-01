@@ -7,9 +7,9 @@ import net.myitian.no_caves.NoCaves;
 import net.myitian.no_caves.integration.clothconfig.ConfigScreen;
 
 @Mod(NoCaves.MOD_ID)
-public class NoCavesForge {
+public final class NoCavesForge {
+    @SuppressWarnings("removal")
     public NoCavesForge() {
-        //noinspection removal
         this(ModLoadingContext.get());
     }
 
@@ -17,8 +17,8 @@ public class NoCavesForge {
         NoCaves.init();
         if (NoCaves.CLOTH_CONFIG_EXISTED) {
             context.registerExtensionPoint(
-                    ConfigScreenHandler.ConfigScreenFactory.class,
-                    () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> ConfigScreen.buildConfigScreen(parent))
+                ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> ConfigScreen.buildConfigScreen(parent))
             );
         }
     }

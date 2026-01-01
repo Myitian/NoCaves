@@ -13,28 +13,28 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 @Mod(value = NoCaves.MOD_ID, dist = Dist.CLIENT)
-public class NoCavesNeoForgeClient {
+public final class NoCavesNeoForgeClient {
     public NoCavesNeoForgeClient(ModContainer modContainer) {
         if (NoCaves.CLOTH_CONFIG_EXISTED) {
             try {
                 Method registerExtensionPoint = ModContainer.class.getMethod(
-                        "registerExtensionPoint",
-                        Class.class,
-                        IExtensionPoint.class);
+                    "registerExtensionPoint",
+                    Class.class,
+                    IExtensionPoint.class);
                 Class<IConfigScreenFactory> clazz = IConfigScreenFactory.class;
                 //noinspection JavaReflectionInvocation
                 registerExtensionPoint.invoke(modContainer, clazz, Proxy.newProxyInstance(
-                        clazz.getClassLoader(),
-                        new Class<?>[]{clazz},
-                        (proxy, method, args) -> {
-                            if ("createScreen".equals(method.getName())
-                                    && args != null
-                                    && args.length == 2
-                                    && args[1] instanceof Screen screen) {
-                                return ConfigScreen.buildConfigScreen(screen);
-                            }
-                            return method.invoke(proxy, args);
-                        }));
+                    clazz.getClassLoader(),
+                    new Class<?>[]{clazz},
+                    (proxy, method, args) -> {
+                        if ("createScreen".equals(method.getName())
+                            && args != null
+                            && args.length == 2
+                            && args[1] instanceof Screen screen) {
+                            return ConfigScreen.buildConfigScreen(screen);
+                        }
+                        return method.invoke(proxy, args);
+                    }));
                 // NeoForge commit 7d465ab changes IConfigScreenFactory:
                 // - Screen createScreen(Minecraft minecraft, Screen modListScreen);
                 // + Screen createScreen(ModContainer container, Screen modListScreen);

@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 @Mixin(BiomeGenerationSettings.class)
-public interface BiomeGenerationSettings_FeaturesMixin {
+public interface BiomeGenerationSettings_FeaturesAccessor {
     @Mutable
     @Accessor
     void setFeatures(List<HolderSet<PlacedFeature>> features);

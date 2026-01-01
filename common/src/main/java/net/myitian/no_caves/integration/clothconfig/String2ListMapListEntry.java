@@ -10,7 +10,9 @@ import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.myitian.no_caves.NoCaves;
@@ -26,7 +28,9 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
-public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>> {
+public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>>
+    extends AbstractListListEntry<Map.Entry<String, T>, String2ListMapListEntry.Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+    implements ContainerEventHandler, NarratableEntry, GuiEventListener {
     protected final Supplier<Map<String, T>> defaultValue;
     protected final Map<String, T> original;
     private final List<ReferenceProvider<?>> referencableEntries = Lists.newArrayList();
@@ -34,17 +38,17 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
     @ApiStatus.Internal
     public String2ListMapListEntry(Component fieldName, @NotNull List<Map.Entry<String, T>> value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Consumer<List<Map.Entry<String, T>>> saveConsumer, Supplier<Map<String, T>> defaultValue, Component resetButtonKey, boolean deleteButtonEnabled, boolean insertInFront, BiFunction<Map.Entry<String, T>, String2ListMapListEntry<T, INNER>, INNER> createNewCell) {
         super(
-                fieldName,
-                value,
-                defaultExpanded,
-                tooltipSupplier,
-                saveConsumer,
-                defaultValue == null ? null : () -> List.copyOf(defaultValue.get().entrySet()),
-                resetButtonKey,
-                false,
-                deleteButtonEnabled,
-                insertInFront,
-                (entry, self) -> new Cell<>(entry, self, createNewCell.apply(entry, self)));
+            fieldName,
+            value,
+            defaultExpanded,
+            tooltipSupplier,
+            saveConsumer,
+            defaultValue == null ? null : () -> List.copyOf(defaultValue.get().entrySet()),
+            resetButtonKey,
+            false,
+            deleteButtonEnabled,
+            insertInFront,
+            (entry, self) -> new Cell<>(entry, self, createNewCell.apply(entry, self)));
         this.defaultValue = defaultValue;
         original = NoCaves.createMap(value);
         for (Cell<T, INNER> cell : cells) {
@@ -56,27 +60,23 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
     @ApiStatus.Internal
     public String2ListMapListEntry(Component fieldName, @NotNull List<Map.Entry<String, T>> value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Supplier<List<Map.Entry<String, T>>> defaultValue, Consumer<List<Map.Entry<String, T>>> saveConsumer, Component resetButtonKey, boolean deleteButtonEnabled, boolean insertInFront, BiFunction<Map.Entry<String, T>, String2ListMapListEntry<T, INNER>, INNER> createNewCell) {
         super(
-                fieldName,
-                value,
-                defaultExpanded,
-                tooltipSupplier,
-                saveConsumer,
-                defaultValue,
-                resetButtonKey,
-                false,
-                deleteButtonEnabled,
-                insertInFront,
-                (entry, self) -> new Cell<>(entry, self, createNewCell.apply(entry, self)));
+            fieldName,
+            value,
+            defaultExpanded,
+            tooltipSupplier,
+            saveConsumer,
+            defaultValue,
+            resetButtonKey,
+            false,
+            deleteButtonEnabled,
+            insertInFront,
+            (entry, self) -> new Cell<>(entry, self, createNewCell.apply(entry, self)));
         this.defaultValue = defaultValue == null ? null : () -> NoCaves.createMap(defaultValue.get());
         original = NoCaves.createMap(value);
         for (Cell<T, INNER> cell : cells) {
             referencableEntries.add(cell.nestedEntry);
         }
         setReferenceProviderEntries(referencableEntries);
-    }
-
-    public void setFocusedProxy(GuiEventListener focused) {
-        setFocused(focused); // mixins in variant subproject seems cannot remap setFocused() correctly
     }
 
     @Override
@@ -118,7 +118,9 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
         return this;
     }
 
-    public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T>> extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, Cell<T, INNER>, String2ListMapListEntry<T, INNER>> implements ReferenceProvider<T> {
+    public static class Cell<T, INNER extends AbstractConfigListEntry<T> & NameEditableListEntry<T> & ContainerEventHandler & NarratableEntry>
+        extends AbstractListListEntry.AbstractListCell<Map.Entry<String, T>, Cell<T, INNER>, String2ListMapListEntry<T, INNER>>
+        implements ContainerEventHandler, NarratableEntry, ReferenceProvider<T> {
         public final INNER nestedEntry;
         private final List<INNER> child;
 
@@ -129,11 +131,8 @@ public class String2ListMapListEntry<T, INNER extends AbstractConfigListEntry<T>
             child = List.of(nestedEntry);
         }
 
+        @SuppressWarnings("unused")
         public void updateBounds(boolean expanded, int x, int y, int entryWidth, int entryHeight) {
-        }
-
-        public void setFocusedProxy(GuiEventListener focused) {
-            setFocused(focused); // mixins in variant subproject seems cannot remap setFocused() correctly
         }
 
         @Override

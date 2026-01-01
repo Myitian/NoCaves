@@ -11,9 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "deprecation"})
 @Mixin(value = String2ListMapListEntry.Cell.class, remap = false)
-abstract class String2ListMapListEntry$CellMixin<T, SELF extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF>, OUTER_SELF extends AbstractListListEntry<T, SELF, OUTER_SELF>> extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF> {
+abstract class String2ListMapListEntry$CellMixin<T, SELF extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF>, OUTER_SELF extends AbstractListListEntry<T, SELF, OUTER_SELF>>
+    extends AbstractListListEntry.AbstractListCell<T, SELF, OUTER_SELF> {
     @Final
     @Shadow
     public AbstractConfigListEntry<?> nestedEntry;
@@ -24,7 +25,7 @@ abstract class String2ListMapListEntry$CellMixin<T, SELF extends AbstractListLis
 
     @Inject(method = "updateBounds", at = @At("HEAD"))
     private void updateBounds_Inject(boolean expanded, int x, int y, int entryWidth, int entryHeight, CallbackInfo ci) {
-        //noinspection UnnecessarySuperQualifier
+        //noinspection UnnecessarySuperQualifier: prevent call this.updateBounds()
         super.updateBounds(expanded, x, y, entryWidth, entryHeight);
         if (expanded) {
             nestedEntry.setBounds(new Rectangle(x, y, entryWidth, nestedEntry.getItemHeight()));

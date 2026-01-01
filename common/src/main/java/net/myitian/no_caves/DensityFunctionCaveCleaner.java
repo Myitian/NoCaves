@@ -36,9 +36,9 @@ public final class DensityFunctionCaveCleaner {
                 try {
                     var pair = entry.getValue();
                     if (pair != null
-                            && pair.getLeft() != null
-                            && pair.getRight() != null
-                            && pair.getLeft().test(original)) {
+                        && pair.getLeft() != null
+                        && pair.getRight() != null
+                        && pair.getLeft().test(original)) {
                         return pair.getRight().apply(original);
                     }
                 } catch (Exception e) {
@@ -68,13 +68,13 @@ public final class DensityFunctionCaveCleaner {
 
     public static boolean isCaveDensityFunction(DensityFunction densityFunction) {
         return densityFunction instanceof DensityFunctions.HolderHolder(Holder<DensityFunction> function)
-                && isCaveDensityFunction(function);
+            && isCaveDensityFunction(function);
     }
 
     public static boolean isCaveDensityFunction(Holder<DensityFunction> densityFunction) {
         return densityFunction instanceof Holder.Reference<DensityFunction> reference
-                && Config.TransformationSettings.getDensityFunctionCavePatterns()
-                .matches(reference.key().location().toString());
+            && Config.TransformationSettings.getDensityFunctionCavePatterns()
+            .matches(reference.key().location().toString());
     }
 
     public static boolean isCaveNoise(DensityFunction.NoiseHolder noise) {
@@ -83,15 +83,15 @@ public final class DensityFunctionCaveCleaner {
 
     public static boolean isCaveNoise(Holder<NormalNoise.NoiseParameters> noise) {
         return noise instanceof Holder.Reference<NormalNoise.NoiseParameters> reference
-                && Config.TransformationSettings.getNoiseCavePatterns()
-                .matches(reference.key().location().toString());
+            && Config.TransformationSettings.getNoiseCavePatterns()
+            .matches(reference.key().location().toString());
     }
 
     @Nullable
     public static DensityFunction transformRegistryEntryHolder(DensityFunctions.HolderHolder holder) {
         Holder<DensityFunction> function = holder.function();
         if (Config.TransformationSettings.isEnableDensityFunctionCaveFilter()
-                && isCaveDensityFunction(function)) {
+            && isCaveDensityFunction(function)) {
             return null;
         } else if (function instanceof Holder.Direct<DensityFunction>) {
             return transform(function.value());
@@ -102,7 +102,7 @@ public final class DensityFunctionCaveCleaner {
     @Nullable
     public static DensityFunction transformNoise(DensityFunctions.Noise noise) {
         return Config.TransformationSettings.isEnableNoiseCaveFilter()
-                && isCaveNoise(noise.noise()) ? null : noise;
+            && isCaveNoise(noise.noise()) ? null : noise;
     }
 
     @Nullable
@@ -129,11 +129,11 @@ public final class DensityFunctionCaveCleaner {
                 return transformedChild1;
             } else {
                 return DensityFunctions.rangeChoice(
-                        input,
-                        rangeChoice.minInclusive(),
-                        rangeChoice.maxExclusive(),
-                        transformedChild1,
-                        transformedChild2);
+                    input,
+                    rangeChoice.minInclusive(),
+                    rangeChoice.maxExclusive(),
+                    transformedChild1,
+                    transformedChild2);
             }
         }
     }
@@ -147,11 +147,11 @@ public final class DensityFunctionCaveCleaner {
             return DensityFunctions.constant(linear.transform(constant.value()));
         } else {
             return new DensityFunctions.MulOrAdd(
-                    linear.specificType(),
-                    transformedChild,
-                    linear.minValue(),
-                    linear.maxValue(),
-                    linear.argument());
+                linear.specificType(),
+                transformedChild,
+                linear.minValue(),
+                linear.maxValue(),
+                linear.argument());
         }
     }
 
@@ -178,7 +178,7 @@ public final class DensityFunctionCaveCleaner {
         } else if (transformedChild2 == null) {
             return transformedChild1;
         } else if (transformedChild1 instanceof DensityFunctions.Constant constant1
-                && transformedChild2 instanceof DensityFunctions.Constant constant2) {
+            && transformedChild2 instanceof DensityFunctions.Constant constant2) {
             double v1 = constant1.value();
             switch (binary.type()) {
                 case ADD -> {
@@ -233,9 +233,9 @@ public final class DensityFunctionCaveCleaner {
                 return DensityFunctions.blendDensity(transformedChild);
             } else if (positional instanceof DensityFunctions.WeirdScaledSampler typedPositional) {
                 return new DensityFunctions.WeirdScaledSampler(
-                        transformedChild,
-                        typedPositional.noise(),
-                        typedPositional.rarityValueMapper());
+                    transformedChild,
+                    typedPositional.noise(),
+                    typedPositional.rarityValueMapper());
             }
             // Unknown types will be left as is
         }

@@ -16,19 +16,19 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(RegistryDataLoader.class)
 abstract class RegistryDataLoaderMixin {
     @Redirect(
-            method = "loadElementFromResource",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcom/mojang/serialization/DataResult;getOrThrow()Ljava/lang/Object;",
-                    remap = false))
+        method = "loadElementFromResource",
+        at = @At(
+            value = "INVOKE",
+            target = "Lcom/mojang/serialization/DataResult;getOrThrow()Ljava/lang/Object;",
+            remap = false))
     private static Object loadElementFromResource_Redirect_getOrThrow(
-            DataResult<?> instance,
-            WritableRegistry<?> unused_0,
-            Decoder<?> unused_1,
-            RegistryOps<?> unused_2,
-            ResourceKey<?> key,
-            Resource unused_3,
-            RegistrationInfo unused_4) {
+        DataResult<?> instance,
+        WritableRegistry<?> unused_0,
+        Decoder<?> unused_1,
+        RegistryOps<?> unused_2,
+        ResourceKey<?> key,
+        Resource unused_3,
+        RegistrationInfo unused_4) {
         return RegistryValuePreprocessor.process(key, instance.getOrThrow());
     }
 }

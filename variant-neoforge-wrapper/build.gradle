@@ -7,10 +7,6 @@ configurations {
     shadowCommon
 }
 
-base {
-    archivesName = "${project.mod_id}-${project.name}"
-}
-
 dependencies {
     neoForge "net.neoforged:neoforge:${project.variant_neoforge_version}"
     modImplementation "me.shedaniel.cloth:cloth-config-neoforge:${project.main_cloth_config_version}"
@@ -30,7 +26,7 @@ remapJar {
 }
 
 sourcesJar {
-    def commonSources = project(":variant").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
+    def variantSources = project(":variant").sourcesJar
+    dependsOn variantSources
+    from variantSources.archiveFile.map { zipTree(it) }
 }

@@ -10,7 +10,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -28,22 +30,24 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
-public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEntry.Cell, PatternSetListEntry> {
+public class PatternSetListEntry
+    extends BaseListEntry<Pattern, PatternSetListEntry.Cell, PatternSetListEntry>
+    implements ContainerEventHandler, NarratableEntry, GuiEventListener {
     protected final Supplier<PatternSet> defaultValue;
     protected final Set<PatternKey> original;
     protected Function<Pattern, Optional<Component>> cellErrorSupplier;
 
     public PatternSetListEntry(Component fieldName, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Consumer<List<Pattern>> saveConsumer, Supplier<PatternSet> defaultValue, Component resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
         super(
-                fieldName,
-                tooltipSupplier,
-                defaultValue == null ? null : () -> new ArrayList<>(defaultValue.get()),
-                e -> new Cell(null, e),
-                saveConsumer,
-                resetButtonKey,
-                requiresRestart,
-                deleteButtonEnabled,
-                insertInFront);
+            fieldName,
+            tooltipSupplier,
+            defaultValue == null ? null : () -> new ArrayList<>(defaultValue.get()),
+            e -> new Cell(null, e),
+            saveConsumer,
+            resetButtonKey,
+            requiresRestart,
+            deleteButtonEnabled,
+            insertInFront);
         this.defaultValue = defaultValue;
         if (value == null) {
             original = Set.of();
@@ -59,15 +63,15 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
 
     public PatternSetListEntry(Component fieldName, @Nullable PatternSet value, boolean defaultExpanded, Supplier<Optional<Component[]>> tooltipSupplier, Supplier<List<Pattern>> defaultValue, Consumer<List<Pattern>> saveConsumer, Component resetButtonKey, boolean requiresRestart, boolean deleteButtonEnabled, boolean insertInFront) {
         super(
-                fieldName,
-                tooltipSupplier,
-                defaultValue,
-                e -> new Cell(null, e),
-                saveConsumer,
-                resetButtonKey,
-                requiresRestart,
-                deleteButtonEnabled,
-                insertInFront);
+            fieldName,
+            tooltipSupplier,
+            defaultValue,
+            e -> new Cell(null, e),
+            saveConsumer,
+            resetButtonKey,
+            requiresRestart,
+            deleteButtonEnabled,
+            insertInFront);
         this.defaultValue = defaultValue == null ? null : () -> new PatternSet(defaultValue.get());
         if (value == null) {
             original = Set.of();
@@ -155,7 +159,9 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
         return new Cell(pattern, this);
     }
 
-    public static class Cell extends BaseListCell {
+    public static class Cell
+        extends BaseListCell
+        implements ContainerEventHandler, NarratableEntry {
         protected final EditBox patternFieldWidget;
         protected final EditBox flagsFieldWidget;
         protected final PatternSetListEntry listListEntry;
@@ -207,6 +213,7 @@ public class PatternSetListEntry extends BaseListEntry<Pattern, PatternSetListEn
             children = List.of(patternFieldWidget, flagsFieldWidget);
         }
 
+        @SuppressWarnings("unused")
         public void updateBounds(boolean expanded, int x, int y, int entryWidth, int entryHeight) {
             if (expanded) {
                 cellBounds.reshape(x, y, entryWidth, entryHeight);

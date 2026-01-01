@@ -4,7 +4,7 @@ import net.myitian.no_caves.NoCaves;
 import net.neoforged.fml.common.Mod;
 
 @Mod(NoCaves.MOD_ID)
-public class NoCavesNeoForge {
+public final class NoCavesNeoForge {
     public NoCavesNeoForge() {
         NoCaves.init();
     }

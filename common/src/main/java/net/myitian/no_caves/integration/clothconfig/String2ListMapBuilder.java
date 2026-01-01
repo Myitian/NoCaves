@@ -52,28 +52,28 @@ public class String2ListMapBuilder<T, INNER extends AbstractConfigListEntry<T> &
     @Override
     public @NotNull String2ListMapListEntry<T, INNER> build() {
         return finishBuilding(newDefaultValue != null ?
-                new String2ListMapListEntry<>(
-                        getFieldNameKey(),
-                        value,
-                        isExpanded(),
-                        null,
-                        getSaveConsumer(),
-                        newDefaultValue,
-                        getResetButtonKey(),
-                        isDeleteButtonEnabled(),
-                        isInsertInFront(),
-                        newCellFactory) :
-                new String2ListMapListEntry<>(
-                        getFieldNameKey(),
-                        value,
-                        isExpanded(),
-                        null,
-                        defaultValue,
-                        getSaveConsumer(),
-                        getResetButtonKey(),
-                        isDeleteButtonEnabled(),
-                        isInsertInFront(),
-                        newCellFactory));
+            new String2ListMapListEntry<>(
+                getFieldNameKey(),
+                value,
+                isExpanded(),
+                null,
+                getSaveConsumer(),
+                newDefaultValue,
+                getResetButtonKey(),
+                isDeleteButtonEnabled(),
+                isInsertInFront(),
+                newCellFactory) :
+            new String2ListMapListEntry<>(
+                getFieldNameKey(),
+                value,
+                isExpanded(),
+                null,
+                defaultValue,
+                getSaveConsumer(),
+                getResetButtonKey(),
+                isDeleteButtonEnabled(),
+                isInsertInFront(),
+                newCellFactory));
     }
 
     protected String2ListMapListEntry<T, INNER> finishBuilding(String2ListMapListEntry<T, INNER> entry) {

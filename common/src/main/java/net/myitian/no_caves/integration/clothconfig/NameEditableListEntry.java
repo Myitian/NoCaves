@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public interface NameEditableListEntry<T> {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     static boolean drawTextFieldWidget(Object obj, GuiGraphics graphics,
                                        int x, int y, int color,
                                        int mouseX, int mouseY, float delta) {

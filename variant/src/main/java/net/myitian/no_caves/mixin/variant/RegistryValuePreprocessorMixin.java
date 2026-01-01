@@ -17,11 +17,11 @@ import java.util.Optional;
 public class RegistryValuePreprocessorMixin {
     /**
      * @author Myitian
-     * @reason Replace impl in higher version MC
+     * @reason Replace impl in higher version Minecraft
      */
     @Overwrite
     private static void processBiomeCarvers(BiomeGenerationSettings settings, PatternSet patterns) {
-        BiomeGenerationSettings_CarversMixin wrapper = (BiomeGenerationSettings_CarversMixin) settings;
+        BiomeGenerationSettings_CarversAccessor wrapper = (BiomeGenerationSettings_CarversAccessor) settings;
         HolderSet<ConfiguredWorldCarver<?>> carvers = wrapper.getCarvers();
         ArrayList<Holder<ConfiguredWorldCarver<?>>> tmp = new ArrayList<>(carvers.size());
         for (var entry : carvers) {

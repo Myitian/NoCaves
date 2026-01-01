@@ -1,21 +1,18 @@
-package net.myitian.no_caves.mixin;
+package net.myitian.no_caves.mixin.variant;
 
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import java.util.Map;
-
 @Mixin(BiomeGenerationSettings.class)
-public interface BiomeGenerationSettings_CarversMixin {
+public interface BiomeGenerationSettings_CarversAccessor {
     @Accessor
-    Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> getCarvers();
+    HolderSet<ConfiguredWorldCarver<?>> getCarvers();
 
     @Mutable
     @Accessor
-    void setCarvers(Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers);
+    void setCarvers(HolderSet<ConfiguredWorldCarver<?>> carvers);
 }

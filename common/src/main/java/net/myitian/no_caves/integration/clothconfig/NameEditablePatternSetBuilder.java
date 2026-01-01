@@ -15,27 +15,27 @@ public class NameEditablePatternSetBuilder extends AbstractPatternSetBuilder<Nam
     @Override
     public @NotNull NameEditablePatternSetListEntry build() {
         return finishBuilding(newDefaultValue != null ?
-                new NameEditablePatternSetListEntry(
-                        newName,
-                        value,
-                        isExpanded(),
-                        null,
-                        getSaveConsumer(),
-                        newDefaultValue,
-                        getResetButtonKey(),
-                        isRequireRestart(),
-                        isDeleteButtonEnabled(),
-                        isInsertInFront()) :
-                new NameEditablePatternSetListEntry(
-                        newName,
-                        value,
-                        isExpanded(),
-                        null,
-                        defaultValue,
-                        getSaveConsumer(),
-                        getResetButtonKey(),
-                        isRequireRestart(),
-                        isDeleteButtonEnabled(),
-                        isInsertInFront()));
+            new NameEditablePatternSetListEntry(
+                newName,
+                value,
+                isExpanded(),
+                null,
+                getSaveConsumer(),
+                newDefaultValue,
+                getResetButtonKey(),
+                isRequireRestart(),
+                isDeleteButtonEnabled(),
+                isInsertInFront()) :
+            new NameEditablePatternSetListEntry(
+                newName,
+                value,
+                isExpanded(),
+                null,
+                defaultValue,
+                getSaveConsumer(),
+                getResetButtonKey(),
+                isRequireRestart(),
+                isDeleteButtonEnabled(),
+                isInsertInFront()));
     }
 }

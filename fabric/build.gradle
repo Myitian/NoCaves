@@ -13,7 +13,7 @@ loom {
 
 configurations {
     common
-    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
+    shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
@@ -21,10 +21,6 @@ configurations {
 
 shadow {
     addShadowVariantIntoJavaComponent = false
-}
-
-base {
-    archivesName = "${project.mod_id}-${project.name}-${project.version_id}"
 }
 
 dependencies {
@@ -39,22 +35,8 @@ dependencies {
     shadowCommon(project(":variant-fabric-wrapper")) { transitive false }
 }
 
-processResources {
-    def propsCopy = new HashMap(props)
-    propsCopy.replace("mod_version", "${rootProject.mod_version}-${project.name}-${rootProject.version_id}")
-    inputs.properties propsCopy
-
-    filesMatching("fabric.mod.json") {
-        expand propsCopy
-    }
-
-    from(project(":common").file("src/main/resources")) {
-        include "${rootProject.mod_id}.accesswidener"
-    }
-}
-
 shadowJar {
-    exclude "architectury.common.json"
+    exclude("architectury.common.json", "*-refmap.json", "architectury_inject*/**")
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
 }
@@ -65,18 +47,11 @@ remapJar {
 }
 
 sourcesJar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-}
-
-publishing {
-    publications {
-        mavenFabric(MavenPublication) {
-            artifactId = rootProject.mod_id + "-" + project.name
-            from components.java
-        }
-    }
-    repositories {
-    }
+    def variantSources = project(":variant-fabric-wrapper").sourcesJar
+    dependsOn variantSources
+    from variantSources.archiveFile.map { zipTree(it) }
 }
