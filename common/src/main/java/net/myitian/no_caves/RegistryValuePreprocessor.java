@@ -17,8 +17,6 @@ import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.myitian.no_caves.config.Config;
-import net.myitian.no_caves.mixin.BiomeGenerationSettings_CarversAccessor;
-import net.myitian.no_caves.mixin.BiomeGenerationSettings_FeaturesAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,8 +124,7 @@ public final class RegistryValuePreprocessor {
     }
 
     private static void processBiomeCarvers(BiomeGenerationSettings settings, PatternSet patterns) {
-        BiomeGenerationSettings_CarversAccessor wrapper = (BiomeGenerationSettings_CarversAccessor) settings;
-        HolderSet<ConfiguredWorldCarver<?>> carvers = wrapper.getCarvers();
+        HolderSet<ConfiguredWorldCarver<?>> carvers = settings.carvers;
         ArrayList<Holder<ConfiguredWorldCarver<?>>> tmp = new ArrayList<>(carvers.size());
         for (var entry : carvers) {
             Optional<ResourceKey<ConfiguredWorldCarver<?>>> regKey = entry.unwrapKey();
@@ -135,7 +132,7 @@ public final class RegistryValuePreprocessor {
                 tmp.add(entry);
             }
         }
-        wrapper.setCarvers(HolderSet.direct(tmp));
+        settings.carvers = HolderSet.direct(tmp);
     }
 
     private static void processBiomeFeatures(BiomeGenerationSettings settings, PatternSet patterns) {
@@ -155,17 +152,16 @@ public final class RegistryValuePreprocessor {
             newFeatures.add(list.isEmpty() ? HolderSet.empty() : HolderSet.direct(list));
             list.clear();
         }
-        BiomeGenerationSettings_FeaturesAccessor wrapper = (BiomeGenerationSettings_FeaturesAccessor) settings;
-        wrapper.setFeatures(newFeatures);
-        wrapper.setFlowerFeatures(Suppliers.memoize(() -> newFeatures.stream()
+        settings.features = newFeatures;
+        settings.flowerFeatures = Suppliers.memoize(() -> newFeatures.stream()
             .flatMap(HolderSet::stream)
             .map(Holder::value)
             .flatMap(PlacedFeature::getFeatures)
             .filter(it -> it.feature() == Feature.FLOWER)
-            .collect(ImmutableList.toImmutableList())));
-        wrapper.setFeatureSet(Suppliers.memoize(() -> newFeatures.stream()
+            .collect(ImmutableList.toImmutableList()));
+        settings.featureSet = Suppliers.memoize(() -> newFeatures.stream()
             .flatMap(HolderSet::stream)
             .map(Holder::value)
-            .collect(Collectors.toSet())));
+            .collect(Collectors.toSet()));
     }
 }
