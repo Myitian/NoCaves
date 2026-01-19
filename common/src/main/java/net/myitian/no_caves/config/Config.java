@@ -23,10 +23,10 @@ public final class Config {
         private static boolean enableCarverFilter = defaultEnableCarverFilter;
         // The specified carvers will be filtered.
         private static final List<Pattern> defaultDisabledCarverPatterns = List.of(
-                // vanilla
-                Pattern.compile("^minecraft:ca(?:nyon|ve(?:_extra_underground)?)$"),
-                // mod: Biomes O' Plenty
-                Pattern.compile("^biomesoplenty:origin_cave$")
+            // vanilla
+            Pattern.compile("^minecraft:ca(?:nyon|ve(?:_extra_underground)?)$"),
+            // mod: Biomes O' Plenty
+            Pattern.compile("^biomesoplenty:origin_cave$")
         );
         private static final PatternSet disabledCarverPatterns = new PatternSet(defaultDisabledCarverPatterns);
         // The specified biome will not be affected by carver filter.
@@ -112,29 +112,29 @@ public final class Config {
 
         public static void registerCodec(Map<String, Pair<ConfigCodec.ConsumerWithIOException<JsonReader>, ConfigCodec.ConsumerWithIOException<JsonWriter>>> map) {
             map.put("enableCarverFilter", Pair.of(
-                    reader -> setEnableCarverFilter(reader.nextBoolean()),
-                    writer -> writer.value(isEnableCarverFilter())));
+                reader -> setEnableCarverFilter(reader.nextBoolean()),
+                writer -> writer.value(isEnableCarverFilter())));
             map.put("disabledCarverPatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getDisabledCarverPatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getDisabledCarverPatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getDisabledCarverPatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getDisabledCarverPatterns())));
             map.put("carverFilterBiomeExclusionPatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getCarverFilterBiomeExclusionPatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getCarverFilterBiomeExclusionPatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getCarverFilterBiomeExclusionPatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getCarverFilterBiomeExclusionPatterns())));
             map.put("biomeSpecificOverrideForDisabledCarverPatterns", Pair.of(
-                    reader -> ConfigCodec.readString2PatternSetMap(reader, getBiomeSpecificOverrideForDisabledCarverPatterns(), true),
-                    writer -> ConfigCodec.writeString2PatternSetMap(writer, getBiomeSpecificOverrideForDisabledCarverPatterns())));
+                reader -> ConfigCodec.readString2PatternSetMap(reader, getBiomeSpecificOverrideForDisabledCarverPatterns(), true),
+                writer -> ConfigCodec.writeString2PatternSetMap(writer, getBiomeSpecificOverrideForDisabledCarverPatterns())));
             map.put("enableFeatureFilter", Pair.of(
-                    reader -> setEnableFeatureFilter(reader.nextBoolean()),
-                    writer -> writer.value(isEnableFeatureFilter())));
+                reader -> setEnableFeatureFilter(reader.nextBoolean()),
+                writer -> writer.value(isEnableFeatureFilter())));
             map.put("disabledFeaturePatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getDisabledFeaturePatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getDisabledFeaturePatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getDisabledFeaturePatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getDisabledFeaturePatterns())));
             map.put("featureFilterBiomeExclusionPatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getFeatureFilterBiomeExclusionPatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getFeatureFilterBiomeExclusionPatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getFeatureFilterBiomeExclusionPatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getFeatureFilterBiomeExclusionPatterns())));
             map.put("biomeSpecificOverrideForDisabledFeaturePatterns", Pair.of(
-                    reader -> ConfigCodec.readString2PatternSetMap(reader, getBiomeSpecificOverrideForDisabledFeaturePatterns(), true),
-                    writer -> ConfigCodec.writeString2PatternSetMap(writer, getBiomeSpecificOverrideForDisabledFeaturePatterns())));
+                reader -> ConfigCodec.readString2PatternSetMap(reader, getBiomeSpecificOverrideForDisabledFeaturePatterns(), true),
+                writer -> ConfigCodec.writeString2PatternSetMap(writer, getBiomeSpecificOverrideForDisabledFeaturePatterns())));
 
         }
     }
@@ -145,8 +145,10 @@ public final class Config {
         private static boolean enableDensityFunctionTransformation = defaultEnableDensityFunctionTransformation;
         // The specified density function will be transformed.
         private static final List<Pattern> defaultDensityFunctionToTransformPatterns = List.of(
-                // mod: Tectonic or Terralith
-                Pattern.compile("^minecraft:overworld(?:_large_biomes)?/noise_router/final_density$")
+            // mod: Tectonic or Terralith
+            Pattern.compile("^minecraft:overworld(?:_large_biomes)?/noise_router/final_density$"),
+            // mod: Lithosphere
+            Pattern.compile("^lithosphere:density/final_density$")
         );
         private static final PatternSet densityFunctionToTransformPatterns = new PatternSet(defaultDensityFunctionToTransformPatterns);
         // Set to true to enable the final density transformation.
@@ -199,17 +201,17 @@ public final class Config {
 
         public static void registerCodec(Map<String, Pair<ConfigCodec.ConsumerWithIOException<JsonReader>, ConfigCodec.ConsumerWithIOException<JsonWriter>>> map) {
             map.put("enableDensityFunctionTransformation", Pair.of(
-                    reader -> setEnableDensityFunctionTransformation(reader.nextBoolean()),
-                    writer -> writer.value(isEnableDensityFunctionTransformation())));
+                reader -> setEnableDensityFunctionTransformation(reader.nextBoolean()),
+                writer -> writer.value(isEnableDensityFunctionTransformation())));
             map.put("densityFunctionToTransformPatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getDensityFunctionToTransformPatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getDensityFunctionToTransformPatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getDensityFunctionToTransformPatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getDensityFunctionToTransformPatterns())));
             map.put("enableFinalDensityTransformation", Pair.of(
-                    reader -> setEnableFinalDensityTransformation(reader.nextBoolean()),
-                    writer -> writer.value(isEnableFinalDensityTransformation())));
+                reader -> setEnableFinalDensityTransformation(reader.nextBoolean()),
+                writer -> writer.value(isEnableFinalDensityTransformation())));
             map.put("finalDensityTransformationExclusionPatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getFinalDensityTransformationExclusionPatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getFinalDensityTransformationExclusionPatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getFinalDensityTransformationExclusionPatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getFinalDensityTransformationExclusionPatterns())));
         }
     }
 
@@ -219,8 +221,8 @@ public final class Config {
         private static boolean enableNoiseCaveFilter = defaultEnableNoiseCaveFilter;
         // The names of the noise caves to filter.
         private static final List<Pattern> defaultNoiseCavePatterns = List.of(
-                // vanilla
-                Pattern.compile("^minecraft:cave_")
+            // vanilla
+            Pattern.compile("^minecraft:cave_")
         );
         private static final PatternSet noiseCavePatterns = new PatternSet(defaultNoiseCavePatterns);
         // Set to true to filter references to other cave density functions in the density function (including the final density).
@@ -228,10 +230,13 @@ public final class Config {
         private static boolean enableDensityFunctionCaveFilter = defaultEnableDensityFunctionCaveFilter;
         // The names of the cave density functions to filter.
         private static final List<Pattern> defaultDensityFunctionCavePatterns = List.of(
-                // vanilla
-                Pattern.compile("^minecraft:overworld/caves/"),
-                // mod: Tectonic
-                Pattern.compile("^tectonic:overworld/caves$")
+            // vanilla
+            Pattern.compile("^minecraft:overworld/caves/"),
+            // mod: Tectonic
+            Pattern.compile("^tectonic:overworld/caves$"),
+            Pattern.compile("^tectonic:cave"),
+            // mod: Lithosphere
+            Pattern.compile("^lithosphere:caves/")
         );
         private static final PatternSet densityFunctionCavePatterns = new PatternSet(defaultDensityFunctionCavePatterns);
 
@@ -279,17 +284,17 @@ public final class Config {
 
         public static void registerCodec(Map<String, Pair<ConfigCodec.ConsumerWithIOException<JsonReader>, ConfigCodec.ConsumerWithIOException<JsonWriter>>> map) {
             map.put("enableNoiseCaveFilter", Pair.of(
-                    reader -> setEnableNoiseCaveFilter(reader.nextBoolean()),
-                    writer -> writer.value(isEnableNoiseCaveFilter())));
+                reader -> setEnableNoiseCaveFilter(reader.nextBoolean()),
+                writer -> writer.value(isEnableNoiseCaveFilter())));
             map.put("noiseCavePatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getNoiseCavePatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getNoiseCavePatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getNoiseCavePatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getNoiseCavePatterns())));
             map.put("enableDensityFunctionCaveFilter", Pair.of(
-                    reader -> setEnableDensityFunctionCaveFilter(reader.nextBoolean()),
-                    writer -> writer.value(isEnableDensityFunctionCaveFilter())));
+                reader -> setEnableDensityFunctionCaveFilter(reader.nextBoolean()),
+                writer -> writer.value(isEnableDensityFunctionCaveFilter())));
             map.put("densityFunctionCavePatterns", Pair.of(
-                    reader -> ConfigCodec.readPatternSet(reader, getDensityFunctionCavePatterns(), true),
-                    writer -> ConfigCodec.writePatternSet(writer, getDensityFunctionCavePatterns())));
+                reader -> ConfigCodec.readPatternSet(reader, getDensityFunctionCavePatterns(), true),
+                writer -> ConfigCodec.writePatternSet(writer, getDensityFunctionCavePatterns())));
         }
     }
 
