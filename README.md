@@ -1,6 +1,8 @@
 # NoCaves
 
-<img src="common/src/main/resources/logo.png" alt="logo" width="256"/>
+### Currently, this branch only compatible with Fabric loader and Minecraft 26.1-pre-1 or 26.1-pre-2, with no in-game config support. (NeoForge, Forge and Cloth Config have not yet released versions for MC 26.1-pre-1/2)
+
+<img src="src/main/resources/logo.png" alt="logo" width="256"/>
 
 [![CurseForge Downloads](https://img.shields.io/curseforge/dt/1367527?style=for-the-badge&logo=curseforge&label=CurseForge%20Downloads&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/no-caves-mod)\
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/HqI1ld6l?style=for-the-badge&logo=modrinth&label=Modrinth%20Downloads&color=00AF5C)](https://modrinth.com/mod/no-caves-mod)\

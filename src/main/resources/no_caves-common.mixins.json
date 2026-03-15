@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8.6",
+  "package": "net.myitian.no_caves.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "net.myitian.no_caves.mixin.NoCavesMixinPlugin",
+  "mixins": [
+    "BiomeGenerationSettings_CarversAccessor",
+    "BiomeGenerationSettings_FeaturesAccessor",
+    "MappedRegistryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

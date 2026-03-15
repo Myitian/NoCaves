@@ -1,68 +1,154 @@
-plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
-}
-
-architectury {
-    minecraft = rootProject.minecraft_version
-}
-
-subprojects {
-    apply plugin: "java"
-    apply plugin: "dev.architectury.loom"
-
-    version = "${project.mod_version}-${project.name}-${project.version_id}"
-    group = project.maven_group
-
-    base {
-        archivesName = project.mod_id
+buildscript {
+    repositories {
+        maven { url = "https://maven.architectury.dev" }
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${project.minecraft_version}"
-        mappings loom.layered {
-        }
-    }
-
-    processResources {
-        def props = [
-                mod_id                              : project.mod_id,
-                mod_version                         : project.version,
-                mod_name                            : project.mod_name,
-                mod_description                     : project.mod_description,
-                mod_license                         : project.mod_license,
-                mod_author                          : project.mod_author,
-                mod_source                          : project.mod_source,
-                maven_group                         : project.maven_group,
-                supported_minecraft_version_fabric  : project.supported_minecraft_version_fabric,
-                supported_minecraft_version_forge   : project.supported_minecraft_version_forge,
-                supported_minecraft_version_neoforge: project.supported_minecraft_version_neoforge,
-        ]
-        inputs.properties props
-
-        filesMatching(["pack.mcmeta", "fabric.mod.json", "META-INF/*mods.toml"]) {
-            expand props
-        }
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
-        options.release = 25
-    }
-
-    java {
-        withSourcesJar()
+        classpath 'dev.architectury:at:1.0.1'
     }
 }
 
-allprojects {
-    apply plugin: "architectury-plugin"
+plugins {
+    id 'net.fabricmc.fabric-loom' version "1.15-SNAPSHOT"
+}
 
-    repositories {
-        maven { url = "https://maven.shedaniel.me" }
-        maven { url = "https://maven.architectury.dev" }
-        maven { url = "https://maven.neoforged.net" }
-        maven { url = "https://maven.parchmentmc.org" }
-        maven { url = "https://maven.terraformersmc.com" }
+loom {
+    accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
+}
+
+version = "${project.mod_version}-mc-${project.version_id}"
+group = project.maven_group
+
+base {
+    archivesName = project.mod_id
+}
+
+repositories {
+    maven { url = "https://maven.shedaniel.me" }
+    maven { url = "https://maven.architectury.dev" }
+    maven { url = "https://maven.neoforged.net/releases" }
+    maven { url = "https://maven.minecraftforge.net" }
+    maven { url = "https://maven.terraformersmc.com" }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    implementation "net.neoforged.fancymodloader:loader:${project.neoforge_fml_version}"
+    implementation "net.minecraftforge:javafmllanguage:${project.forge_version}"
+    implementation "net.minecraftforge:fmlloader:${project.forge_version}"
+}
+
+processResources {
+    def props = [
+            mod_id                              : project.mod_id,
+            mod_version                         : project.version,
+            mod_name                            : project.mod_name,
+            mod_description                     : project.mod_description,
+            mod_license                         : project.mod_license,
+            mod_author                          : project.mod_author,
+            mod_source                          : project.mod_source,
+            maven_group                         : project.maven_group,
+            supported_minecraft_version_fabric  : project.supported_minecraft_version_fabric,
+            supported_minecraft_version_forge   : project.supported_minecraft_version_forge,
+            supported_minecraft_version_neoforge: project.supported_minecraft_version_neoforge,
+    ]
+    inputs.properties props
+
+    filesMatching(["pack.mcmeta", "fabric.mod.json", "META-INF/*mods.toml"]) {
+        expand props
     }
 }
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    it.options.release = 25
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+    inputs.property "archivesName", project.base.archivesName
+
+    from("LICENSE") {
+        rename { "${it}_${project.mod_id}" }
+    }
+
+    manifest {
+        attributes(
+                "MixinConfigs": "no_caves-common.mixins.json"
+        )
+    }
+}
+
+
+import dev.architectury.at.AccessChange
+import dev.architectury.at.AccessTransform
+import dev.architectury.at.AccessTransformSet
+import dev.architectury.at.ModifierChange
+import dev.architectury.at.io.AccessTransformFormats
+import net.fabricmc.classtweaker.api.ClassTweakerReader
+import net.fabricmc.classtweaker.api.visitor.AccessWidenerVisitor
+import net.fabricmc.classtweaker.api.visitor.ClassTweakerVisitor
+import org.cadixdev.bombe.type.signature.MethodSignature
+
+abstract class AtGenerator extends DefaultTask {
+    @InputFile
+    abstract RegularFileProperty getInputFile()
+
+    @OutputFile
+    abstract RegularFileProperty getOutputFile()
+
+    static AccessTransform toAt(AccessWidenerVisitor.AccessType access) {
+        switch (access) {
+            case AccessWidenerVisitor.AccessType.ACCESSIBLE:
+                return AccessTransform.of(AccessChange.PUBLIC)
+            case AccessWidenerVisitor.AccessType.EXTENDABLE:
+            case AccessWidenerVisitor.AccessType.MUTABLE:
+                return AccessTransform.of(AccessChange.PUBLIC, ModifierChange.REMOVE)
+        }
+    }
+
+    @TaskAction
+    void generate() {
+        def atSet = AccessTransformSet.create()
+        inputFile.get().asFile.withReader("UTF-8") {
+            ClassTweakerReader.create(new ClassTweakerVisitor() {
+                @Override
+                AccessWidenerVisitor visitAccessWidener(String owner) {
+                    return new AccessWidenerVisitor() {
+                        @Override
+                        void visitClass(AccessWidenerVisitor.AccessType access, boolean transitive) {
+                            atSet.getOrCreateClass(owner).merge(toAt(access))
+                        }
+
+                        @Override
+                        void visitMethod(String name, String descriptor, AccessWidenerVisitor.AccessType access, boolean transitive) {
+                            atSet.getOrCreateClass(owner).mergeMethod(MethodSignature.of(name, descriptor), toAt(access))
+                        }
+
+                        @Override
+                        void visitField(String name, String descriptor, AccessWidenerVisitor.AccessType access, boolean transitive) {
+                            atSet.getOrCreateClass(owner).mergeField(name, toAt(access))
+                        }
+                    }
+                }
+            }).read(it, "")
+        }
+        outputFile.get().asFile.withWriter("UTF-8") {
+            AccessTransformFormats.FML.write(it, atSet)
+        }
+    }
+}
+
+
+sourceSets.main.resources.srcDir(tasks.register("aw2at", AtGenerator) {
+    inputFile = file("src/main/resources/${project.mod_id}.accesswidener")
+    outputFile = layout.buildDirectory.file("generated/resources/main/META-INF/accesstransformer.cfg")
+}.map { layout.buildDirectory.dir("generated/resources/main") })
