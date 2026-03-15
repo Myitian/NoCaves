@@ -13,13 +13,14 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public final class NoCaves {
     public static final String MOD_ID = "no_caves";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final int DATA_VERSION = getDataVersion();
     public static final boolean CLOTH_CONFIG_EXISTED = DATA_VERSION > Integer.MIN_VALUE && isClothConfigExisted();
-    public static final Path CONFIG_PATH = PlatformUtil.getConfigDirectory().resolve(MOD_ID + ".json");
+    public static Path CONFIG_PATH;
     public static final int MC_1_21_9__25w36a = 4545;
     public static final int MC_1_21_6__25w15a = 4422;
     public static final int MC_1_21_4__24w44a = 4174;
@@ -29,7 +30,9 @@ public final class NoCaves {
     public static int transformedFinalDensity = 0;
     public static int transformedDensityFunctions = 0;
 
-    public static void init() {
+    public static void init(Supplier<Path> configDirectorySupplier) {
+        CONFIG_PATH = configDirectorySupplier.get().resolve(MOD_ID + ".json");
+        LOGGER.info("NoCaves config path: {}", CONFIG_PATH);
         File configFile = CONFIG_PATH.toFile();
         if (!Config.load(configFile)) {
             Config.save(configFile);

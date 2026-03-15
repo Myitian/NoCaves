@@ -3,18 +3,20 @@ package net.myitian.no_caves.neoforge;
 import net.minecraft.client.gui.screens.Screen;
 import net.myitian.no_caves.NoCaves;
 import net.myitian.no_caves.integration.clothconfig.ConfigScreen;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.IExtensionPoint;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-@Mod(value = NoCaves.MOD_ID, dist = Dist.CLIENT)
-public final class NoCavesNeoForgeClient {
-    public NoCavesNeoForgeClient(ModContainer modContainer) {
+@Mod(NoCaves.MOD_ID)
+public final class NoCavesNeoForge {
+    public NoCavesNeoForge(ModContainer modContainer) {
+        NoCaves.LOGGER.info("NoCaves is on NeoForge");
+        NoCaves.init(FMLPaths.CONFIGDIR::get);
         if (NoCaves.CLOTH_CONFIG_EXISTED) {
             try {
                 Method registerExtensionPoint = ModContainer.class.getMethod(

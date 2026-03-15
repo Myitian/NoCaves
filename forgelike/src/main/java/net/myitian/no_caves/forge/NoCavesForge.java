@@ -3,6 +3,7 @@ package net.myitian.no_caves.forge;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.myitian.no_caves.NoCaves;
 import net.myitian.no_caves.integration.clothconfig.ConfigScreen;
 
@@ -14,7 +15,8 @@ public final class NoCavesForge {
     }
 
     public NoCavesForge(ModLoadingContext context) {
-        NoCaves.init();
+        NoCaves.LOGGER.info("NoCaves is on Forge");
+        NoCaves.init(FMLPaths.CONFIGDIR::get);
         if (NoCaves.CLOTH_CONFIG_EXISTED) {
             context.registerExtensionPoint(
                 ConfigScreenHandler.ConfigScreenFactory.class,

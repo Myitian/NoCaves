@@ -22,8 +22,7 @@ subprojects {
         switch (project.name) {
             case "variant":
             case "variant-fabric-wrapper":
-            case "variant-forge-wrapper":
-            case "variant-neoforge-wrapper":
+            case "variant-forgelike-wrapper":
                 minecraft "com.mojang:minecraft:${project.variant_minecraft_version}"
                 mappings loom.layered {
                     officialMojangMappings()

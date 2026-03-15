@@ -32,11 +32,13 @@ shadow {
 
 dependencies {
     forge "net.minecraftforge:forge:${project.main_forge_version}"
+    modImplementation "me.shedaniel.cloth:cloth-config-forge:${project.main_cloth_config_version}"
+    modImplementation "net.neoforged:neoforge:${project.main_neoforge_version}:universal"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
-    common(project(":variant-forge-wrapper")) { transitive = false }
-    shadowCommon(project(":variant-forge-wrapper")) { transitive = false }
+    common(project(":variant-forgelike-wrapper")) { transitive = false }
+    shadowCommon(project(":variant-forgelike-wrapper")) { transitive = false }
 }
 
 shadowJar {
@@ -55,7 +57,7 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-    def variantSources = project(":variant-forge-wrapper").sourcesJar
+    def variantSources = project(":variant-forgelike-wrapper").sourcesJar
     dependsOn variantSources
     from variantSources.archiveFile.map { zipTree(it) }
 }
