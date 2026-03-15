@@ -41,7 +41,7 @@ The configuration file is located at `config/no_caves.json`. If the configuratio
 - [carvers](https://minecraft.wiki/w/Carver_definition): are referenced in biome definitions (`worldgen/biome`), used to add caves and canyons.
 - [density functions](https://minecraft.wiki/w/Density_function): are referenced from the noise router in noise settings (`worldgen/noise_settings`), make up mathematical expressions to obtain a number from a position.
 - [final density](https://minecraft.wiki/w/Noise_router#Final_density): a part of a dimension's noise settings (`worldgen/noise_settings`), is the main density function that determines whether a block position should be solid or air.
-
+<p></p>
 
 - [雕刻器](https://zh.minecraft.wiki/w/%E9%9B%95%E5%88%BB%E5%99%A8%E5%AE%9A%E4%B9%89%E6%A0%BC%E5%BC%8F)：在生物群系定义（`worldgen/biome`）中引用，用于添加洞穴和峡谷。
 - [密度函数](https://zh.minecraft.wiki/w/%E5%AF%86%E5%BA%A6%E5%87%BD%E6%95%B0)：主要供噪声设置（`worldgen/noise_settings`）使用，可以根据一定的运算法则将一个坐标转换为一个数。
