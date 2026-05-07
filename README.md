@@ -1,6 +1,8 @@
 # NoCaves
 
-<img src="common/src/main/resources/logo.png" alt="logo" width="256"/>
+### Currently, this branch only compatible with Fabric loader and Minecraft 26.1-pre-1 or 26.1-pre-2, with no in-game config support. (NeoForge, Forge and Cloth Config have not yet released versions for MC 26.1-pre-1/2)
+
+<img src="src/main/resources/logo.png" alt="logo" width="256"/>
 
 [![CurseForge Downloads](https://img.shields.io/curseforge/dt/1367527?style=for-the-badge&logo=curseforge&label=CurseForge%20Downloads&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/no-caves-mod)\
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/HqI1ld6l?style=for-the-badge&logo=modrinth&label=Modrinth%20Downloads&color=00AF5C)](https://modrinth.com/mod/no-caves-mod)\
@@ -40,6 +42,7 @@ The configuration file is located at `config/no_caves.json`. If the configuratio
 - [density functions](https://minecraft.wiki/w/Density_function): are referenced from the noise router in noise settings (`worldgen/noise_settings`), make up mathematical expressions to obtain a number from a position.
 - [final density](https://minecraft.wiki/w/Noise_router#Final_density): a part of a dimension's noise settings (`worldgen/noise_settings`), is the main density function that determines whether a block position should be solid or air.
 
+<p></p>
 
 - [雕刻器](https://zh.minecraft.wiki/w/%E9%9B%95%E5%88%BB%E5%99%A8%E5%AE%9A%E4%B9%89%E6%A0%BC%E5%BC%8F)：在生物群系定义（`worldgen/biome`）中引用，用于添加洞穴和峡谷。
 - [密度函数](https://zh.minecraft.wiki/w/%E5%AF%86%E5%BA%A6%E5%87%BD%E6%95%B0)：主要供噪声设置（`worldgen/noise_settings`）使用，可以根据一定的运算法则将一个坐标转换为一个数。
@@ -49,8 +52,14 @@ The configuration file is located at `config/no_caves.json`. If the configuratio
 
 - **[1.20](https://github.com/Myitian/NoCaves/tree/1.20)**: supports MC 1.19.3\~1.20.4 (do not support in-game configuration on MC 1.19.3\~1.19.4)
 - **[1.21](https://github.com/Myitian/NoCaves/tree/1.21)**: supports MC 1.20.5~1.21.10 (also supports MC 1.21.11 on Fabric)
-- **[1.21.11](https://github.com/Myitian/NoCaves/tree/1.21.11) (current branch)**: supports MC 1.21.11
-- ***26** (current branch, in development): supports MC 26.1*
+- **[1.21.11](https://github.com/Myitian/NoCaves/tree/1.21.11)**: supports MC 1.21.11
+- **[26](https://github.com/Myitian/NoCaves/tree/26) (current branch)**: supports MC 26.1
+
+> [!NOTE]
+>
+> In the current project, the branch targeting Minecraft 26+ employs an experimental development model: since Minecraft has removed obfuscation, development for all three major loaders is now conducted entirely on Fabric Loom, with the non-Fabric loaders treated as standard dependencies. The advantages of this approach include simplified environment setup, reduced reliance on cross-platform loader frameworks, and the ability to support multiple loaders using a single JAR file. However, the drawbacks are that direct debugging on alternative loaders is not possible, and the conversion of AccessWideners to AccessTransformers must be performed manually.
+>
+> 当前项目中，适用于 Minecraft 26+ 的分支使用了一种实验性的开发模式——由于 Minecraft 移除了混淆，现在三个主流加载器的开发均在 Fabric Loom 上进行，其中非 Fabric 加载器作为常规依赖项使用。这种方案的优点是可以简化环境搭建和减少对跨平台加载器框架的依赖，以及实现一个 JAR 就可以适配各种加载器，缺点是无法直接在另外的加载器上调试模组，并且需要手动引入 AccessWidener 到 AccessTransformer 的转换。
 
 ## How It Works 工作原理
 
